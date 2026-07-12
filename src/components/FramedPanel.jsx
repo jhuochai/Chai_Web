@@ -15,7 +15,7 @@ export default function FramedPanel({
 }) {
   return (
     <Tag className={`framed-panel framed-panel--${variant} ${className}`} {...rest}>
-      <CrackTexture variant={variant === 'wild' ? 'wild' : 'corners'} />
+      <CrackTexture variant={variant === 'wild' || variant === 'deco' ? variant : 'corners'} />
       <div className="framed-panel__content">{children}</div>
     </Tag>
   );

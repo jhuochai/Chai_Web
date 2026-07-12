@@ -22,6 +22,15 @@
   clip-path: polygon(0 2%, 100% 0, 100% 98%, 98% 100%, 0 100%, 2% 3%);
 }
 
+.framed-panel--deco {
+  border-color: rgba(201, 162, 75, 0.4);
+}
+
+.framed-panel--deco::before {
+  border-color: rgba(201, 162, 75, 0.22);
+  inset: 10px;
+}
+
 .framed-panel__content {
   position: relative;
   z-index: 1;

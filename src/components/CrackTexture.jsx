@@ -24,6 +24,39 @@ export default function CrackTexture({ variant = 'corners', className = '' }) {
     );
   }
 
+  if (variant === 'deco') {
+    return (
+      <svg
+        className={`crack-texture crack-texture--deco ${className}`}
+        viewBox="0 0 400 500"
+        preserveAspectRatio="none"
+        aria-hidden="true"
+        focusable="false"
+      >
+        {/* Outer rectilinear border */}
+        <path
+          d="M18 18 L382 18 L382 482 L18 482 Z"
+          className="crack-line crack-line--thin"
+        />
+        {/* Inner nested border, Art Deco double-line frame */}
+        <path
+          d="M30 30 L370 30 L370 470 L30 470 Z"
+          className="crack-line crack-line--thin"
+        />
+        {/* Corner notches, all four corners */}
+        <path d="M18 46 L34 46 L34 18" className="crack-line" />
+        <path d="M382 46 L366 46 L366 18" className="crack-line" />
+        <path d="M18 454 L34 454 L34 482" className="crack-line" />
+        <path d="M382 454 L366 454 L366 482" className="crack-line" />
+        {/* Symmetric corner step-diamonds, the Art Deco signature detail */}
+        <path d="M18 18 L40 40" className="crack-line crack-line--thin" />
+        <path d="M382 18 L360 40" className="crack-line crack-line--thin" />
+        <path d="M18 482 L40 460" className="crack-line crack-line--thin" />
+        <path d="M382 482 L360 460" className="crack-line crack-line--thin" />
+      </svg>
+    );
+  }
+
   return (
     <svg
       className={`crack-texture crack-texture--corners ${className}`}
