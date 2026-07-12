@@ -1,9 +1,8 @@
 const en = {
   nav: {
     home: 'Home',
-    about: 'Experience',
-    portfolio: 'Work',
-    contact: 'Contact',
+    story: 'Story',
+    work: 'Work',
     cta: 'Contact Me',
     langToggleLabel: 'Switch to Chinese',
   },
@@ -182,14 +181,20 @@ const en = {
     credentialsLabel: 'Credentials',
     footerTag: 'Chai Yi Chen · Game Marketing Coordinator',
   },
+  scenes: {
+    scene0: { title: 'Scene 0 — Loading', note: 'Content coming in a later pass' },
+    scene2: { title: 'Scene 2 — Introduction', note: 'Content coming in a later pass' },
+    scene3: { title: 'Scene 3 — Career Tree', note: 'Content coming in a later pass' },
+    scene4: { title: 'Scene 4 — Interests', note: 'Content coming in a later pass' },
+    scene6: { title: 'Scene 6 — How This Was Built', note: 'Content coming in a later pass' },
+  },
 };
 
 const zh = {
   nav: {
     home: '首頁',
-    about: '個人經歷',
-    portfolio: '精選項目',
-    contact: '聯繫',
+    story: '故事',
+    work: '精選項目',
     cta: '聯繫我',
     langToggleLabel: '切換成英文',
   },
@@ -360,6 +365,13 @@ const zh = {
     timelineHeading: '經歷時間軸',
     credentialsLabel: '學歷與資格認證',
     footerTag: '柴怡辰 · 遊戲行銷企劃',
+  },
+  scenes: {
+    scene0: { title: '第零幕｜開場', note: '內容製作中' },
+    scene2: { title: '第二幕｜自我介紹', note: '內容製作中' },
+    scene3: { title: '第三幕｜生涯大樹', note: '內容製作中' },
+    scene4: { title: '第四幕｜興趣與長處', note: '內容製作中' },
+    scene6: { title: '第六幕｜製作過程', note: '內容製作中' },
   },
 };
 
