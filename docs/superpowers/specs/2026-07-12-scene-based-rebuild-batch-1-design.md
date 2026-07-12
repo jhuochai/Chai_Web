@@ -49,8 +49,11 @@ version; the gun/bullet/firework Scene 0 sequence is Batch 2) → `ClickSpark` w
 - **Nav**: upgrade to a glass-pill treatment. Desktop keeps inline scene links + language
   toggle + Contact Me. Mobile collapses to a glass hamburger button (Lucide-style crossfade
   icon rotation, ~300ms) opening a fullscreen glass overlay menu with staggered link entrance
-  (100ms, 150ms, 200ms, … per link). Nav links point to scene anchors (`#scene-1` etc.) instead
-  of the old `#hero`/`#about`/`#portfolio`/`#contact` ids.
+  (100ms, 150ms, 200ms, … per link). To avoid an 8-item nav (fails the "single line on
+  desktop" rule), the visible link set stays curated at three, re-pointed to the new anchors:
+  Home → `#scene-1`, Story → `#scene-3` (the career-tree scene carries the experience
+  narrative), Work → `#scene-5` (Portfolio). Scene 0/2/4/6/7 aren't in the nav itself; Scene 7
+  stays reachable via the Contact Me button as today.
 - **FramedPanel**: add a new frame treatment based on the Art Deco geometric reference the user
   shared (nested rectilinear gold linework, symmetric corner notches) — hand-authored original
   SVG, not traced from the reference image (itself a stock asset, used only as a style guide,
@@ -58,12 +61,12 @@ version; the gun/bullet/firework Scene 0 sequence is Batch 2) → `ClickSpark` w
   nameplate and echoed at Scene 7. It replaces today's minimalist corner-bracket variant for
   these two scenes; other frame usages (Portfolio cards) are untouched this batch.
 - **Asset pipeline**: the character/scene PNGs in `設計參考/` are 4–10MB each (uncompressed
-  exports). Before import, each image used in Batch 1 (currently only
-  `hero page_background.png`) is resized to realistic display dimensions and re-compressed
-  (WebP with PNG fallback where transparency isn't needed, quality-tuned) and moved into
-  `src/assets/scenes/`. Images used only by skeleton placeholders in this batch get the same
-  treatment. Images not yet used this batch (character sprites, ribbon/flower hotspot art) are
-  left in `設計參考/` untouched until their batch.
+  exports). Before import, each image used in Batch 1 (currently `hero page_background.png`
+  plus whichever full-bleed backgrounds the skeleton scenes use) is resized to a 2400px-long-edge
+  cap (full-bleed backgrounds need headroom above 1920px viewports, but not the original
+  export resolution) and re-compressed to WebP with a PNG fallback where transparency isn't
+  needed, and moved into `src/assets/scenes/`. Images not used by any Batch 1 scene (character
+  sprites, ribbon/flower hotspot art) are left in `設計參考/` untouched until their batch.
 
 ## Scene 1 — Hero (full build)
 
@@ -71,7 +74,9 @@ version; the gun/bullet/firework Scene 0 sequence is Batch 2) → `ClickSpark` w
   image, `object-fit: cover`, `background: black` fallback under it while it loads. No video,
   no crossfade switcher — the multi-source crossfade pattern from the reference prompt the user
   supplied is explicitly deferred to Scene 3's day/night toggle (Batch 2), not used here.
-- Badge pill above the headline (glass pill, small tag text).
+- Badge pill above the headline (glass pill), reusing the existing `t.title` string (Game
+  Marketing Coordinator / 遊戲行銷企劃) that already renders as small eyebrow text today — no
+  new copy, just a pill treatment instead of a bare mono label.
 - Nameplate: Art Deco geometric frame (see Global changes) wraps the name; today's
   VariableProximity hover effect on the name text carries over unchanged.
 - Positioning statement carries over unchanged (bilingual, with the existing emphasized-phrase
@@ -85,7 +90,10 @@ version; the gun/bullet/firework Scene 0 sequence is Batch 2) → `ClickSpark` w
 ## Scenes 0, 2, 3, 4, 6 — skeleton only this batch
 
 Each is `min-height: 100dvh` with its real background image showing (compressed per the asset
-pipeline above) and placeholder heading text in both languages. No interactivity yet:
+pipeline above). Placeholder heading follows one convention in both languages: the scene's
+working title plus a "content coming in a later pass" note (e.g. "Scene 3 — Career Tree /
+content coming soon" · "第三幕：生涯大樹 / 內容製作中"), styled as plain centered text, no
+attempt at final layout. No interactivity yet:
 
 - Scene 0: no gun/bullet/firework sequence yet (today's simple LoadingScreen splash stays as
   the actual loading experience; Scene 0 as a scroll-section is just a placeholder shell for
