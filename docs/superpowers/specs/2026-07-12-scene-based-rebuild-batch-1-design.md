@@ -61,12 +61,13 @@ version; the gun/bullet/firework Scene 0 sequence is Batch 2) → `ClickSpark` w
   nameplate and echoed at Scene 7. It replaces today's minimalist corner-bracket variant for
   these two scenes; other frame usages (Portfolio cards) are untouched this batch.
 - **Asset pipeline**: the character/scene PNGs in `設計參考/` are 4–10MB each (uncompressed
-  exports). Before import, each image used in Batch 1 (currently `hero page_background.png`
-  plus whichever full-bleed backgrounds the skeleton scenes use) is resized to a 2400px-long-edge
-  cap (full-bleed backgrounds need headroom above 1920px viewports, but not the original
-  export resolution) and re-compressed to WebP with a PNG fallback where transparency isn't
-  needed, and moved into `src/assets/scenes/`. Images not used by any Batch 1 scene (character
-  sprites, ribbon/flower hotspot art) are left in `設計參考/` untouched until their batch.
+  exports). Before import, each image actually used in Batch 1 (`hero page_background.png` and
+  `tree_day.png` — see the Scene 0/2/3/4/6 section below for why the other three skeleton
+  scenes have no background image this batch) is resized to a 2400px-long-edge cap (full-bleed
+  backgrounds need headroom above 1920px viewports, but not the original export resolution)
+  and re-compressed to WebP with a PNG fallback, moved into `src/assets/scenes/`. Images not
+  used by any Batch 1 scene (character sprites, ribbon/flower hotspot art, `trr_night.png`) are
+  left in `設計參考/` untouched until their batch.
 
 ## Scene 1 — Hero (full build)
 
@@ -89,19 +90,27 @@ version; the gun/bullet/firework Scene 0 sequence is Batch 2) → `ClickSpark` w
 
 ## Scenes 0, 2, 3, 4, 6 — skeleton only this batch
 
-Each is `min-height: 100dvh` with its real background image showing (compressed per the asset
-pipeline above). Placeholder heading follows one convention in both languages: the scene's
-working title plus a "content coming in a later pass" note (e.g. "Scene 3 — Career Tree /
-content coming soon" · "第三幕：生涯大樹 / 內容製作中"), styled as plain centered text, no
-attempt at final layout. No interactivity yet:
+All five share one `SceneSkeleton` component: `min-height: 100dvh`, centered placeholder
+heading in both languages following one convention (scene working title + a "content coming in
+a later pass" note, e.g. "Scene 3 — Career Tree / content coming soon" · "第三幕：生涯大樹 /
+內容製作中"), no attempt at final layout, no interactivity yet.
 
-- Scene 0: no gun/bullet/firework sequence yet (today's simple LoadingScreen splash stays as
-  the actual loading experience; Scene 0 as a scroll-section is just a placeholder shell for
-  now — see open question below).
-- Scene 2: no hanging-parallax character yet, just the background.
-- Scene 3: no walk transition, no day/night toggle, no ribbon/flower hotspots yet.
-- Scene 4: no interests content yet.
-- Scene 6: no "how this was built" content yet.
+**Background reality check (caught in spec self-review):** cross-referencing the asset
+manifest, only Scene 3 actually has dedicated background art ready (`tree_day.png` /
+`trr_night.png` — this batch just shows the day version statically, no toggle yet). Scenes 0,
+2, 4, and 6 have no background art of their own in `設計參考/` — only character/prop sprites
+meant for later batches' interactive treatment (`拿著槍的手.png`, `character_hanging upside
+down.png`, etc.), which are NOT used as backgrounds here since that would misrepresent them as
+finished. So:
+
+- Scene 0: plain `--void` background, no image. No gun/bullet/firework sequence yet (today's
+  simple `LoadingScreen` splash stays as the actual loading experience; Scene 0 as a
+  scroll-section is just an empty placeholder shell for now — see open question below).
+- Scene 2: plain `--void` background, no image yet (no hanging-parallax character this batch).
+- Scene 3: real background, `tree_day.png` (compressed per the asset pipeline), static, no
+  walk transition, no day/night toggle, no ribbon/flower hotspots yet.
+- Scene 4: plain `--void` background, no image yet (no interests content yet).
+- Scene 6: plain `--void` background, no image yet (no "how this was built" content yet).
 
 The goal of this batch for these five scenes is purely to confirm the 1700px content column,
 the vertical rhythm between scenes, and the scroll-anchor nav wiring — not to build their real
