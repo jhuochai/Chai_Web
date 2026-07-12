@@ -1,0 +1,190 @@
+.message-dialog__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  background: rgba(10, 8, 7, 0.72);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  animation: dialog-fade 0.25s var(--ease-reveal);
+}
+
+@keyframes dialog-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.message-dialog__wrap {
+  width: min(480px, 100%);
+  max-height: 88vh;
+  overflow-y: auto;
+  animation: dialog-rise 0.3s var(--ease-reveal);
+}
+
+@keyframes dialog-rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.message-dialog__panel {
+  position: relative;
+  padding: clamp(28px, 4vw, 40px);
+  background: var(--void-card);
+}
+
+.message-dialog__close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  border-radius: 999px;
+  background: transparent;
+  border: 1px solid var(--hairline);
+  color: var(--parchment-dim);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.message-dialog__close:hover,
+.message-dialog__close:focus-visible {
+  color: var(--gold-bright);
+  border-color: var(--gold-dim);
+}
+
+.message-dialog__panel h3 {
+  font-size: 24px;
+  padding-right: 32px;
+}
+
+.message-dialog__intro {
+  margin-top: 12px;
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: var(--parchment-faint);
+}
+
+.message-dialog__field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.message-dialog__field label {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--parchment-faint);
+}
+
+.message-dialog__field input,
+.message-dialog__field textarea {
+  font-family: var(--body);
+  font-size: 14.5px;
+  color: var(--parchment);
+  background: var(--void);
+  border: 1px solid var(--hairline);
+  padding: 11px 14px;
+  resize: vertical;
+}
+
+.message-dialog__field input::placeholder,
+.message-dialog__field textarea::placeholder {
+  color: var(--parchment-faint);
+}
+
+.message-dialog__field input:focus-visible,
+.message-dialog__field textarea:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 1px;
+  border-color: var(--gold-dim);
+}
+
+.message-dialog__error {
+  margin-top: 14px;
+  font-size: 13px;
+  color: #e08a6a;
+}
+
+.message-dialog__actions {
+  margin-top: 26px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.message-dialog__cancel {
+  border-radius: 999px;
+  background: transparent;
+  border: 1px solid var(--hairline);
+  color: var(--parchment-dim);
+  font-family: var(--mono);
+  font-size: 12.5px;
+  padding: 11px 20px;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.message-dialog__cancel:hover,
+.message-dialog__cancel:focus-visible {
+  color: var(--parchment);
+  border-color: var(--parchment-faint);
+}
+
+.message-dialog__submit {
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  letter-spacing: 0.03em;
+  color: var(--void);
+  background: var(--gold);
+  border: 1px solid var(--gold);
+  padding: 11px 22px;
+  transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+.message-dialog__submit:hover,
+.message-dialog__submit:focus-visible {
+  background: var(--gold-bright);
+}
+
+.message-dialog__submit:active {
+  transform: translateY(1px) scale(0.98);
+}
+
+.message-dialog__success h3 {
+  margin-bottom: 12px;
+}
+
+.message-dialog__success p {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--parchment-dim);
+  margin-bottom: 22px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .message-dialog__backdrop,
+  .message-dialog__wrap {
+    animation: none;
+  }
+}

@@ -1,0 +1,126 @@
+.nav {
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline: 0;
+  z-index: 40;
+  height: var(--nav-h);
+  display: flex;
+  align-items: center;
+  background: rgba(21, 18, 16, 0.22);
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+  border-bottom: 1px solid transparent;
+  transition: background-color 0.4s var(--ease-reveal), border-color 0.4s var(--ease-reveal), backdrop-filter 0.4s var(--ease-reveal);
+}
+
+.nav--solid {
+  background: rgba(21, 18, 16, 0.82);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  border-bottom: 1px solid var(--hairline);
+}
+
+.nav__inner {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+}
+
+.nav__mark {
+  font-family: var(--display);
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--parchment);
+  text-decoration: none;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  white-space: nowrap;
+}
+
+.nav__mark-sub {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  color: var(--parchment-faint);
+  font-weight: 400;
+}
+
+.nav__links {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  flex: 1;
+  justify-content: center;
+}
+
+.nav__links a {
+  text-decoration: none;
+  color: var(--parchment-dim);
+  font-size: 14.5px;
+  letter-spacing: 0.01em;
+  position: relative;
+  padding-block: 4px;
+  white-space: nowrap;
+  transition: color 0.25s ease;
+}
+
+.nav__links a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 100%;
+  bottom: 0;
+  height: 1px;
+  background: var(--gold);
+  transition: right 0.3s var(--ease-reveal);
+}
+
+.nav__links a:hover,
+.nav__links a:focus-visible {
+  color: var(--parchment);
+}
+
+.nav__links a:hover::after,
+.nav__links a:focus-visible::after {
+  right: 0;
+}
+
+.nav__actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+}
+
+.nav__lang {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.05em;
+  padding: 8px 12px;
+}
+
+.nav__cta {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  padding: 10px 22px;
+}
+
+@media (max-width: 860px) {
+  .nav__links {
+    display: none;
+  }
+  .nav__mark-sub {
+    display: none;
+  }
+}

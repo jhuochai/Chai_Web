@@ -1,0 +1,156 @@
+.portfolio {
+  position: relative;
+  padding-block: clamp(100px, 12vh, 150px) clamp(80px, 10vh, 120px);
+  background:
+    radial-gradient(45% 35% at 12% 100%, rgba(74, 124, 158, 0.08), transparent 70%),
+    var(--void);
+}
+
+.portfolio__head {
+  max-width: 62ch;
+  margin-bottom: 40px;
+}
+
+.portfolio__head h2 {
+  font-size: clamp(30px, 3vw, 42px);
+  margin-bottom: 16px;
+}
+
+.portfolio__head p {
+  font-size: 15.5px;
+  color: var(--parchment-dim);
+  line-height: 1.7;
+}
+
+.portfolio__gallery-wrap {
+  position: relative;
+  height: clamp(420px, 46vw, 600px);
+  width: 100%;
+  margin-bottom: clamp(56px, 7vw, 88px);
+}
+
+.portfolio__cases {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 28px;
+  margin-bottom: 64px;
+}
+
+.case-panel {
+  padding: clamp(22px, 2.4vw, 30px);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  height: 100%;
+}
+
+.case-panel__tag {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+  width: fit-content;
+}
+
+.case-panel__title {
+  font-size: clamp(20px, 1.8vw, 25px);
+}
+
+.case-panel__scenario {
+  font-size: 14.5px;
+  line-height: 1.7;
+  color: var(--parchment-dim);
+}
+
+.case-panel__row {
+  border-top: 1px solid var(--hairline-soft);
+  padding-top: 10px;
+}
+
+.case-panel__row-label {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--parchment-faint);
+}
+
+.case-panel__row p {
+  margin-top: 6px;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--parchment-dim);
+}
+
+.case-panel__result {
+  color: var(--cyan) !important;
+  font-family: var(--mono);
+  font-size: 12.5px !important;
+}
+
+.portfolio__player {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  padding-top: 40px;
+  border-top: 1px solid var(--hairline-soft);
+}
+
+.portfolio__player-icon {
+  flex-shrink: 0;
+  color: var(--cyan);
+  border: 1px solid rgba(63, 193, 214, 0.35);
+  padding: 14px;
+}
+
+.portfolio__player h3 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.portfolio__player p {
+  font-size: 14.5px;
+  line-height: 1.7;
+  color: var(--parchment-dim);
+  max-width: 60ch;
+}
+
+.portfolio__player-genres {
+  margin-top: 6px;
+  font-size: 13px !important;
+  color: var(--parchment-faint) !important;
+}
+
+.portfolio__player-games {
+  margin-top: 18px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.portfolio__player-games li {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  border: 1px solid var(--hairline);
+  padding: 8px 14px;
+  font-size: 13px;
+  color: var(--parchment);
+}
+
+.portfolio__player-games em {
+  font-style: normal;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--gold);
+}
+
+@media (max-width: 900px) {
+  .portfolio__cases {
+    grid-template-columns: 1fr;
+  }
+  .portfolio__gallery-wrap {
+    height: clamp(340px, 70vw, 480px);
+  }
+}

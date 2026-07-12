@@ -1,0 +1,71 @@
+.framed-panel {
+  position: relative;
+  border: 1px solid var(--gold-dim);
+  background: linear-gradient(155deg, rgba(201, 162, 75, 0.06), transparent 60%), var(--void-card);
+  isolation: isolate;
+}
+
+.framed-panel::before {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border: 1px solid rgba(201, 162, 75, 0.16);
+  pointer-events: none;
+}
+
+.framed-panel--wild {
+  border-color: rgba(201, 162, 75, 0.28);
+  clip-path: polygon(0 2%, 100% 0, 100% 98%, 98% 100%, 0 100%, 2% 3%);
+}
+
+.framed-panel--wild::before {
+  clip-path: polygon(0 2%, 100% 0, 100% 98%, 98% 100%, 0 100%, 2% 3%);
+}
+
+.framed-panel__content {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+}
+
+.crack-texture {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.crack-line {
+  fill: none;
+  stroke: var(--gold);
+  stroke-width: 1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.4;
+  transition: stroke 0.5s var(--ease-reveal), opacity 0.5s var(--ease-reveal), filter 0.5s var(--ease-reveal);
+}
+
+.crack-line--thin {
+  stroke-width: 0.75;
+  opacity: 0.3;
+}
+
+.framed-panel--wild .crack-line {
+  stroke-width: 1.1;
+  opacity: 0.28;
+}
+
+.framed-panel:hover .crack-line,
+.framed-panel:focus-within .crack-line {
+  stroke: var(--cyan);
+  opacity: 0.85;
+  filter: drop-shadow(0 0 3px rgba(63, 193, 214, 0.65));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .crack-line {
+    transition: none;
+  }
+}

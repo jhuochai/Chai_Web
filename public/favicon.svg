@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
+  <rect width="48" height="48" fill="#151210" />
+  <rect x="3" y="3" width="42" height="42" fill="none" stroke="#c9a24b" stroke-width="1.5" />
+  <text x="24" y="31" font-family="Georgia, serif" font-size="22" fill="#e0bc6a" text-anchor="middle">柴</text>
+</svg>

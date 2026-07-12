@@ -1,0 +1,111 @@
+.closing {
+  position: relative;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: var(--void);
+  padding-block: 100px 40px;
+}
+
+.closing__fog {
+  position: absolute;
+  inset: -15%;
+  background:
+    radial-gradient(45% 50% at 50% 20%, rgba(201, 162, 75, 0.16), transparent 70%),
+    radial-gradient(35% 40% at 15% 90%, rgba(74, 124, 158, 0.14), transparent 70%),
+    radial-gradient(30% 35% at 90% 85%, rgba(110, 139, 61, 0.12), transparent 70%);
+  animation: fog-drift 30s ease-in-out infinite alternate;
+}
+
+.closing__content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 56px;
+}
+
+.closing__statement {
+  max-width: 24ch;
+  font-size: clamp(28px, 3.6vw, 48px);
+  line-height: 1.35;
+  font-style: italic;
+  color: var(--parchment);
+}
+
+.closing__panel {
+  padding: clamp(20px, 3vw, 32px) clamp(28px, 4vw, 48px);
+}
+
+.closing__links {
+  display: flex;
+  gap: clamp(24px, 4vw, 56px);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.closing__links a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--parchment-dim);
+  font-family: var(--mono);
+  font-size: 13.5px;
+  letter-spacing: 0.02em;
+  transition: color 0.2s ease;
+}
+
+.closing__links a:hover,
+.closing__links a:focus-visible {
+  color: var(--gold-bright);
+}
+
+.closing__links-pending {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--parchment-faint);
+  font-family: var(--mono);
+  font-size: 13.5px;
+  letter-spacing: 0.02em;
+}
+
+.closing__message-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: 0.03em;
+  padding: 13px 28px;
+}
+
+.closing__foot {
+  position: relative;
+  z-index: 1;
+  margin-top: 64px;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  color: var(--parchment-faint);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .closing__fog {
+    animation: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .closing__links {
+    flex-direction: column;
+    gap: 20px;
+    align-items: flex-start;
+  }
+}
