@@ -30,7 +30,7 @@ export default function Hero() {
 
       <div className="hero__content container">
         <motion.span
-          className="hero__badge btn-glass btn-glass--ghost"
+          className="hero__badge btn-glass btn-glass--ghost btn-glass--static"
           initial={reduce ? false : { opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}

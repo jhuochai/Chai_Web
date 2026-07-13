@@ -217,6 +217,16 @@ button {
   color: var(--parchment);
 }
 
+/* Non-interactive glass elements (decorative pills) keep the glass look
+   without the button hover feedback. */
+.btn-glass--static:hover,
+.btn-glass--static:focus-visible {
+  background: rgba(237, 227, 208, 0.03);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.14);
+  transform: none;
+  color: var(--parchment-dim);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .btn-glass {
     transition: none;

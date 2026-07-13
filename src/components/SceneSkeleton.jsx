@@ -13,7 +13,7 @@ export default function SceneSkeleton({ id, title, note, backgroundUrl }) {
       style={backgroundUrl ? { backgroundImage: `url(${backgroundUrl})` } : undefined}
     >
       <div className="scene-skeleton__scrim" aria-hidden="true" />
-      <div className="scene-skeleton__content">
+      <div className="scene-skeleton__content container">
         <h2>{title}</h2>
         <p>{note}</p>
       </div>

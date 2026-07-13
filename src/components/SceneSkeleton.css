@@ -15,11 +15,12 @@
   background: rgba(21, 18, 16, 0.55);
 }
 
+/* Horizontal sizing comes from the shared .container class so the
+   skeletons rehearse the same 1700px content column as real scenes. */
 .scene-skeleton__content {
   position: relative;
   z-index: 1;
   text-align: center;
-  padding-inline: 24px;
 }
 
 .scene-skeleton__content h2 {
