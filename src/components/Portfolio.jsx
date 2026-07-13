@@ -22,7 +22,7 @@ export default function Portfolio() {
   );
 
   return (
-    <section id="portfolio" className="portfolio">
+    <section id="scene-5" className="portfolio">
       <div className="container">
         <RevealSection as="div" className="portfolio__head">
           <h2>{heading}</h2>
