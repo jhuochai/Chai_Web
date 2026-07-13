@@ -1,8 +1,9 @@
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import FramedPanel from './FramedPanel';
 import VariableProximity from './VariableProximity';
 import { useLanguage } from '../i18n/LanguageContext';
+import heroBackground from '../assets/scenes/hero-background.webp';
 import './Hero.css';
 
 const nameRise = {
@@ -14,105 +15,39 @@ const nameRise = {
   }),
 };
 
-const FADE_MS = 500;
-const FADE_OUT_THRESHOLD_S = 0.55;
-const LOOP_RESTART_DELAY_MS = 100;
-
 export default function Hero() {
   const reduce = useReducedMotion();
   const { lang, t } = useLanguage();
-
-  const videoRef = useRef(null);
   const nameWrapRef = useRef(null);
-  const rafIdRef = useRef(null);
-  const opacityRef = useRef(0);
-  const fadingOutRef = useRef(false);
-
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return undefined;
-
-    const animateOpacity = (to, duration) => {
-      if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
-      const from = opacityRef.current;
-      const start = performance.now();
-      const step = (now) => {
-        const elapsed = now - start;
-        const progress = duration === 0 ? 1 : Math.min(elapsed / duration, 1);
-        const value = from + (to - from) * progress;
-        opacityRef.current = value;
-        video.style.opacity = String(value);
-        rafIdRef.current = progress < 1 ? requestAnimationFrame(step) : null;
-      };
-      rafIdRef.current = requestAnimationFrame(step);
-    };
-
-    const handlePlaying = () => {
-      fadingOutRef.current = false;
-      animateOpacity(1, FADE_MS);
-    };
-
-    const handleTimeUpdate = () => {
-      if (fadingOutRef.current) return;
-      if (!video.duration || Number.isNaN(video.duration)) return;
-      const remaining = video.duration - video.currentTime;
-      if (remaining <= FADE_OUT_THRESHOLD_S) {
-        fadingOutRef.current = true;
-        animateOpacity(0, FADE_MS);
-      }
-    };
-
-    const handleEnded = () => {
-      if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
-      opacityRef.current = 0;
-      video.style.opacity = '0';
-      window.setTimeout(() => {
-        video.currentTime = 0;
-        video.play().catch(() => {});
-      }, LOOP_RESTART_DELAY_MS);
-    };
-
-    video.addEventListener('playing', handlePlaying);
-    video.addEventListener('timeupdate', handleTimeUpdate);
-    video.addEventListener('ended', handleEnded);
-
-    return () => {
-      video.removeEventListener('playing', handlePlaying);
-      video.removeEventListener('timeupdate', handleTimeUpdate);
-      video.removeEventListener('ended', handleEnded);
-      if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
-    };
-  }, []);
 
   return (
-    <section id="hero" className="hero">
+    <section id="scene-1" className="hero">
       <div className="hero__bg" aria-hidden="true">
-        {/* TODO: drop the real hero clip in as /media/hero-loop.mp4 + .webm.
-            The crossfade-loop above (playing / timeupdate / ended) picks it
-            up automatically once a real source loads; loop is handled in
-            JS on purpose (native loop never fires 'ended'). */}
-        <video ref={videoRef} className="hero__video" autoPlay muted playsInline style={{ opacity: 0 }}>
-          <source src="/media/hero-loop.webm" type="video/webm" />
-          <source src="/media/hero-loop.mp4" type="video/mp4" />
-        </video>
+        <img src={heroBackground} alt="" className="hero__bg-image" />
         <div className="hero__fog" />
         <div className="hero__scrim" />
       </div>
 
       <div className="hero__content container">
-        <FramedPanel as="div" variant="corners" className="hero__nameplate">
+        <motion.span
+          className="hero__badge btn-glass btn-glass--ghost"
+          initial={reduce ? false : { opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+        >
+          {t.title}
+        </motion.span>
+
+        <FramedPanel as="div" variant="deco" className="hero__nameplate">
           <motion.div
             initial={reduce ? false : 'hidden'}
             animate="show"
             variants={{ show: { transition: { staggerChildren: 0.08 } } }}
           >
-            <motion.p className="hero__title eyebrow" variants={nameRise} custom={0}>
-              {t.title}
-            </motion.p>
             <motion.h1
               className={`hero__name ${lang === 'en' ? 'hero__name--latin' : ''}`}
               variants={nameRise}
-              custom={1}
+              custom={0}
             >
               <span ref={nameWrapRef} className="hero__name-proximity">
                 <VariableProximity
@@ -125,7 +60,7 @@ export default function Hero() {
                 />
               </span>
             </motion.h1>
-            <motion.p className="hero__name-en" variants={nameRise} custom={2}>
+            <motion.p className="hero__name-en" variants={nameRise} custom={1}>
               {t.name.sub}
             </motion.p>
           </motion.div>
@@ -141,6 +76,19 @@ export default function Hero() {
           <em>{t.positioning.emphasis}</em>
           {t.positioning.after}
         </motion.p>
+
+        <motion.ul
+          className="hero__stats"
+          initial={reduce ? false : { opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 1.3, ease: [0.16, 1, 0.3, 1] }}
+        >
+          {t.highlights.map((h) => (
+            <li key={h.label}>
+              {h.value} {h.label}
+            </li>
+          ))}
+        </motion.ul>
       </div>
     </section>
   );
