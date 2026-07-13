@@ -12,7 +12,7 @@ export default function Contact() {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   return (
-    <section id="contact" className="closing">
+    <section id="scene-7" className="closing">
       <div className="closing__fog" aria-hidden="true" />
       <div className="closing__content container">
         <RevealSection as="div">
@@ -20,7 +20,7 @@ export default function Contact() {
         </RevealSection>
 
         <RevealSection as="div" delay={0.1}>
-          <FramedPanel variant="corners" className="closing__panel">
+          <FramedPanel variant="deco" className="closing__panel">
             <ul className="closing__links">
               <li>
                 <a href={`mailto:${contact.email}`}>

@@ -24,3 +24,14 @@ if (!window.ResizeObserver) {
     disconnect() {}
   };
 }
+
+// jsdom doesn't implement IntersectionObserver; framer-motion and RevealSection
+// use it and will throw on mount without this.
+if (!window.IntersectionObserver) {
+  window.IntersectionObserver = class IntersectionObserver {
+    constructor() {}
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  };
+}
