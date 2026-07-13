@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useScroll, useMotionValueEvent } from 'motion/react';
 import { Globe, List, X } from '@phosphor-icons/react';
 import { useLanguage } from '../i18n/LanguageContext';
@@ -8,6 +8,10 @@ import './Nav.css';
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  // Stable identity: MobileMenu's focus/scroll-lock effect depends on
+  // onClose, so a fresh closure per render would re-arm it (and re-steal
+  // focus) on every Nav re-render while the menu is open.
+  const closeMenu = useCallback(() => setMenuOpen(false), []);
   const { scrollY } = useScroll();
   const { lang, toggleLang, t } = useLanguage();
 
@@ -65,7 +69,7 @@ export default function Nav() {
           </button>
         </div>
       </div>
-      <MobileMenu open={menuOpen} links={links} onClose={() => setMenuOpen(false)} />
+      <MobileMenu open={menuOpen} links={links} onClose={closeMenu} />
     </header>
   );
 }
