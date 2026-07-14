@@ -26,7 +26,7 @@ const en = {
     {
       key: 'multitasking',
       label: 'Multitasking',
-      desc: 'Ran two product communities, 貓咲造咖 and 暗棋, in parallel without dropping either.',
+      desc: 'Ran two product communities, 貓咪造咖 and 暗棋, in parallel without dropping either.',
     },
     {
       key: 'creativity',
@@ -36,18 +36,107 @@ const en = {
   ],
   personalityBlurb:
     "Right-brain by nature, creativity and instinct are what actually drive the work. Data analysis was never the core strength, it's the tool I use to check whether an instinct actually landed. I'm a deep-in player first, and an executor who moves fast and recalibrates as I go.",
+  intro: {
+    eyebrow: 'Nice to meet you',
+  },
+  careerTree: {
+    eyebrow: 'The Career Tree',
+    heading: 'Every branch holds a story',
+    intro:
+      'By day the tree carries the work; by night it blooms with the games I play. Flip the sky, then open whatever catches your eye.',
+    dayLabel: 'Day',
+    nightLabel: 'Night',
+    toggleToNight: 'Switch to night',
+    toggleToDay: 'Switch to day',
+    dayHint: 'Pull a ribbon to open a work chapter',
+    nightHint: 'Pick a flower to see what I play',
+    closeLabel: 'Close',
+    ribbons: [
+      {
+        id: 'gamesofa',
+        org: 'Gamesofa 慧邦科技',
+        role: 'Game Marketing Intern',
+        period: 'Mar 2026 – Present',
+        summary: 'Social growth, ad audience testing, and KOC partnerships for 貓咪造咖 and 神來也暗棋.',
+        points: [
+          'Grew IG followers from 18k to 30k (+67%), owning content planning, posting, and community replies solo across FB, IG, and Threads.',
+          "Ran a NT$10,000 ad test for 暗棋 using Meta's CPI/CPM/CTR/CVR/IR data plus AI-assisted analysis to validate a new audience profile, and pulled the campaign the moment it underperformed.",
+          'Sourced and closed 3 KOC partnerships, owning deal terms and script outlines end to end.',
+          'Produced 24 cross-format assets and 26 shot-and-shipped scripts solo, using Canva, GPT, and Gemini.',
+        ],
+      },
+      {
+        id: 'ntpu',
+        org: 'National Taipei University',
+        role: 'Part-time Research Assistant',
+        period: 'Sep 2024 – Jan 2026',
+        summary: 'Course materials and digital content in a fully English-speaking workplace.',
+        points: [
+          'Organized course materials and managed digital content in an all-English work environment.',
+          'Supported document production and coordination, keeping information accurate and delivered on schedule.',
+        ],
+      },
+      {
+        id: 'actg',
+        org: 'ACT Genomics',
+        role: 'HR Intern',
+        period: 'Jul – Sep 2024',
+        summary: 'Three months of high-speed, zero-error people operations.',
+        points: [
+          'Coordinated recruiting and interviews: ~20% screening pass rate for sales reps, 60% offer rate for biotech engineers.',
+          'Digitized 200 personnel files in 3 weeks with a 0% error rate.',
+          'Ran 20 exit interviews (75% response rate) and turned them into an analysis report.',
+          'Helped update gender-equality workplace policy and training materials, and led the Intern Gathering Party from concept to event day.',
+        ],
+      },
+      {
+        id: 'eelin',
+        org: 'Eelin Entertainment',
+        role: 'Professional Model',
+        period: 'Jul 2022 – Dec 2024',
+        summary: 'Interpreting brand concepts in front of the camera.',
+        points: [
+          'Translated brand concepts into visual expression — the same instinct marketing needs for brand image and visual storytelling.',
+        ],
+      },
+    ],
+    flowers: [
+      {
+        id: 'mlbb',
+        name: 'Mobile Legends: Bang Bang',
+        note: 'Grandmaster rank',
+        desc: 'The main ranked grind. Understanding why players tilt, queue again, and spend is field research you cannot fake.',
+      },
+      {
+        id: 'idv',
+        name: 'Identity V',
+        note: 'Survivor Rank 5',
+        desc: 'Asymmetric survival horror — reading the other side\'s intent in seconds is the whole game.',
+      },
+      {
+        id: 'stardew',
+        name: 'Stardew Valley',
+        desc: 'The cozy counterweight. Long-term progression loops and seasonal events, studied one harvest at a time.',
+      },
+      {
+        id: 'shelf',
+        name: 'Also on the shelf',
+        desc: 'League of Legends, Valorant, Rainbow Six Siege, GTA, Minecraft — spanning MOBA, FPS, survival-social, and sims.',
+      },
+    ],
+  },
   experience: [
     {
-      org: '神來也',
+      org: '慧邦科技',
       role: 'Marketing Intern',
       period: 'Mar 2026 - Present',
-      products: ['貓咲造咖', '暗棋'],
+      products: ['貓咪造咖', '暗棋'],
       points: [
         'Grew IG followers from 18k to 30k (+67%), owning content planning, posting, and community replies solo across FB, IG, and Threads.',
         "Ran a NT$10,000 ad test for 暗棋 using Meta's CPI/CPM/CTR/CVR/IR data plus AI-assisted analysis to validate a new audience profile, and pulled the campaign the moment it underperformed to protect budget.",
         'Sourced and closed 3 KOC partnerships, owning deal terms and script outlines end to end.',
         'Produced 24 cross-format assets and 26 shot-and-shipped scripts solo, using Canva, GPT, and Gemini.',
-        "Led the concept and rollout for 貓咲造咖's 30k-follower IG celebration campaign.",
+        "Led the concept and rollout for 貓咪造咖's 30k-follower IG celebration campaign.",
       ],
     },
   ],
@@ -114,7 +203,7 @@ const en = {
     cases: [
       {
         id: 'catcafe',
-        title: '貓咲造咖',
+        title: '貓咪造咖',
         tag: 'Community Growth',
         scenario: 'A newly launched title needed its brand voice and community built from zero.',
         approach:
@@ -180,11 +269,9 @@ const en = {
     timelineHeading: 'Experience Timeline',
     credentialsLabel: 'Credentials',
     footerTag: 'Chai Yi Chen · Game Marketing Coordinator',
+    enterLabel: 'Enter the site',
   },
   scenes: {
-    scene0: { title: 'Scene 0 — Loading', note: 'Content coming in a later pass' },
-    scene2: { title: 'Scene 2 — Introduction', note: 'Content coming in a later pass' },
-    scene3: { title: 'Scene 3 — Career Tree', note: 'Content coming in a later pass' },
     scene4: { title: 'Scene 4 — Interests', note: 'Content coming in a later pass' },
     scene6: { title: 'Scene 6 — How This Was Built', note: 'Content coming in a later pass' },
   },
@@ -217,7 +304,7 @@ const zh = {
     {
       key: 'multitasking',
       label: '多工',
-      desc: '同時經營貓咲造咖與暗棋兩款產品的社群，多線並行不掉球。',
+      desc: '同時經營貓咪造咖與暗棋兩款產品的社群，多線並行不掉球。',
     },
     {
       key: 'creativity',
@@ -227,18 +314,106 @@ const zh = {
   ],
   personalityBlurb:
     '自認是右腦型人才，創意與直覺是驅動一切的引擎，數據分析從來不是強項，而是拿來驗證直覺有沒有打中的工具。身分是深度玩家，也是先動手再回頭校準方向的執行者。',
+  intro: {
+    eyebrow: '很高興認識你',
+  },
+  careerTree: {
+    eyebrow: '生涯大樹',
+    heading: '每一根枝枒，都掛著一段故事',
+    intro: '白天，樹上掛著我的工作經歷；入夜後，開出我常玩的遊戲。切換天色，再點開你感興趣的那一段。',
+    dayLabel: '白天',
+    nightLabel: '夜晚',
+    toggleToNight: '切換到夜晚',
+    toggleToDay: '切換到白天',
+    dayHint: '拉開一條絲帶，展開一段工作經歷',
+    nightHint: '點一朵花，看看我常玩的遊戲',
+    closeLabel: '關閉',
+    ribbons: [
+      {
+        id: 'gamesofa',
+        org: '慧邦科技 Gamesofa',
+        role: '遊戲行銷企劃實習生',
+        period: '2026/03 – 至今',
+        summary: '負責貓咪造咖與神來也暗棋：社群成長、廣告受眾測試、KOC 合作。',
+        points: [
+          '獨立負責 FB／IG／Threads 三平台內容規劃、發文與留言互動，帶動 IG 粉絲數自 1.8 萬成長至 3 萬，成長幅度達 67%。',
+          '獲配 1 萬元預算執行暗棋廣告測試，運用 Meta 後台數據（CPI、CPM、CTR、CVR、IR）搭配 AI 輔助分析驗證新受眾輪廓，成效未達預期時即時終止投放。',
+          '接洽並促成 3 組 KOC 合作，獨立負責條件溝通與腳本大綱撰寫。',
+          '運用 Canva、GPT、Gemini 獨立產出 24 件跨形式行銷素材，撰寫 26 份腳本，皆實際拍攝上線。',
+        ],
+      },
+      {
+        id: 'ntpu',
+        org: '國立臺北大學',
+        role: '兼任研究助理',
+        period: '2024/09 – 2026/01',
+        summary: '在全英語工作環境中，把教材與文件打理得清楚準時。',
+        points: [
+          '於全英語工作環境中協助整理課程教材、管理數位內容。',
+          '支援文件製作與協調工作，確保資訊清晰準確、如期交付。',
+        ],
+      },
+      {
+        id: 'actg',
+        org: '行動基因生技',
+        role: '人資實習生',
+        period: '2024/07 – 2024/09',
+        summary: '三個月的高效零失誤人資實戰。',
+        points: [
+          '統籌招募與面試安排：業務代表篩選成功率約 20%、生技工程師錄取率 60%。',
+          '3 週內完成 200 份人員資料數位化，錯誤率 0%。',
+          '執行 20 份離職訪談（回收率 75%）並製作分析報告。',
+          '協助性別工作平等法規更新與教材製作，並主導 Intern Gathering Party 活動企劃到落地。',
+        ],
+      },
+      {
+        id: 'eelin',
+        org: 'Eelin Entertainment 伊林娛樂',
+        role: '專業模特',
+        period: '2022/07 – 2024/12',
+        summary: '在鏡頭前詮釋品牌概念。',
+        points: [
+          '詮釋品牌概念、傳達視覺訊息——與行銷所需的品牌形象理解與視覺傳達直接相通。',
+        ],
+      },
+    ],
+    flowers: [
+      {
+        id: 'mlbb',
+        name: '激鬥峽谷',
+        note: '宗師段位',
+        desc: '主力排位場。理解玩家為什麼上頭、為什麼再排一場、為什麼課金——這種田野調查沒辦法用報告補。',
+      },
+      {
+        id: 'idv',
+        name: '第五人格',
+        note: '求生五階',
+        desc: '非對稱生存對抗，幾秒內讀懂對面的意圖就是這個遊戲的全部。',
+      },
+      {
+        id: 'stardew',
+        name: '星露谷物語',
+        desc: '療癒系的另一端。長線養成循環與季節活動，一個收成季一個收成季地研究。',
+      },
+      {
+        id: 'shelf',
+        name: '書架上還有',
+        desc: '英雄聯盟、Valorant、虹彩六號、GTA、Minecraft——橫跨 MOBA、FPS、生存社交與模擬經營。',
+      },
+    ],
+  },
   experience: [
     {
-      org: '神來也',
+      org: '慧邦科技',
       role: '行銷企劃實習生',
       period: '2026/03 - 至今',
-      products: ['貓咲造咖', '暗棋'],
+      products: ['貓咪造咖', '暗棋'],
       points: [
         '獨立負責 FB／IG／Threads 三平台內容規劃、發文與留言互動，帶動 IG 粉絲數自 1.8 萬成長至 3 萬，成長幅度達 67%。',
         '獲配 1 萬元預算執行暗棋廣告測試，運用 Meta 後台數據（CPI、CPM、CTR、CVR、IR）搭配 AI 輔助分析驗證新受眾輪廓，成效未達預期時即時終止投放，控管預算風險。',
         '接洽並促成 3 組 KOC 合作，獨立負責條件溝通與腳本大綱撰寫。',
         '運用 Canva、GPT、Gemini 獨立產出 24 件跨形式行銷素材，撰寫 26 份腳本，皆實際拍攝上線。',
-        '主導貓咲造咖 IG 三萬粉絲慶祝活動的企劃與執行，統籌視覺方向與社群宣傳排程。',
+        '主導貓咪造咖 IG 三萬粉絲慶祝活動的企劃與執行，統籌視覺方向與社群宣傳排程。',
       ],
     },
   ],
@@ -304,7 +479,7 @@ const zh = {
     cases: [
       {
         id: 'catcafe',
-        title: '貓咲造咖',
+        title: '貓咪造咖',
         tag: '社群成長',
         scenario: '新品上線初期，社群聲量與品牌調性都要從零建立。',
         approach: '獨立主導三平台內容企劃與排程，並主導 IG 三萬粉絲慶祝活動的企劃與執行。',
@@ -365,11 +540,9 @@ const zh = {
     timelineHeading: '經歷時間軸',
     credentialsLabel: '學歷與資格認證',
     footerTag: '柴怡辰 · 遊戲行銷企劃',
+    enterLabel: '進入網站',
   },
   scenes: {
-    scene0: { title: '第零幕｜開場', note: '內容製作中' },
-    scene2: { title: '第二幕｜自我介紹', note: '內容製作中' },
-    scene3: { title: '第三幕｜生涯大樹', note: '內容製作中' },
     scene4: { title: '第四幕｜興趣與長處', note: '內容製作中' },
     scene6: { title: '第六幕｜製作過程', note: '內容製作中' },
   },
