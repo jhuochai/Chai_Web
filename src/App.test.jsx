@@ -11,11 +11,10 @@ vi.mock('./components/CircularGallery', () => ({
 }));
 
 describe('App', () => {
-  it('renders all 8 scenes in order', () => {
+  it('renders scenes 1-7 in order (scene 0 is the loading overlay, not a section)', () => {
     const { container } = render(<App />);
     const ids = Array.from(container.querySelectorAll('main > section')).map((el) => el.id);
     expect(ids).toEqual([
-      'scene-0',
       'scene-1',
       'scene-2',
       'scene-3',

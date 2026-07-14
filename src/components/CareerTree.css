@@ -1,0 +1,254 @@
+.career-tree {
+  position: relative;
+  padding-block: clamp(48px, 8vh, 120px) 0;
+}
+
+/* --- walking pass --- */
+
+.career-tree__walk {
+  position: relative;
+  height: clamp(220px, 32vh, 340px);
+  overflow: hidden;
+}
+
+.career-tree__walker {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: clamp(150px, 14vw, 240px);
+  height: auto;
+  user-select: none;
+  filter: drop-shadow(0 16px 40px rgba(0, 0, 0, 0.5));
+  animation: walk-bob 0.7s ease-in-out infinite alternate;
+}
+
+@keyframes walk-bob {
+  from {
+    margin-bottom: 0;
+  }
+  to {
+    margin-bottom: 7px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .career-tree__walker {
+    animation: none;
+    left: 40%;
+  }
+}
+
+/* --- heading --- */
+
+.career-tree__heading {
+  text-align: center;
+  margin-bottom: clamp(28px, 4vh, 56px);
+}
+
+.career-tree__heading h2 {
+  margin-top: 12px;
+  font-size: clamp(30px, 3.4vw, 48px);
+}
+
+.career-tree__intro {
+  margin: 16px auto 0;
+  max-width: 56ch;
+  color: var(--parchment-dim);
+  line-height: 1.75;
+}
+
+/* --- tree stage --- */
+
+.career-tree__stage {
+  position: relative;
+  min-height: 100dvh;
+  overflow: hidden;
+  background: var(--void-raised);
+}
+
+.career-tree__sky {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+
+.career-tree__sky--active {
+  opacity: 1;
+}
+
+.career-tree__leaves {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* --- controls --- */
+
+.career-tree__toggle {
+  position: absolute;
+  top: clamp(16px, 3vh, 32px);
+  right: clamp(16px, 3vw, 40px);
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 11px 20px;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  letter-spacing: 0.08em;
+}
+
+.career-tree__hint {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(18px, 3.5vh, 40px);
+  transform: translateX(-50%);
+  z-index: 2;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  letter-spacing: 0.06em;
+  color: var(--parchment-dim);
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+  white-space: nowrap;
+}
+
+/* --- hotspots --- */
+
+.career-tree__spot {
+  position: absolute;
+  z-index: 2;
+  transform: translate(-50%, -50%);
+  background: none;
+  border: none;
+  padding: 0;
+  line-height: 0;
+}
+
+.career-tree__spot img {
+  filter: drop-shadow(0 0 14px rgba(224, 188, 106, 0.35));
+  animation: spot-pulse 2.2s ease-in-out infinite;
+  transition: transform 0.3s var(--ease-reveal);
+}
+
+.career-tree__spot:hover img,
+.career-tree__spot:focus-visible img {
+  transform: scale(1.12);
+  filter: drop-shadow(0 0 22px rgba(63, 193, 214, 0.55));
+}
+
+.career-tree__spot--ribbon img {
+  width: clamp(44px, 4.4vw, 74px);
+}
+
+.career-tree__spot--flower img {
+  width: clamp(52px, 5vw, 84px);
+}
+
+@keyframes spot-pulse {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 8px rgba(224, 188, 106, 0.22));
+  }
+  50% {
+    filter: drop-shadow(0 0 20px rgba(224, 188, 106, 0.55));
+  }
+}
+
+/* --- detail card --- */
+
+.career-tree__backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(20px, 4vw, 64px);
+  background: rgba(21, 18, 16, 0.62);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}
+
+.career-tree__card-wrap {
+  max-width: 720px;
+  width: 100%;
+  max-height: 100%;
+}
+
+.career-tree__card {
+  position: relative;
+  padding: clamp(28px, 3.4vw, 52px);
+  background: var(--void-card);
+  max-height: min(78dvh, 720px);
+  overflow-y: auto;
+}
+
+.career-tree__close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: inline-flex;
+  padding: 10px;
+}
+
+.career-tree__card-title {
+  margin-top: 12px;
+  font-size: clamp(24px, 2.4vw, 34px);
+}
+
+.career-tree__card-role {
+  margin-top: 6px;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--cool-blue-text);
+}
+
+.career-tree__card-summary {
+  margin-top: 18px;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(16px, 1.3vw, 19px);
+  color: var(--gold-bright);
+  line-height: 1.6;
+}
+
+.career-tree__card-points {
+  margin-top: 22px;
+  display: grid;
+  gap: 12px;
+}
+
+.career-tree__card-points li {
+  position: relative;
+  padding-left: 22px;
+  font-size: 14.5px;
+  line-height: 1.7;
+  color: var(--parchment-dim);
+}
+
+.career-tree__card-points li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 8px;
+  height: 1px;
+  background: var(--gold);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .career-tree__spot img {
+    animation: none;
+  }
+  .career-tree__sky {
+    transition: none;
+  }
+}
