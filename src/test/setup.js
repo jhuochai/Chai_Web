@@ -15,6 +15,13 @@ if (!window.matchMedia) {
   });
 }
 
+// jsdom has no 2D canvas backend; getContext logs a "not implemented"
+// error and returns null. Components guard on a null context, so stub
+// it to return null quietly instead of spamming test output.
+if (window.HTMLCanvasElement) {
+  window.HTMLCanvasElement.prototype.getContext = () => null;
+}
+
 // jsdom doesn't implement ResizeObserver either; several components
 // (CircularGallery, ClickSpark) use it and will throw on mount without this.
 if (!window.ResizeObserver) {
