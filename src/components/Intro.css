@@ -1,0 +1,160 @@
+.intro {
+  position: relative;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  padding-block: clamp(72px, 10vh, 140px);
+  overflow: hidden;
+}
+
+.intro__inner {
+  display: grid;
+  grid-template-columns: minmax(280px, 5fr) minmax(0, 7fr);
+  align-items: center;
+  gap: clamp(32px, 4vw, 80px);
+}
+
+/* --- hanging character --- */
+
+.intro__character {
+  position: relative;
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: calc(-1 * clamp(72px, 10vh, 140px));
+}
+
+/* The bar she hangs from, running off the top of the scene. */
+.intro__bar {
+  width: 5px;
+  height: clamp(40px, 8vh, 110px);
+  background: linear-gradient(180deg, rgba(201, 162, 75, 0) 0%, rgba(201, 162, 75, 0.55) 100%);
+}
+
+.intro__character-image {
+  width: clamp(240px, 24vw, 420px);
+  height: auto;
+  user-select: none;
+  filter: drop-shadow(0 24px 60px rgba(0, 0, 0, 0.5));
+}
+
+/* --- framed introduction --- */
+
+.intro__panel-wrap {
+  min-width: 0;
+}
+
+.intro__panel {
+  padding: clamp(32px, 4vw, 64px);
+}
+
+.intro__name {
+  margin-top: 14px;
+  font-size: clamp(40px, 4.6vw, 68px);
+  line-height: 1.05;
+  display: flex;
+  align-items: baseline;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.intro__name-sub {
+  font-family: var(--mono);
+  font-size: clamp(13px, 1vw, 15px);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--parchment-faint);
+}
+
+.intro__title {
+  margin-top: 10px;
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.intro__positioning {
+  margin-top: 28px;
+  max-width: 62ch;
+  font-size: clamp(16px, 1.25vw, 19px);
+  line-height: 1.75;
+  color: var(--parchment-dim);
+}
+
+.intro__positioning em {
+  font-family: var(--display);
+  font-style: italic;
+  color: var(--gold-bright);
+}
+
+/* --- traits: typographic rows, deliberately not pills/badges --- */
+
+.intro__traits {
+  margin-top: 40px;
+  border-top: 1px solid var(--hairline);
+}
+
+.intro__trait {
+  display: grid;
+  grid-template-columns: 44px minmax(140px, 220px) 1fr;
+  align-items: baseline;
+  gap: 16px;
+  padding-block: 18px;
+  border-bottom: 1px solid var(--hairline-soft);
+}
+
+.intro__trait-index {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--parchment-faint);
+}
+
+.intro__trait-label {
+  font-size: clamp(20px, 1.8vw, 26px);
+  font-weight: 560;
+}
+
+.intro__trait-desc {
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: var(--parchment-dim);
+}
+
+.intro__personality {
+  margin-top: 30px;
+  max-width: 70ch;
+  font-size: 14.5px;
+  line-height: 1.8;
+  color: var(--parchment-dim);
+}
+
+@media (max-width: 1100px) {
+  .intro__inner {
+    grid-template-columns: 1fr;
+  }
+
+  .intro__character {
+    margin-top: 0;
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .intro__bar {
+    display: none;
+  }
+
+  .intro__character-image {
+    width: clamp(200px, 40vw, 320px);
+  }
+
+  .intro__trait {
+    grid-template-columns: 44px 1fr;
+  }
+
+  .intro__trait-desc {
+    grid-column: 2;
+  }
+}
