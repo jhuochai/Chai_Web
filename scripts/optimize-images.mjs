@@ -19,6 +19,8 @@ const images = [
   { file: 'character_walk.png', name: 'character-walk', kind: 'sprite' },
   { file: 'tree_ribbon.png', name: 'tree-ribbon', kind: 'sprite' },
   { file: 'single_flower.png', name: 'single-flower', kind: 'sprite' },
+  { file: 'character_lean.png', name: 'character-lean', kind: 'sprite' },
+  { file: 'character_ribbon.png', name: 'character-ribbon', kind: 'sprite' },
 ];
 
 async function optimize({ file, name, kind }) {
