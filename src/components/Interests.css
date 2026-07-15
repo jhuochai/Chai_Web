@@ -1,0 +1,144 @@
+.interests {
+  position: relative;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  padding-block: clamp(80px, 12vh, 160px);
+}
+
+.interests__heading {
+  max-width: 760px;
+}
+
+.interests__heading h2 {
+  margin-top: 12px;
+  font-size: clamp(30px, 3.4vw, 48px);
+}
+
+.interests__insight {
+  margin-top: 20px;
+  font-size: clamp(15.5px, 1.2vw, 18px);
+  line-height: 1.8;
+  color: var(--parchment-dim);
+}
+
+/* --- the create → immerse → share loop --- */
+
+.interests__loop {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(20px, 3vw, 48px);
+  margin-top: clamp(40px, 5vh, 64px);
+  padding-block: 26px;
+  border-block: 1px solid var(--hairline);
+}
+
+.interests__loop-step {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-template-rows: auto auto;
+  column-gap: 14px;
+  align-items: baseline;
+  padding-right: clamp(24px, 3vw, 56px);
+}
+
+.interests__loop-index {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--gold);
+}
+
+.interests__loop-label {
+  font-family: var(--display);
+  font-size: clamp(20px, 1.9vw, 27px);
+  color: var(--parchment);
+}
+
+.interests__loop-desc {
+  grid-column: 2;
+  font-size: 13.5px;
+  color: var(--parchment-faint);
+}
+
+.interests__loop-arrow {
+  position: absolute;
+  right: 0;
+  top: 0.45em;
+  color: var(--gold-dim);
+}
+
+/* --- hobbies + strengths --- */
+
+.interests__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(32px, 4vw, 80px);
+  margin-top: clamp(40px, 6vh, 72px);
+  align-items: start;
+}
+
+.interests__hobbies {
+  display: grid;
+  gap: 22px;
+}
+
+.interests__hobby {
+  padding: clamp(22px, 2.4vw, 34px);
+  border: 1px solid var(--hairline-soft);
+  background: var(--void-raised);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.interests__hobby:hover {
+  border-color: var(--hairline);
+  box-shadow: 0 14px 44px -22px rgba(201, 162, 75, 0.35);
+}
+
+.interests__hobby-icon {
+  color: var(--gold);
+}
+
+.interests__hobby h3 {
+  margin-top: 12px;
+  font-size: clamp(19px, 1.6vw, 24px);
+}
+
+.interests__hobby p {
+  margin-top: 10px;
+  font-size: 14.5px;
+  line-height: 1.7;
+  color: var(--parchment-dim);
+}
+
+.interests__strengths-label {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cool-blue-text);
+}
+
+.interests__strength {
+  margin-top: 26px;
+  padding-left: 22px;
+  border-left: 2px solid var(--gold-dim);
+}
+
+.interests__strength h3 {
+  font-size: clamp(20px, 1.8vw, 26px);
+}
+
+.interests__strength p {
+  margin-top: 10px;
+  max-width: 58ch;
+  font-size: 14.5px;
+  line-height: 1.75;
+  color: var(--parchment-dim);
+}
+
+@media (max-width: 1100px) {
+  .interests__grid {
+    grid-template-columns: 1fr;
+  }
+}
