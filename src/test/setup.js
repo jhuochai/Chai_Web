@@ -22,6 +22,13 @@ if (window.HTMLCanvasElement) {
   window.HTMLCanvasElement.prototype.getContext = () => null;
 }
 
+// jsdom has no media playback; stub play/pause so components using a
+// real <audio> element don't spam "Not implemented" errors.
+if (window.HTMLMediaElement) {
+  window.HTMLMediaElement.prototype.play = () => Promise.resolve();
+  window.HTMLMediaElement.prototype.pause = () => {};
+}
+
 // jsdom doesn't implement ResizeObserver either; several components
 // (CircularGallery, ClickSpark) use it and will throw on mount without this.
 if (!window.ResizeObserver) {

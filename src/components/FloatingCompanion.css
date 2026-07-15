@@ -1,0 +1,68 @@
+.floating-companion {
+  position: fixed;
+  right: clamp(-14px, -0.6vw, -6px);
+  bottom: 0;
+  z-index: 30;
+  width: clamp(120px, 11vw, 200px);
+  pointer-events: none;
+  opacity: 0;
+  animation: companion-in 1s var(--ease-reveal) 0.6s forwards;
+  --ribbon-rot: 0deg;
+  --ribbon-x: 0px;
+}
+
+@keyframes companion-in {
+  to {
+    opacity: 0.92;
+  }
+}
+
+.floating-companion__body {
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 12px 34px rgba(0, 0, 0, 0.55));
+}
+
+.floating-companion__ribbon-wrap {
+  position: absolute;
+  inset: 0;
+  transform: rotate(var(--ribbon-rot)) translateX(var(--ribbon-x));
+  transform-origin: 50% 20%;
+  transition: transform 0.45s var(--ease-reveal);
+  will-change: transform;
+}
+
+.floating-companion__ribbon {
+  width: 100%;
+  height: auto;
+  animation: ribbon-idle 4.5s ease-in-out infinite alternate;
+  transform-origin: 50% 20%;
+}
+
+@keyframes ribbon-idle {
+  from {
+    transform: rotate(-1.6deg);
+  }
+  to {
+    transform: rotate(1.8deg);
+  }
+}
+
+@media (max-width: 1100px) {
+  .floating-companion {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .floating-companion {
+    animation: none;
+    opacity: 0.92;
+  }
+  .floating-companion__ribbon {
+    animation: none;
+  }
+  .floating-companion__ribbon-wrap {
+    transition: none;
+  }
+}

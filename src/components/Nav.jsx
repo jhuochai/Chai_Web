@@ -3,6 +3,7 @@ import { useScroll, useMotionValueEvent } from 'motion/react';
 import { Globe, List, X } from '@phosphor-icons/react';
 import { useLanguage } from '../i18n/LanguageContext';
 import MobileMenu from './MobileMenu';
+import MusicToggle from './MusicToggle';
 import './Nav.css';
 
 export default function Nav() {
@@ -43,6 +44,7 @@ export default function Nav() {
           ))}
         </nav>
         <div className="nav__actions">
+          <MusicToggle />
           <button
             type="button"
             className="nav__lang btn-glass btn-glass--ghost"
