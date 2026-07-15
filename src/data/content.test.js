@@ -19,17 +19,34 @@ describe('content.nav', () => {
   });
 });
 
-describe('content.scenes', () => {
-  it('has placeholder title+note for the remaining skeleton scenes, in both languages', () => {
+describe('content.interests', () => {
+  it('has the create-immerse-share loop, two hobbies, and two strengths, in both languages', () => {
     for (const lang of ['en', 'zh']) {
-      for (const key of ['scene4', 'scene6']) {
-        expect(content[lang].scenes[key]).toEqual(
-          expect.objectContaining({ title: expect.any(String), note: expect.any(String) })
+      const interests = content[lang].interests;
+      expect(interests.loop).toHaveLength(3);
+      expect(interests.hobbies).toHaveLength(2);
+      expect(interests.strengths).toHaveLength(2);
+      for (const strength of interests.strengths) {
+        expect(strength).toEqual(
+          expect.objectContaining({ id: expect.any(String), title: expect.any(String), desc: expect.any(String) })
         );
       }
-      expect(content[lang].scenes.scene0).toBeUndefined();
-      expect(content[lang].scenes.scene2).toBeUndefined();
-      expect(content[lang].scenes.scene3).toBeUndefined();
+    }
+  });
+});
+
+describe('content.buildStory', () => {
+  it('has the five build-process steps in both languages', () => {
+    for (const lang of ['en', 'zh']) {
+      const story = content[lang].buildStory;
+      expect(story.steps).toHaveLength(5);
+      expect(story.steps.map((s) => s.key)).toEqual([
+        'concept',
+        'design',
+        'content',
+        'build',
+        'iterate',
+      ]);
     }
   });
 });

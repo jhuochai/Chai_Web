@@ -125,6 +125,76 @@ const en = {
       },
     ],
   },
+  interests: {
+    eyebrow: 'Off the Clock',
+    heading: 'The same loop, three arenas',
+    insight:
+      'Making something from nothing, sinking into the process, then sharing it and watching people react. That loop is cooking. That loop is gaming. And that loop is exactly how the 貓咪造咖 community content gets made — the hobbies and the job are one personality, expressed three ways.',
+    loop: [
+      { key: 'create', label: 'Create', desc: 'From zero to a real thing' },
+      { key: 'immerse', label: 'Immerse', desc: 'Deep in the process' },
+      { key: 'share', label: 'Share', desc: 'Put it out, watch it land' },
+    ],
+    hobbies: [
+      {
+        id: 'cooking',
+        name: 'Cooking',
+        desc: 'A dish is a small launch: prep, plate, serve, and read the table for the verdict.',
+      },
+      {
+        id: 'gaming',
+        name: 'Gaming',
+        desc: 'Ranked grinds and cozy farms alike — playing deep is how player instincts stay sharp.',
+      },
+    ],
+    strengthsLabel: 'What people get from working with me',
+    strengths: [
+      {
+        id: 'empathy',
+        title: 'Emotional awareness',
+        desc: "A steady presence when someone's having a rough day, and the tact to push back or decline without bruising anyone — which is exactly what keeps cross-team work and KOC relationships smooth.",
+      },
+      {
+        id: 'curiosity',
+        title: 'Curiosity about people',
+        desc: 'Psychology and philosophy, internalized into gut reads: what a player is feeling, how a team is really getting along — the same instinct that makes content land with its audience.',
+      },
+    ],
+  },
+  buildStory: {
+    eyebrow: 'Behind the Site',
+    heading: 'How this site was made',
+    intro:
+      'This site is itself a work sample: concept, art direction, copy, and code were built in collaboration with AI (Claude, Claude Code, Gemini) — with every prompt, veto, and final call made by me.',
+    steps: [
+      {
+        key: 'concept',
+        label: 'Concept',
+        desc: 'Nailed the positioning and the Piltover/Zaun dual-identity metaphor before touching any tools.',
+      },
+      {
+        key: 'design',
+        label: 'Design system',
+        desc: 'Locked the palette, type, and frame language — Arcane brushwork meets chiaroscuro gold.',
+      },
+      {
+        key: 'content',
+        label: 'Content plan',
+        desc: 'Mapped eight scenes of narrative, then wrote the bilingual copy to fit each one.',
+      },
+      {
+        key: 'build',
+        label: 'AI-assisted build',
+        desc: 'Generated the character art with image models and built the React site with Claude Code, batch by batch.',
+      },
+      {
+        key: 'iterate',
+        label: 'Iterate',
+        desc: 'Reviewed every pass in the browser, cut what flopped, polished what worked.',
+      },
+    ],
+    takeaway: 'AI collaboration, aesthetic judgment, and project management — demonstrated, not claimed.',
+  },
   experience: [
     {
       org: '慧邦科技',
@@ -270,10 +340,8 @@ const en = {
     credentialsLabel: 'Credentials',
     footerTag: 'Chai Yi Chen · Game Marketing Coordinator',
     enterLabel: 'Enter the site',
-  },
-  scenes: {
-    scene4: { title: 'Scene 4 — Interests', note: 'Content coming in a later pass' },
-    scene6: { title: 'Scene 6 — How This Was Built', note: 'Content coming in a later pass' },
+    musicOnLabel: 'Turn music on',
+    musicOffLabel: 'Turn music off',
   },
 };
 
@@ -401,6 +469,76 @@ const zh = {
         desc: '英雄聯盟、Valorant、虹彩六號、GTA、Minecraft——橫跨 MOBA、FPS、生存社交與模擬經營。',
       },
     ],
+  },
+  interests: {
+    eyebrow: '下班之後',
+    heading: '同一種循環，三個場域',
+    insight:
+      '從無到有做出東西、沉浸在過程裡、然後分享出去看見別人的反應——做菜是這個循環，打遊戲是這個循環，做貓咪造咖的社群內容也是同一個循環。興趣跟工作能力從來不是分開的兩塊，而是同一個人格特質的三種展現。',
+    loop: [
+      { key: 'create', label: '做出來', desc: '從零到一個真實的東西' },
+      { key: 'immerse', label: '沉浸', desc: '整個人泡進過程裡' },
+      { key: 'share', label: '分享', desc: '端出去，看它落在誰心上' },
+    ],
+    hobbies: [
+      {
+        id: 'cooking',
+        name: '烹飪',
+        desc: '每道菜都是一次小型上線：備料、擺盤、端上桌，然後從餐桌上的表情讀成效。',
+      },
+      {
+        id: 'gaming',
+        name: '打遊戲',
+        desc: '排位的競技場和療癒的農場都玩得深——玩家直覺就是這樣一直保持鋒利的。',
+      },
+    ],
+    strengthsLabel: '跟我共事會得到什麼',
+    strengths: [
+      {
+        id: 'empathy',
+        title: '情緒感知力',
+        desc: '在別人情緒低落時能給予安定的陪伴，需要提出回饋或婉拒時也懂得把話說得不傷人——這讓跨部門溝通、KOC 關係維繫特別游刃有餘。',
+      },
+      {
+        id: 'curiosity',
+        title: '對人的好奇心',
+        desc: '心理學與哲學不是紙上談兵的興趣，而是內化成「理解玩家心理」與「讀懂團隊人際動態」的直覺判斷力——這也是行銷內容能抓準受眾情緒的原因。',
+      },
+    ],
+  },
+  buildStory: {
+    eyebrow: '這個網站怎麼來的',
+    heading: '我是怎麼製作這個網站的',
+    intro:
+      '這個網站本身就是一件作品：從概念、美術方向、文案到程式碼，全程與 AI（Claude、Claude Code、Gemini）協作完成——而每一句 prompt、每一次否決、每一個最終定案，都由我來下。',
+    steps: [
+      {
+        key: 'concept',
+        label: '發想',
+        desc: '先把定位陳述與 Piltover／Zaun 雙重身分的隱喻想清楚，才碰工具。',
+      },
+      {
+        key: 'design',
+        label: '設計系統定案',
+        desc: '鎖定色票、字體與畫框語彙——Arcane 的筆觸遇上卡拉瓦喬的金光。',
+      },
+      {
+        key: 'content',
+        label: '內容規劃',
+        desc: '把敘事切成八個場景，再為每一幕寫下雙語文案。',
+      },
+      {
+        key: 'build',
+        label: 'AI 協作實作',
+        desc: '用生圖模型產出角色插畫，再與 Claude Code 分批把 React 網站蓋起來。',
+      },
+      {
+        key: 'iterate',
+        label: '迭代優化',
+        desc: '每一批都進瀏覽器實測，砍掉不成立的，磨亮成立的。',
+      },
+    ],
+    takeaway: 'AI 協作力、審美整合、專案管理——不用宣稱，這個網站就是證明。',
   },
   experience: [
     {
@@ -541,10 +679,8 @@ const zh = {
     credentialsLabel: '學歷與資格認證',
     footerTag: '柴怡辰 · 遊戲行銷企劃',
     enterLabel: '進入網站',
-  },
-  scenes: {
-    scene4: { title: '第四幕｜興趣與長處', note: '內容製作中' },
-    scene6: { title: '第六幕｜製作過程', note: '內容製作中' },
+    musicOnLabel: '開啟音樂',
+    musicOffLabel: '關閉音樂',
   },
 };
 
