@@ -3,26 +3,25 @@ import Nav from './components/Nav';
 import Hero from './components/Hero';
 import Intro from './components/Intro';
 import CareerTree from './components/CareerTree';
+import Interests from './components/Interests';
 import Portfolio from './components/Portfolio';
+import BuildStory from './components/BuildStory';
 import Contact from './components/Contact';
-import SceneSkeleton from './components/SceneSkeleton';
+import FloatingCompanion from './components/FloatingCompanion';
 import GrainOverlay from './components/GrainOverlay';
 import ClickSpark from './components/ClickSpark';
 import LoadingScreen from './components/LoadingScreen';
-import { LanguageProvider, useLanguage } from './i18n/LanguageContext';
+import { LanguageProvider } from './i18n/LanguageContext';
 
 function Scenes() {
-  const { t } = useLanguage();
-  const { scenes } = t;
-
   return (
     <main>
       <Hero />
       <Intro />
       <CareerTree />
-      <SceneSkeleton id="scene-4" title={scenes.scene4.title} note={scenes.scene4.note} />
+      <Interests />
       <Portfolio />
-      <SceneSkeleton id="scene-6" title={scenes.scene6.title} note={scenes.scene6.note} />
+      <BuildStory />
       <Contact />
     </main>
   );
@@ -45,6 +44,7 @@ function App() {
         <GrainOverlay />
         <Nav />
         <Scenes />
+        <FloatingCompanion />
       </ClickSpark>
     </LanguageProvider>
   );
