@@ -18,20 +18,24 @@ import './CareerTree.css';
 const WALK_FRAMES = [walkFrame0, walkFrame1, walkFrame2, walkFrame3];
 const WALK_FRAME_MS = 220;
 
-// Hotspot anchor points, in % of the tree stage. Ribbons hang off the
-// day tree's branches; flowers bloom on the night tree.
+// Hotspot anchors in % of the BACKGROUND IMAGE (not the stage): the day
+// tree has glowing ribbons and the night tree glowing flower clusters
+// painted right into the art, so the click targets sit on those. The
+// canvas element reproduces object-fit: cover geometry, which keeps
+// these glued to the branches at every viewport size. Kept within
+// 22-78% horizontally so no hotspot is cropped away down to ~1024px.
 const RIBBON_SPOTS = {
-  gamesofa: { left: '36%', top: '26%' },
-  ntpu: { left: '58%', top: '22%' },
-  actg: { left: '27%', top: '44%' },
-  eelin: { left: '66%', top: '42%' },
+  gamesofa: { left: '48%', top: '33%' },
+  ntpu: { left: '65.5%', top: '37%' },
+  actg: { left: '37.5%', top: '50%' },
+  eelin: { left: '71%', top: '64%' },
 };
 
 const FLOWER_SPOTS = {
-  mlbb: { left: '40%', top: '24%' },
-  idv: { left: '61%', top: '30%' },
-  stardew: { left: '31%', top: '46%' },
-  shelf: { left: '55%', top: '50%' },
+  mlbb: { left: '72.5%', top: '33%' },
+  idv: { left: '24%', top: '55%' },
+  stardew: { left: '59%', top: '16%' },
+  shelf: { left: '75%', top: '55%' },
 };
 
 const LEAF_COLORS = ['rgba(201,162,75,0.75)', 'rgba(224,188,106,0.6)', 'rgba(110,139,61,0.65)'];
@@ -202,19 +206,34 @@ export default function CareerTree() {
       </RevealSection>
 
       <div className={`career-tree__stage ${night ? 'career-tree__stage--night' : ''}`}>
-        <img
-          src={treeDay}
-          alt=""
-          className={`career-tree__sky ${night ? '' : 'career-tree__sky--active'}`}
-          draggable="false"
-        />
-        <img
-          src={treeNight}
-          alt=""
-          className={`career-tree__sky ${night ? 'career-tree__sky--active' : ''}`}
-          loading="lazy"
-          draggable="false"
-        />
+        {/* Reproduces object-fit: cover for the wide tree art, so the
+            hotspots inside share the image's own coordinate system. */}
+        <div className="career-tree__canvas">
+          <img
+            src={treeDay}
+            alt=""
+            className={`career-tree__sky ${night ? '' : 'career-tree__sky--active'}`}
+            draggable="false"
+          />
+          <img
+            src={treeNight}
+            alt=""
+            className={`career-tree__sky ${night ? 'career-tree__sky--active' : ''}`}
+            loading="lazy"
+            draggable="false"
+          />
+          {items.map((item) => (
+            <button
+              key={`${night ? 'flower' : 'ribbon'}-${item.id}`}
+              type="button"
+              className="career-tree__spot"
+              style={spots[item.id]}
+              onClick={() => setActiveId(item.id)}
+              aria-label={night ? item.name : item.org}
+              aria-haspopup="dialog"
+            />
+          ))}
+        </div>
         <LeafCanvas dense={Boolean(activeItem)} />
 
         <button
@@ -231,20 +250,6 @@ export default function CareerTree() {
         <p className="career-tree__hint" aria-live="polite">
           {night ? tree.nightHint : tree.dayHint}
         </p>
-
-        {items.map((item) => (
-          <button
-            key={`${night ? 'flower' : 'ribbon'}-${item.id}`}
-            type="button"
-            className={`career-tree__spot ${night ? 'career-tree__spot--flower' : 'career-tree__spot--ribbon'}`}
-            style={spots[item.id]}
-            onClick={() => setActiveId(item.id)}
-            aria-label={night ? item.name : item.org}
-            aria-haspopup="dialog"
-          >
-            <img src={night ? flowerSprite : ribbonSprite} alt="" draggable="false" />
-          </button>
-        ))}
 
         <AnimatePresence>
           {activeItem && (
@@ -281,6 +286,14 @@ export default function CareerTree() {
                   >
                     <X size={18} weight="light" />
                   </button>
+
+                  <img
+                    src={activeItem.org ? ribbonSprite : flowerSprite}
+                    alt=""
+                    className="career-tree__card-emblem"
+                    aria-hidden="true"
+                    draggable="false"
+                  />
 
                   {activeItem.org ? (
                     <>

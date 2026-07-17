@@ -57,12 +57,24 @@
   background: var(--void-raised);
 }
 
+/* Mimics object-fit: cover for the 2400x1018 tree art: full stage
+   height, centered, width from the image's own aspect ratio — so the
+   hotspots inside can use image-space percentages and stay glued to
+   the painted ribbons/flowers at any viewport size. */
+.career-tree__canvas {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  height: 100%;
+  aspect-ratio: 2400 / 1018;
+  transform: translateX(-50%);
+}
+
 .career-tree__sky {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
   opacity: 0;
   transition: opacity 1s ease;
 }
@@ -109,45 +121,50 @@
   white-space: nowrap;
 }
 
-/* --- hotspots --- */
+/* --- hotspots: glow halos over the ribbons/flowers painted in the
+   background art itself (no duplicate sprite on top) --- */
 
 .career-tree__spot {
   position: absolute;
   z-index: 2;
   transform: translate(-50%, -50%);
-  background: none;
+  width: clamp(64px, 6vw, 104px);
+  height: clamp(64px, 6vw, 104px);
   border: none;
+  border-radius: 50%;
   padding: 0;
-  line-height: 0;
-}
-
-.career-tree__spot img {
-  filter: drop-shadow(0 0 14px rgba(224, 188, 106, 0.35));
-  animation: spot-pulse 2.2s ease-in-out infinite;
+  cursor: pointer;
+  background: radial-gradient(
+    circle,
+    rgba(255, 243, 214, 0.28) 0%,
+    rgba(224, 188, 106, 0.16) 45%,
+    rgba(224, 188, 106, 0) 72%
+  );
+  animation: spot-pulse 2.4s ease-in-out infinite;
   transition: transform 0.3s var(--ease-reveal);
 }
 
-.career-tree__spot:hover img,
-.career-tree__spot:focus-visible img {
-  transform: scale(1.12);
-  filter: drop-shadow(0 0 22px rgba(63, 193, 214, 0.55));
-}
-
-.career-tree__spot--ribbon img {
-  width: clamp(44px, 4.4vw, 74px);
-}
-
-.career-tree__spot--flower img {
-  width: clamp(52px, 5vw, 84px);
+.career-tree__spot:hover,
+.career-tree__spot:focus-visible {
+  transform: translate(-50%, -50%) scale(1.25);
+  animation-play-state: paused;
+  background: radial-gradient(
+    circle,
+    rgba(255, 243, 214, 0.4) 0%,
+    rgba(63, 193, 214, 0.22) 48%,
+    rgba(63, 193, 214, 0) 74%
+  );
 }
 
 @keyframes spot-pulse {
   0%,
   100% {
-    filter: drop-shadow(0 0 8px rgba(224, 188, 106, 0.22));
+    opacity: 0.55;
+    transform: translate(-50%, -50%) scale(0.9);
   }
   50% {
-    filter: drop-shadow(0 0 20px rgba(224, 188, 106, 0.55));
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.08);
   }
 }
 
@@ -186,6 +203,19 @@
   right: 16px;
   display: inline-flex;
   padding: 10px;
+  z-index: 1;
+}
+
+/* The keyed ribbon/flower sprite as a soft emblem in the card corner. */
+.career-tree__card-emblem {
+  position: absolute;
+  top: 8px;
+  right: 54px;
+  width: 74px;
+  height: auto;
+  opacity: 0.55;
+  pointer-events: none;
+  filter: drop-shadow(0 0 12px rgba(224, 188, 106, 0.3));
 }
 
 .career-tree__card-title {
