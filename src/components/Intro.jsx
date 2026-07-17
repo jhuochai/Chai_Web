@@ -32,7 +32,6 @@ export default function Intro() {
           style={reduce ? undefined : { y: characterY, rotate: characterSway }}
           aria-hidden="true"
         >
-          <span className="intro__bar" />
           <img
             src={characterHanging}
             alt=""

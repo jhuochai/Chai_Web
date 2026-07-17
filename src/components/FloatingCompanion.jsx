@@ -32,9 +32,11 @@ export default function FloatingCompanion() {
         // Sway grows as the cursor comes closer (full effect inside ~150px,
         // fading out to nothing beyond ~600px).
         const proximity = Math.max(0, Math.min(1, 1 - (dist - 150) / 450));
-        const rot = Math.max(-10, Math.min(10, dx / 30)) * proximity;
+        // Small amplitude on purpose: the body art carries a painted copy
+        // of the same scarf, so a big offset would read as a double image.
+        const rot = Math.max(-4, Math.min(4, dx / 70)) * proximity;
         root.style.setProperty('--ribbon-rot', `${rot}deg`);
-        root.style.setProperty('--ribbon-x', `${rot * 0.8}px`);
+        root.style.setProperty('--ribbon-x', `${rot * 0.6}px`);
       });
     };
 

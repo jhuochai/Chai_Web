@@ -8,8 +8,15 @@ import treeDay from '../assets/scenes/tree-day.webp';
 import treeNight from '../assets/scenes/tree-night.webp';
 import ribbonSprite from '../assets/scenes/tree-ribbon.webp';
 import flowerSprite from '../assets/scenes/single-flower.webp';
-import characterWalk from '../assets/scenes/character-walk.webp';
+import walkFrame0 from '../assets/scenes/character-walk-0.webp';
+import walkFrame1 from '../assets/scenes/character-walk-1.webp';
+import walkFrame2 from '../assets/scenes/character-walk-2.webp';
+import walkFrame3 from '../assets/scenes/character-walk-3.webp';
 import './CareerTree.css';
+
+// Contact pose → passing pose → contact (other leg) → passing.
+const WALK_FRAMES = [walkFrame0, walkFrame1, walkFrame2, walkFrame3];
+const WALK_FRAME_MS = 220;
 
 // Hotspot anchor points, in % of the tree stage. Ribbons hang off the
 // day tree's branches; flowers bloom on the night tree.
@@ -107,22 +114,38 @@ function LeafCanvas({ dense }) {
 
 /**
  * Scroll-linked walking pass: the character crosses the strip from left
- * to right as it scrolls through the viewport. Used both to enter the
- * tree scene and to walk off toward the next scene.
+ * to right as it scrolls through the viewport, cycling through the four
+ * walk poses like a hand-drawn flipbook. Used both to enter the tree
+ * scene and to walk off toward the next scene.
  */
 function WalkStrip() {
   const stripRef = useRef(null);
   const reduce = useReducedMotion();
+  const [frame, setFrame] = useState(0);
   const { scrollYProgress } = useScroll({
     target: stripRef,
     offset: ['start end', 'end start'],
   });
   const x = useTransform(scrollYProgress, [0, 1], ['-18vw', '82vw']);
 
+  useEffect(() => {
+    if (reduce) return undefined;
+    // Preload every pose so the first cycle doesn't flicker.
+    for (const src of WALK_FRAMES) {
+      const img = new Image();
+      img.src = src;
+    }
+    const timer = window.setInterval(
+      () => setFrame((prev) => (prev + 1) % WALK_FRAMES.length),
+      WALK_FRAME_MS
+    );
+    return () => window.clearInterval(timer);
+  }, [reduce]);
+
   return (
     <div className="career-tree__walk" ref={stripRef} aria-hidden="true">
       <motion.img
-        src={characterWalk}
+        src={WALK_FRAMES[frame]}
         alt=""
         className="career-tree__walker"
         style={reduce ? undefined : { x }}

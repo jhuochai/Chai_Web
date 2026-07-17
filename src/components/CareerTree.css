@@ -18,22 +18,13 @@
   width: clamp(150px, 14vw, 240px);
   height: auto;
   user-select: none;
-  filter: drop-shadow(0 16px 40px rgba(0, 0, 0, 0.5));
-  animation: walk-bob 0.7s ease-in-out infinite alternate;
-}
-
-@keyframes walk-bob {
-  from {
-    margin-bottom: 0;
-  }
-  to {
-    margin-bottom: 7px;
-  }
+  /* The four-pose flipbook carries the gait; the drop shadow hugs the
+     real silhouette now that the sprites have true alpha. */
+  filter: drop-shadow(0 18px 30px rgba(0, 0, 0, 0.55));
 }
 
 @media (prefers-reduced-motion: reduce) {
   .career-tree__walker {
-    animation: none;
     left: 40%;
   }
 }
