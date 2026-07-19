@@ -11,6 +11,15 @@ const en = {
     sub: '柴怡辰',
   },
   title: 'Game Marketing Coordinator',
+  hero: {
+    tagline: 'Aim on instinct. Hit with execution.',
+    switcherLabel: 'Choose a scene',
+    scenes: [
+      { id: 'starry', label: 'Starry Night' },
+      { id: 'day', label: 'Daylight Tree' },
+      { id: 'night', label: 'Night Bloom' },
+    ],
+  },
   positioning: {
     before: 'A game marketing coordinator who pitches ideas on ',
     emphasis: 'instinct and creativity',
@@ -358,6 +367,15 @@ const zh = {
     sub: 'Chai Yi Chen',
   },
   title: '遊戲行銷企劃',
+  hero: {
+    tagline: '靠直覺瞄準，用效率命中。',
+    switcherLabel: '切換場景',
+    scenes: [
+      { id: 'starry', label: '星夜' },
+      { id: 'day', label: '日光大樹' },
+      { id: 'night', label: '夜色大樹' },
+    ],
+  },
   positioning: {
     before: '一個靠',
     emphasis: '創意與直覺',
