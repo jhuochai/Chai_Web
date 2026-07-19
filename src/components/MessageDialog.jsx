@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
-import { X, PaperPlaneTilt } from '@phosphor-icons/react';
+import { X } from '@phosphor-icons/react';
 import FramedPanel from './FramedPanel';
+import Stepper, { Step } from './Stepper';
 import { useLanguage } from '../i18n/LanguageContext';
 import './MessageDialog.css';
 
@@ -12,7 +13,7 @@ export default function MessageDialog({ open, onClose }) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
-  const [error, setError] = useState('');
+  const [step, setStep] = useState(1);
   const [sent, setSent] = useState(false);
 
   const nameInputRef = useRef(null);
@@ -34,21 +35,18 @@ export default function MessageDialog({ open, onClose }) {
       setName('');
       setEmail('');
       setMessage('');
-      setError('');
+      setStep(1);
       setSent(false);
     }
   }, [open]);
 
   if (!open) return null;
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!name.trim() || !message.trim()) {
-      setError(f.errorRequired);
-      return;
-    }
-    setError('');
+  // Per-step gating instead of a submit-time error: the Continue button
+  // stays disabled until the current step's required field is filled.
+  const nextDisabled = (step === 1 && !name.trim()) || (step === 3 && !message.trim());
 
+  const handleComplete = () => {
     const subject = `Portfolio message from ${name.trim()}`;
     const bodyLines = [message.trim(), '', `${f.nameLabel}: ${name.trim()}`];
     if (email.trim()) bodyLines.push(`${f.emailLabel}: ${email.trim()}`);
@@ -85,62 +83,61 @@ export default function MessageDialog({ open, onClose }) {
               </button>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} noValidate>
+            <div>
               <h3 id="message-dialog-title">{f.title}</h3>
               <p className="message-dialog__intro">{f.intro}</p>
 
-              <div className="message-dialog__field">
-                <label htmlFor="msg-name">{f.nameLabel}</label>
-                <input
-                  id="msg-name"
-                  ref={nameInputRef}
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder={f.namePlaceholder}
-                  autoComplete="name"
-                />
-              </div>
-
-              <div className="message-dialog__field">
-                <label htmlFor="msg-email">{f.emailLabel}</label>
-                <input
-                  id="msg-email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder={f.emailPlaceholder}
-                  autoComplete="email"
-                />
-              </div>
-
-              <div className="message-dialog__field">
-                <label htmlFor="msg-message">{f.messageLabel}</label>
-                <textarea
-                  id="msg-message"
-                  rows={4}
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  placeholder={f.messagePlaceholder}
-                />
-              </div>
-
-              {error ? (
-                <p className="message-dialog__error" role="alert">
-                  {error}
-                </p>
-              ) : null}
-
-              <div className="message-dialog__actions">
-                <button type="button" className="message-dialog__cancel" onClick={onClose}>
-                  {f.cancelLabel}
-                </button>
-                <button type="submit" className="message-dialog__submit">
-                  <PaperPlaneTilt size={15} weight="light" />
-                  {f.submitLabel}
-                </button>
-              </div>
-            </form>
+              <Stepper
+                initialStep={1}
+                onStepChange={setStep}
+                onFinalStepCompleted={handleComplete}
+                backButtonText={f.backLabel}
+                nextButtonText={f.nextLabel}
+                completeButtonText={f.submitLabel}
+                nextButtonProps={{ disabled: nextDisabled }}
+                disableStepIndicators
+              >
+                <Step>
+                  <div className="message-dialog__field">
+                    <label htmlFor="msg-name">{f.nameLabel}</label>
+                    <input
+                      id="msg-name"
+                      ref={nameInputRef}
+                      type="text"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder={f.namePlaceholder}
+                      autoComplete="name"
+                    />
+                  </div>
+                </Step>
+                <Step>
+                  <div className="message-dialog__field">
+                    <label htmlFor="msg-email">{f.emailLabel}</label>
+                    <input
+                      id="msg-email"
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder={f.emailPlaceholder}
+                      autoComplete="email"
+                    />
+                  </div>
+                </Step>
+                <Step>
+                  <div className="message-dialog__field">
+                    <label htmlFor="msg-message">{f.messageLabel}</label>
+                    <textarea
+                      id="msg-message"
+                      rows={4}
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
+                      placeholder={f.messagePlaceholder}
+                    />
+                  </div>
+                </Step>
+              </Stepper>
+            </div>
           )}
         </FramedPanel>
       </div>
