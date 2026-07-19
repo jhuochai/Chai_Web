@@ -13,11 +13,11 @@ const en = {
   title: 'Game Marketing Coordinator',
   hero: {
     tagline: 'Aim on instinct. Hit with execution.',
-    switcherLabel: 'Choose a scene',
+    switcherLabel: 'Explore the story',
     scenes: [
-      { id: 'starry', label: 'Star' },
-      { id: 'day', label: 'Day' },
-      { id: 'night', label: 'Night' },
+      { id: 'starry', label: 'Work', target: '#scene-5' },
+      { id: 'day', label: 'Career', target: '#scene-3', mode: 'day' },
+      { id: 'night', label: 'Games', target: '#scene-3', mode: 'night' },
     ],
   },
   positioning: {
@@ -371,11 +371,11 @@ const zh = {
   title: '遊戲行銷企劃',
   hero: {
     tagline: '靠直覺瞄準，用效率命中。',
-    switcherLabel: '切換場景',
+    switcherLabel: '探索故事',
     scenes: [
-      { id: 'starry', label: '星夜' },
-      { id: 'day', label: '白晝' },
-      { id: 'night', label: '夜幕' },
+      { id: 'starry', label: '作品', target: '#scene-5' },
+      { id: 'day', label: '經歷', target: '#scene-3', mode: 'day' },
+      { id: 'night', label: '遊戲', target: '#scene-3', mode: 'night' },
     ],
   },
   positioning: {
