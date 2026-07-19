@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useScroll, useMotionValueEvent } from 'motion/react';
 import { Globe, List, X } from '@phosphor-icons/react';
 import { useLanguage } from '../i18n/LanguageContext';
@@ -9,6 +9,11 @@ import './Nav.css';
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  // Hidden by default so nothing floats over the hero; slides in when
+  // the pointer travels to the top edge, and stays while the mobile
+  // menu is open or keyboard focus is inside.
+  const [revealed, setRevealed] = useState(false);
+  const [focusInside, setFocusInside] = useState(false);
   // Stable identity: MobileMenu's focus/scroll-lock effect depends on
   // onClose, so a fresh closure per render would re-arm it (and re-steal
   // focus) on every Nav re-render while the menu is open.
@@ -23,6 +28,19 @@ export default function Nav() {
     });
   });
 
+  useEffect(() => {
+    const onPointerMove = (event) => {
+      setRevealed((prev) => {
+        const next = event.clientY <= 90;
+        return prev === next ? prev : next;
+      });
+    };
+    window.addEventListener('pointermove', onPointerMove);
+    return () => window.removeEventListener('pointermove', onPointerMove);
+  }, []);
+
+  const shown = revealed || menuOpen || focusInside;
+
   const links = [
     { href: '#scene-1', label: t.nav.home },
     { href: '#scene-3', label: t.nav.story },
@@ -30,7 +48,13 @@ export default function Nav() {
   ];
 
   return (
-    <header className={`nav ${scrolled ? 'nav--solid' : ''}`}>
+    <header
+      className={`nav ${scrolled ? 'nav--solid' : ''} ${shown ? '' : 'nav--hidden'}`}
+      onFocus={() => setFocusInside(true)}
+      onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget)) setFocusInside(false);
+      }}
+    >
       <div className="nav__inner container">
         <a href="#scene-1" className="nav__mark">
           {t.name.display}

@@ -51,6 +51,14 @@ describe('CareerTree', () => {
     await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
   });
 
+  it('switches to night mode when the hero broadcasts games mode', () => {
+    renderTree();
+    fireEvent(window, new CustomEvent('career-tree:mode', { detail: 'night' }));
+    expect(
+      screen.getByRole('button', { name: content.en.careerTree.flowers[0].name })
+    ).toBeInTheDocument();
+  });
+
   it('opens a flower detail card in night mode', () => {
     renderTree();
     fireEvent.click(screen.getByRole('button', { name: 'Switch to night' }));

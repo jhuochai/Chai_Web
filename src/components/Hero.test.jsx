@@ -27,27 +27,37 @@ describe('Hero', () => {
     expect(container.querySelector('video')).toBeNull();
   });
 
-  it('shows the three short scene labels with the first active', () => {
+  it('shows the three chapter labels with the first active', () => {
     renderHero();
     for (const scene of content.en.hero.scenes) {
       expect(screen.getByRole('button', { name: new RegExp(scene.label) })).toBeInTheDocument();
     }
-    expect(screen.getByRole('button', { name: /Star/ })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByRole('button', { name: /Work/ })).toHaveAttribute('aria-pressed', 'true');
   });
 
   it('switches the scene when the pointer rests on a label', () => {
     const { container } = renderHero();
-    fireEvent.mouseEnter(screen.getByRole('button', { name: /Day/ }));
-    expect(screen.getByRole('button', { name: /Day/ })).toHaveAttribute('aria-pressed', 'true');
-    expect(screen.getByRole('button', { name: /Star/ })).toHaveAttribute('aria-pressed', 'false');
+    fireEvent.mouseEnter(screen.getByRole('button', { name: /Career/ }));
+    expect(screen.getByRole('button', { name: /Career/ })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByRole('button', { name: /Work/ })).toHaveAttribute('aria-pressed', 'false');
     expect(container.querySelectorAll('.hero__scene--active')).toHaveLength(1);
   });
 
   it('ignores further switches during the crossfade cooldown', () => {
     renderHero();
-    fireEvent.mouseEnter(screen.getByRole('button', { name: /Day/ }));
-    fireEvent.mouseEnter(screen.getByRole('button', { name: /Night/ }));
-    expect(screen.getByRole('button', { name: /Day/ })).toHaveAttribute('aria-pressed', 'true');
-    expect(screen.getByRole('button', { name: /Night/ })).toHaveAttribute('aria-pressed', 'false');
+    fireEvent.mouseEnter(screen.getByRole('button', { name: /Career/ }));
+    fireEvent.mouseEnter(screen.getByRole('button', { name: /Games/ }));
+    expect(screen.getByRole('button', { name: /Career/ })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByRole('button', { name: /Games/ })).toHaveAttribute('aria-pressed', 'false');
+  });
+
+  it('broadcasts the career-tree mode when a chapter is clicked', () => {
+    renderHero();
+    const heard = [];
+    const onMode = (event) => heard.push(event.detail);
+    window.addEventListener('career-tree:mode', onMode);
+    fireEvent.click(screen.getByRole('button', { name: /Games/ }));
+    window.removeEventListener('career-tree:mode', onMode);
+    expect(heard).toEqual(['night']);
   });
 });

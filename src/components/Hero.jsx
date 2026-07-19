@@ -10,7 +10,15 @@ import './Hero.css';
 // Order matches content.hero.scenes (starry / day / night).
 const SCENE_SOURCES = [starryScene, daylightScene, nightScene];
 const CROSSFADE_MS = 1000;
-const FLUID_COLORS = ['#c9a24b', '#3fc1d6', '#4a7c9e'];
+
+// The fluid takes its palette from the artwork it floats over: warm
+// moon-gold over the starry city, mossy daylight golds over the day
+// tree, violet-and-bloom golds over the night tree.
+const FLUID_PALETTES = [
+  ['#e0bc6a', '#f4e3b2', '#3fc1d6'],
+  ['#6e8b3d', '#c9a24b', '#ede3d0'],
+  ['#e0bc6a', '#8b7bd8', '#3fc1d6'],
+];
 
 /**
  * Cinematic glass-window hero: the key visuals sit behind a huge
@@ -21,7 +29,7 @@ const FLUID_COLORS = ['#c9a24b', '#3fc1d6', '#4a7c9e'];
  */
 export default function Hero() {
   const reduce = useReducedMotion();
-  const { t } = useLanguage();
+  const { lang, t } = useLanguage();
   const [active, setActive] = useState(0);
   const coolingRef = useRef(false);
   const scenesRef = useRef(null);
@@ -35,6 +43,16 @@ export default function Hero() {
     window.setTimeout(() => {
       coolingRef.current = false;
     }, CROSSFADE_MS);
+  };
+
+  // Hover previews the scene; click travels to the matching chapter.
+  const goToScene = (scene) => {
+    if (scene.mode) {
+      window.dispatchEvent(new CustomEvent('career-tree:mode', { detail: scene.mode }));
+    }
+    document.querySelector(scene.target)?.scrollIntoView({
+      behavior: reduce ? 'auto' : 'smooth',
+    });
   };
 
   // Soft parallax: the scene leans a few pixels toward the pointer.
@@ -79,8 +97,9 @@ export default function Hero() {
 
         {!reduce && (
           <LiquidEther
+            key={active}
             className="hero__fluid"
-            colors={FLUID_COLORS}
+            colors={FLUID_PALETTES[active]}
             mouseForce={18}
             cursorSize={90}
             resolution={0.5}
@@ -102,7 +121,9 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
         >
-          <h1 className="hero__tagline">{t.hero.tagline}</h1>
+          <h1 className={`hero__tagline ${lang === 'en' ? 'hero__tagline--latin' : ''}`}>
+            {t.hero.tagline}
+          </h1>
 
           <div className="hero__menu" role="group" aria-label={t.hero.switcherLabel}>
             {t.hero.scenes.map((scene, index) => (
@@ -112,7 +133,7 @@ export default function Hero() {
                 className={`hero__menu-item ${index === active ? 'hero__menu-item--active' : ''}`}
                 onMouseEnter={() => switchScene(index)}
                 onFocus={() => switchScene(index)}
-                onClick={() => switchScene(index)}
+                onClick={() => goToScene(scene)}
                 aria-pressed={index === active}
               >
                 <span className="hero__menu-label">{scene.label}</span>

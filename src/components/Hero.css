@@ -148,6 +148,14 @@
   text-wrap: balance;
 }
 
+/* English tagline reads in Times italic; the Chinese one keeps the
+   handwriting fallback from the script chain. */
+.hero__tagline--latin {
+  font-family: 'Times New Roman', Times, serif;
+  font-style: italic;
+  letter-spacing: 0.01em;
+}
+
 .hero__menu {
   display: inline-flex;
   align-items: stretch;

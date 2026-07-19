@@ -10,7 +10,34 @@
   backdrop-filter: blur(10px) saturate(140%);
   -webkit-backdrop-filter: blur(10px) saturate(140%);
   border-bottom: 1px solid transparent;
-  transition: background-color 0.4s var(--ease-reveal), border-color 0.4s var(--ease-reveal), backdrop-filter 0.4s var(--ease-reveal);
+  transition:
+    background-color 0.4s var(--ease-reveal),
+    border-color 0.4s var(--ease-reveal),
+    backdrop-filter 0.4s var(--ease-reveal),
+    transform 0.45s var(--ease-reveal),
+    opacity 0.45s var(--ease-reveal);
+}
+
+/* Hidden until the pointer reaches the top edge, so nothing floats
+   over the hero art. Touch devices have no hover: keep it visible. */
+.nav--hidden {
+  transform: translateY(-100%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (pointer: coarse) {
+  .nav--hidden {
+    transform: none;
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav {
+    transition: none;
+  }
 }
 
 .nav--solid {

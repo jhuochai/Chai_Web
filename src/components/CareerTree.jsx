@@ -180,6 +180,17 @@ export default function CareerTree() {
     ? [...tree.ribbons, ...tree.flowers].find((item) => item.id === activeId)
     : null;
 
+  // The hero's chapter menu can send visitors here in a specific mode
+  // ("Career" lands on the day tree, "Games" on the night bloom).
+  useEffect(() => {
+    const onMode = (event) => {
+      setNight(event.detail === 'night');
+      setActiveId(null);
+    };
+    window.addEventListener('career-tree:mode', onMode);
+    return () => window.removeEventListener('career-tree:mode', onMode);
+  }, []);
+
   useEffect(() => {
     if (!activeItem) return undefined;
     closeButtonRef.current?.focus();
