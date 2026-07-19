@@ -29,9 +29,10 @@
 }
 
 .nav__mark {
-  font-family: var(--display);
-  font-size: 20px;
-  font-weight: 600;
+  /* Brush-script signature, the Jinx-logo energy of the brand. */
+  font-family: var(--script);
+  font-size: 24px;
+  font-weight: 400;
   color: var(--parchment);
   text-decoration: none;
   display: flex;

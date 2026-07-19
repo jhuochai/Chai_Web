@@ -1,10 +1,6 @@
-@import '@fontsource-variable/fraunces/standard.css';
-@import '@fontsource-variable/fraunces/standard-italic.css';
-@import '@fontsource/inter/400.css';
-@import '@fontsource/inter/500.css';
-@import '@fontsource/inter/600.css';
-@import '@fontsource/jetbrains-mono/400.css';
-@import '@fontsource/jetbrains-mono/500.css';
+@import '@fontsource/kaushan-script/index.css';
+@import 'lxgw-wenkai-tc-webfont/lxgwwenkaitc-regular.css';
+@import 'lxgw-wenkai-tc-webfont/lxgwwenkaitc-bold.css';
 
 :root {
   /* dark academia / art-deco luxury palette */
@@ -28,9 +24,13 @@
   --hairline: rgba(201, 162, 75, 0.22);
   --hairline-soft: rgba(237, 227, 208, 0.12);
 
-  --display: 'Fraunces Variable', 'Fraunces', Georgia, serif;
-  --body: 'Inter', system-ui, sans-serif;
-  --mono: 'JetBrains Mono', ui-monospace, monospace;
+  /* Brush script for decorative accents only (wordmark, tagline,
+     scene labels) — everything meant to be READ uses Times New Roman
+     for Latin with LXGW WenKai TC handwriting carrying the CJK. */
+  --script: 'Kaushan Script', 'LXGW WenKai TC', cursive;
+  --display: 'Times New Roman', Times, 'LXGW WenKai TC', serif;
+  --body: 'Times New Roman', Times, 'LXGW WenKai TC', serif;
+  --mono: 'Times New Roman', Times, 'LXGW WenKai TC', serif;
 
   --content-max: 1700px;
   --nav-h: 76px;
@@ -98,7 +98,7 @@ h2,
 h3,
 h4 {
   font-family: var(--display);
-  font-weight: 560;
+  font-weight: 700;
   color: var(--parchment);
   margin: 0;
   letter-spacing: -0.01em;
