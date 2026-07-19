@@ -3,20 +3,76 @@
   height: 100dvh;
   overflow: hidden;
   background: var(--void);
+  padding: clamp(12px, 1.8vw, 28px);
+  padding-top: calc(var(--nav-h) - 8px);
 }
 
-/* --- crossfading scene layer --- */
+/* --- the glass window ---
+   A single huge liquid-glass pane; the artwork lives behind it. */
+
+.hero__window {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: clamp(22px, 3vw, 44px);
+  overflow: hidden;
+  isolation: isolate;
+  box-shadow:
+    inset 0 0 90px rgba(21, 18, 16, 0.55),
+    0 26px 80px -30px rgba(0, 0, 0, 0.8);
+}
+
+/* Gradient glass edge, same recipe as the site's liquid-glass pills. */
+.hero__window::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  border-radius: inherit;
+  padding: 1.6px;
+  background: linear-gradient(
+    180deg,
+    rgba(237, 227, 208, 0.5) 0%,
+    rgba(237, 227, 208, 0.14) 22%,
+    rgba(237, 227, 208, 0) 45%,
+    rgba(201, 162, 75, 0) 60%,
+    rgba(201, 162, 75, 0.18) 82%,
+    rgba(201, 162, 75, 0.5) 100%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* A diagonal glass reflection streak across the upper pane. */
+.hero__shine {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  border-radius: inherit;
+  background: linear-gradient(
+    115deg,
+    rgba(255, 255, 255, 0.09) 0%,
+    rgba(255, 255, 255, 0.03) 18%,
+    rgba(255, 255, 255, 0) 32%
+  );
+  pointer-events: none;
+}
+
+/* --- crossfading scenes --- */
 
 .hero__scenes {
   position: absolute;
   inset: 0;
+  z-index: 0;
   --parallax-x: 0px;
   --parallax-y: 0px;
 }
 
 .hero__scene {
   position: absolute;
-  /* Slight overscan so the parallax drift never exposes an edge. */
+  /* Overscan so parallax drift never exposes an edge. */
   inset: -24px;
   width: calc(100% + 48px);
   height: calc(100% + 48px);
@@ -32,8 +88,6 @@
   animation: hero-drift 26s ease-in-out infinite alternate;
 }
 
-/* Slow breathing zoom so the scene feels alive even before the cursor
-   touches it. Runs on scale only; parallax rides the translate vars. */
 @keyframes hero-drift {
   from {
     transform: translate3d(var(--parallax-x), var(--parallax-y), 0) scale(1);
@@ -43,74 +97,120 @@
   }
 }
 
-/* Legibility grade only where the UI sits — the art stays bright. */
+/* --- cursor fluid layer --- */
+
+.hero__fluid {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  mix-blend-mode: screen;
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+/* Legibility grade only at the bottom; the art stays bright. */
 .hero__grade {
   position: absolute;
   inset: auto 0 0 0;
-  height: 42%;
+  z-index: 2;
+  height: 40%;
   background: linear-gradient(
     180deg,
     rgba(21, 18, 16, 0) 0%,
-    rgba(21, 18, 16, 0.38) 55%,
-    rgba(21, 18, 16, 0.78) 100%
+    rgba(21, 18, 16, 0.4) 58%,
+    rgba(21, 18, 16, 0.8) 100%
   );
 }
 
-/* --- foot: one tagline + the scene switcher --- */
+/* --- foot: brush-script tagline + hover scene menu --- */
 
 .hero__foot {
   position: absolute;
   inset: auto 0 0 0;
-  z-index: 1;
+  z-index: 4;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(18px, 2.6vh, 28px);
+  gap: clamp(16px, 2.4vh, 26px);
   padding-inline: 24px;
-  padding-bottom: clamp(30px, 5.5vh, 56px);
+  padding-bottom: clamp(28px, 5vh, 52px);
   text-align: center;
 }
 
 .hero__tagline {
-  font-size: clamp(27px, 3.2vw, 46px);
-  font-weight: 500;
-  letter-spacing: 0.01em;
-  line-height: 1.25;
+  font-family: var(--script);
+  font-size: clamp(30px, 3.6vw, 54px);
+  font-weight: 400;
+  letter-spacing: 0.015em;
+  line-height: 1.3;
   color: var(--parchment);
-  text-shadow: 0 2px 26px rgba(21, 18, 16, 0.85);
+  text-shadow: 0 3px 30px rgba(21, 18, 16, 0.9);
   text-wrap: balance;
 }
 
-.hero__tagline-proximity {
-  display: inline-block;
-}
-
-.hero__switcher {
+.hero__menu {
   display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 6px;
+  align-items: stretch;
+  gap: clamp(10px, 1.6vw, 22px);
 }
 
-.hero__switch {
+.hero__menu-item {
+  position: relative;
+  overflow: hidden;
   border: none;
   background: none;
+  padding: 10px 22px;
   border-radius: 999px;
-  padding: 9px 18px;
-  font-family: var(--mono);
-  font-size: 12.5px;
-  letter-spacing: 0.08em;
-  color: rgba(237, 227, 208, 0.55);
-  transition: color 0.3s ease, background-color 0.3s ease;
+  cursor: pointer;
 }
 
-.hero__switch:hover {
-  color: rgba(237, 227, 208, 0.85);
+.hero__menu-label {
+  position: relative;
+  z-index: 0;
+  font-family: var(--script);
+  font-size: clamp(19px, 1.7vw, 25px);
+  color: rgba(237, 227, 208, 0.62);
+  transition: color 0.3s ease;
 }
 
-.hero__switch--active {
+.hero__menu-item--active .hero__menu-label {
   color: var(--gold-bright);
-  background: rgba(21, 18, 16, 0.45);
+}
+
+/* FlowingMenu-style band: slides up over the label on hover and runs
+   a marquee of the same word while the backdrop switches scene. */
+.hero__menu-marquee {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  border-radius: inherit;
+  background: var(--gold-bright);
+  transform: translateY(101%);
+  transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.hero__menu-item:hover .hero__menu-marquee,
+.hero__menu-item:focus-visible .hero__menu-marquee {
+  transform: translateY(0);
+}
+
+.hero__menu-track {
+  display: inline-block;
+  white-space: nowrap;
+  padding-left: 8px;
+  font-family: var(--script);
+  font-size: 17px;
+  color: var(--void);
+  animation: menu-marquee 9s linear infinite;
+}
+
+@keyframes menu-marquee {
+  to {
+    transform: translateX(-50%);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -120,11 +220,16 @@
   .hero__scene--active {
     animation: none;
   }
+  .hero__menu-track {
+    animation: none;
+  }
+  .hero__menu-marquee {
+    transition: none;
+  }
 }
 
 @media (max-width: 640px) {
-  .hero__switch {
-    padding: 8px 12px;
-    font-size: 11.5px;
+  .hero__menu-item {
+    padding: 8px 14px;
   }
 }

@@ -10,6 +10,10 @@ vi.mock('./components/CircularGallery', () => ({
   default: () => <div data-testid="circular-gallery-stub" />,
 }));
 
+vi.mock('./components/LiquidEther', () => ({
+  default: () => <div data-testid="liquid-ether-stub" />,
+}));
+
 describe('App', () => {
   it('renders scenes 1-7 in order (scene 0 is the loading overlay, not a section)', () => {
     const { container } = render(<App />);

@@ -15,9 +15,9 @@ const en = {
     tagline: 'Aim on instinct. Hit with execution.',
     switcherLabel: 'Choose a scene',
     scenes: [
-      { id: 'starry', label: 'Starry Night' },
-      { id: 'day', label: 'Daylight Tree' },
-      { id: 'night', label: 'Night Bloom' },
+      { id: 'starry', label: 'Star' },
+      { id: 'day', label: 'Day' },
+      { id: 'night', label: 'Night' },
     ],
   },
   positioning: {
@@ -269,6 +269,8 @@ const en = {
     messageLabel: 'Message',
     messagePlaceholder: "What's on your mind?",
     submitLabel: 'Open Email App',
+    backLabel: 'Back',
+    nextLabel: 'Continue',
     cancelLabel: 'Cancel',
     closeLabel: 'Close',
     successTitle: 'Almost there',
@@ -372,8 +374,8 @@ const zh = {
     switcherLabel: '切換場景',
     scenes: [
       { id: 'starry', label: '星夜' },
-      { id: 'day', label: '日光大樹' },
-      { id: 'night', label: '夜色大樹' },
+      { id: 'day', label: '白晝' },
+      { id: 'night', label: '夜幕' },
     ],
   },
   positioning: {
@@ -623,6 +625,8 @@ const zh = {
     messageLabel: '留言內容',
     messagePlaceholder: '想跟我說什麼呢？',
     submitLabel: '開啟郵件軟體',
+    backLabel: '上一步',
+    nextLabel: '下一步',
     cancelLabel: '取消',
     closeLabel: '關閉',
     successTitle: '就快好了',

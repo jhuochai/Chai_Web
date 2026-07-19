@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
-import VariableProximity from './VariableProximity';
+import LiquidEther from './LiquidEther';
 import { useLanguage } from '../i18n/LanguageContext';
 import starryScene from '../assets/scenes/hero-background.webp';
 import daylightScene from '../assets/scenes/tree-day.webp';
@@ -10,13 +10,14 @@ import './Hero.css';
 // Order matches content.hero.scenes (starry / day / night).
 const SCENE_SOURCES = [starryScene, daylightScene, nightScene];
 const CROSSFADE_MS = 1000;
+const FLUID_COLORS = ['#c9a24b', '#3fc1d6', '#4a7c9e'];
 
 /**
- * Cinematic scene-switcher hero: the artwork IS the design. Full-bleed
- * key visuals crossfade under a single tagline and a liquid-glass
- * switcher row — no frames, no stats, no paragraph. The art stays
- * bright (no dimming filter); only a bottom grade protects legibility.
- * The background answers the cursor with a soft parallax drift.
+ * Cinematic glass-window hero: the key visuals sit behind a huge
+ * liquid-glass pane, a WebGL fluid layer (LiquidEther) swirls
+ * gold/cyan wisps after the cursor, and the scene switches when the
+ * pointer rests on one of the two-character labels below the tagline.
+ * One brush-script line of text, nothing else.
  */
 export default function Hero() {
   const reduce = useReducedMotion();
@@ -25,7 +26,6 @@ export default function Hero() {
   const coolingRef = useRef(false);
   const scenesRef = useRef(null);
   const sectionRef = useRef(null);
-  const taglineRef = useRef(null);
   const rafRef = useRef(0);
 
   const switchScene = (index) => {
@@ -37,8 +37,7 @@ export default function Hero() {
     }, CROSSFADE_MS);
   };
 
-  // Cursor parallax: the whole scene leans a few pixels toward the
-  // pointer, so the backdrop feels alive instead of painted on.
+  // Soft parallax: the scene leans a few pixels toward the pointer.
   useEffect(() => {
     if (reduce) return undefined;
     const section = sectionRef.current;
@@ -51,8 +50,8 @@ export default function Hero() {
         const rect = section.getBoundingClientRect();
         const nx = (event.clientX - rect.left) / rect.width - 0.5;
         const ny = (event.clientY - rect.top) / rect.height - 0.5;
-        scenes.style.setProperty('--parallax-x', `${(-nx * 18).toFixed(1)}px`);
-        scenes.style.setProperty('--parallax-y', `${(-ny * 12).toFixed(1)}px`);
+        scenes.style.setProperty('--parallax-x', `${(-nx * 16).toFixed(1)}px`);
+        scenes.style.setProperty('--parallax-y', `${(-ny * 10).toFixed(1)}px`);
       });
     };
 
@@ -65,52 +64,68 @@ export default function Hero() {
 
   return (
     <section id="scene-1" className="hero" ref={sectionRef}>
-      <div className="hero__scenes" ref={scenesRef} aria-hidden="true">
-        {SCENE_SOURCES.map((src, index) => (
-          <img
-            key={src}
-            src={src}
-            alt=""
-            className={`hero__scene ${index === active ? 'hero__scene--active' : ''}`}
-            draggable="false"
-          />
-        ))}
-        <div className="hero__grade" />
-      </div>
-
-      <motion.div
-        className="hero__foot"
-        initial={reduce ? false : { opacity: 0, y: 26 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
-      >
-        <h1 className="hero__tagline">
-          <span ref={taglineRef} className="hero__tagline-proximity">
-            <VariableProximity
-              label={t.hero.tagline}
-              containerRef={taglineRef}
-              fromFontVariationSettings="'wght' 480, 'opsz' 40"
-              toFontVariationSettings="'wght' 780, 'opsz' 144"
-              radius={130}
-              falloff="exponential"
+      <div className="hero__window">
+        <div className="hero__scenes" ref={scenesRef} aria-hidden="true">
+          {SCENE_SOURCES.map((src, index) => (
+            <img
+              key={src}
+              src={src}
+              alt=""
+              className={`hero__scene ${index === active ? 'hero__scene--active' : ''}`}
+              draggable="false"
             />
-          </span>
-        </h1>
-
-        <div className="hero__switcher btn-glass" role="group" aria-label={t.hero.switcherLabel}>
-          {t.hero.scenes.map((scene, index) => (
-            <button
-              key={scene.id}
-              type="button"
-              className={`hero__switch ${index === active ? 'hero__switch--active' : ''}`}
-              onClick={() => switchScene(index)}
-              aria-pressed={index === active}
-            >
-              {scene.label}
-            </button>
           ))}
         </div>
-      </motion.div>
+
+        {!reduce && (
+          <LiquidEther
+            className="hero__fluid"
+            colors={FLUID_COLORS}
+            mouseForce={18}
+            cursorSize={90}
+            resolution={0.5}
+            autoDemo
+            autoSpeed={0.35}
+            autoIntensity={1.8}
+            takeoverDuration={0.25}
+            autoResumeDelay={3000}
+            autoRampDuration={0.6}
+          />
+        )}
+
+        <div className="hero__grade" aria-hidden="true" />
+        <div className="hero__shine" aria-hidden="true" />
+
+        <motion.div
+          className="hero__foot"
+          initial={reduce ? false : { opacity: 0, y: 26 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <h1 className="hero__tagline">{t.hero.tagline}</h1>
+
+          <div className="hero__menu" role="group" aria-label={t.hero.switcherLabel}>
+            {t.hero.scenes.map((scene, index) => (
+              <button
+                key={scene.id}
+                type="button"
+                className={`hero__menu-item ${index === active ? 'hero__menu-item--active' : ''}`}
+                onMouseEnter={() => switchScene(index)}
+                onFocus={() => switchScene(index)}
+                onClick={() => switchScene(index)}
+                aria-pressed={index === active}
+              >
+                <span className="hero__menu-label">{scene.label}</span>
+                <span className="hero__menu-marquee" aria-hidden="true">
+                  <span className="hero__menu-track">
+                    {Array.from({ length: 12 }, () => scene.label).join(' · ')}
+                  </span>
+                </span>
+              </button>
+            ))}
+          </div>
+        </motion.div>
+      </div>
     </section>
   );
 }
