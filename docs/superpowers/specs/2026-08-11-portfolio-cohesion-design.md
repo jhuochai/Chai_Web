@@ -34,6 +34,16 @@
 - 區段交界避免水平硬切。使用霧、暗角、光暈、前景剪影或角色跨區重疊作為橋接。
 - 背景不得降低正文可讀性；內文控制在 65–75ch，維持合格對比。
 
+## 滾動與動效架構
+
+- 使用 Lenis 作為唯一的全站平滑滾動引擎，保留原生 scroll、錨點與輔助功能語意。
+- Lenis 與 GSAP 共用同一個 requestAnimationFrame/ticker，避免兩套滾動迴圈產生延遲或抖動。
+- 使用 `anchors: true` 並提供程式化 `scrollTo` fallback，確保 Hero 選單與導覽錨點仍能正確前往場景。
+- GSAP ScrollTrigger 只負責兩個標誌性滾動段落：Hero 到 Intro 的角色／背景交接，以及 Career Tree 的前後景層次與熱點進場。
+- `motion/react` 保留給按鈕、彈窗、切換與短促狀態動畫；Loading 粒子仍由 Canvas 2D 控制。
+- 不使用每區相同的 fade-and-rise，也不為了展示技術加入滾動劫持、水平捲動或過多 pinning。
+- Lenis、GSAP 與既有動效都必須遵守 `prefers-reduced-motion`；降低動態時停用平滑／scrub，改用即時定位與靜態可見內容。
+
 ## Loading
 
 ### 構圖

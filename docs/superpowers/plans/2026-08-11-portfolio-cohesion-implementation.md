@@ -6,7 +6,7 @@
 
 **Architecture:** Keep the existing React/Vite single-page scene structure and `motion/react` interactions. Add one shared scene-atmosphere layer, isolate Loading particle math into a testable pure module, add a dedicated cat-café case component/data module, and replace generated imagery only after preview approval. Existing components remain independently testable and no backend is introduced.
 
-**Tech Stack:** React 19, Vite 8, motion/react, Canvas 2D, CSS, Vitest, Testing Library, Sharp for local image optimization, ImageGen for Hero/Career artwork.
+**Tech Stack:** React 19, Vite 8, Lenis, GSAP/ScrollTrigger, `@gsap/react`, motion/react, Canvas 2D, CSS, Vitest, Testing Library, Sharp for local image optimization, ImageGen for Hero/Career artwork.
 
 ## Global Constraints
 
@@ -16,6 +16,7 @@
 - Intro loses the full decorative frame; the hanging character must be physically anchored to the Hero edge.
 - Loading fire is white-gold/orange with limited cyan/violet Arcane energy and must burst at the actual pointer/touch position.
 - Loading keeps a three-second auto-fire fallback and keyboard/reduced-motion paths.
+- Lenis is the only smooth-scroll engine; GSAP owns only Hero→Intro and Career Tree scroll choreography; motion/react remains for discrete UI state transitions.
 - Cat-café social assets remain unaltered; absolute metrics are used where engagement-rate denominators conflict.
 - No random Picsum imagery, CMS, backend, analytics expansion, or regenerated social posts.
 - Verify at 360×800, 768×1024, 910×698, and 1440×900.
@@ -26,6 +27,8 @@
 - Create `src/components/loadingFire.test.js`: deterministic unit tests for fire origin, palette, and bounds.
 - Modify `src/components/LoadingScreen.jsx`, `LoadingScreen.css`, `LoadingScreen.test.jsx`: larger composition and layered impact.
 - Modify `src/App.jsx`, `src/index.css`: scene order and shared atmospheric background.
+- Create `src/components/SmoothScroll.jsx`, `SmoothScroll.test.jsx`: Lenis lifecycle, GSAP ticker synchronization, and scroll fallback.
+- Create `src/lib/scrollToScene.js`, `scrollToScene.test.js`: one navigation interface for Hero/buttons and anchor fallback.
 - Modify `src/components/Intro.jsx`, `Intro.css`, `Intro.test.jsx`: open layout and Hero-anchored character.
 - Create `src/data/catCafeCase.js`: bilingual case facts and asset metadata.
 - Create `src/components/CatCafeCase.jsx`, `CatCafeCase.css`, `CatCafeCase.test.jsx`: featured case.
@@ -200,7 +203,94 @@ git add src/components/LoadingScreen.jsx src/components/LoadingScreen.css src/co
 git commit -m "feat: enlarge loading shot and anchor fire to input"
 ```
 
-### Task 3: Shared Atmosphere and Open Intro
+### Task 3A: Lenis and GSAP Motion Foundation
+
+**Files:**
+- Create: `src/components/SmoothScroll.jsx`
+- Create: `src/components/SmoothScroll.test.jsx`
+- Create: `src/lib/scrollToScene.js`
+- Create: `src/lib/scrollToScene.test.js`
+- Modify: `src/App.jsx`
+- Modify: `src/components/Hero.jsx`
+- Modify: `package.json`
+- Modify: `package-lock.json`
+
+**Interfaces:**
+- Produces: `setScrollEngine(engine)` and `scrollToScene(target, options)`.
+- Consumed by: `Hero.jsx` and any non-anchor scene navigation.
+
+- [ ] **Step 1: Write failing navigation fallback tests**
+
+```js
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { scrollToScene, setScrollEngine } from './scrollToScene';
+
+describe('scrollToScene', () => {
+  afterEach(() => setScrollEngine(null));
+
+  it('uses Lenis when the shared engine is ready', () => {
+    const engine = { scrollTo: vi.fn() };
+    setScrollEngine(engine);
+    scrollToScene('#scene-3', { immediate: false });
+    expect(engine.scrollTo).toHaveBeenCalledWith('#scene-3', expect.objectContaining({ immediate: false }));
+  });
+
+  it('falls back to native scroll when Lenis is unavailable', () => {
+    const scrollIntoView = vi.fn();
+    vi.spyOn(document, 'querySelector').mockReturnValue({ scrollIntoView });
+    scrollToScene('#scene-3', { immediate: true });
+    expect(scrollIntoView).toHaveBeenCalledWith({ behavior: 'auto' });
+  });
+});
+```
+
+- [ ] **Step 2: Run and verify RED**
+
+Run: `npx.cmd vitest run src/lib/scrollToScene.test.js --pool=forks --maxWorkers=1`  
+Expected: FAIL because the module does not exist.
+
+- [ ] **Step 3: Install the approved motion dependencies**
+
+Run: `npm.cmd install lenis gsap @gsap/react`  
+Expected: package files contain all three dependencies and install succeeds without audit errors that block runtime.
+
+- [ ] **Step 4: Implement the shared scroll interface**
+
+```js
+let scrollEngine = null;
+
+export function setScrollEngine(engine) {
+  scrollEngine = engine;
+}
+
+export function scrollToScene(target, { immediate = false } = {}) {
+  if (scrollEngine) {
+    scrollEngine.scrollTo(target, { immediate, duration: immediate ? 0 : 1.05 });
+    return;
+  }
+  document.querySelector(target)?.scrollIntoView({ behavior: immediate ? 'auto' : 'smooth' });
+}
+```
+
+- [ ] **Step 5: Implement one Lenis/GSAP ticker lifecycle**
+
+Create `SmoothScroll` with Lenis `anchors:true`, `respectReducedMotion:true`, `autoRaf:false`, `stopInertiaOnNavigate:true`; subscribe `ScrollTrigger.update`, call `lenis.raf(time * 1000)` from `gsap.ticker`, set the shared engine, and on cleanup remove the ticker callback, destroy Lenis, clear the engine, and kill component-owned triggers.
+
+- [ ] **Step 6: Replace Hero's native `scrollIntoView` call**
+
+Use `scrollToScene(scene.target, { immediate: reduce })`; keep the existing career-tree mode event.
+
+- [ ] **Step 7: Verify and commit**
+
+Run: `npx.cmd vitest run src/lib/scrollToScene.test.js src/components/SmoothScroll.test.jsx src/components/Hero.test.jsx --pool=forks --maxWorkers=1`  
+Expected: PASS.
+
+```bash
+git add package.json package-lock.json src/App.jsx src/components/SmoothScroll.jsx src/components/SmoothScroll.test.jsx src/components/Hero.jsx src/lib/scrollToScene.js src/lib/scrollToScene.test.js
+git commit -m "feat: coordinate smooth scroll and scene choreography"
+```
+
+### Task 3B: Shared Atmosphere and Open Intro
 
 **Files:**
 - Modify: `src/App.jsx`
@@ -516,7 +606,7 @@ git commit -m "fix: complete responsive portfolio cohesion pass"
 ## Spec Coverage Review
 
 - Loading composition, exact target, hybrid fire, auto fallback, DPR, keyboard, and reduced motion: Tasks 1–2.
-- Shared world background and seamless Hero/Intro transition: Task 3.
+- Lenis/GSAP motion foundation and shared Hero/Intro transition: Tasks 3A–3B.
 - Brighter ruined-factory Hero with no columns or wasteland: Task 4.
 - 2D plus 3D-lit Career Tree with aligned day/night hotspots: Task 4.
 - Featured cat-café 1+8 evidence and reliable metrics: Tasks 5–6.
