@@ -47,11 +47,15 @@ describe('LoadingScreen', () => {
     expect(onDone).toHaveBeenCalledTimes(1);
   });
 
-  it('fires early on click and only once', () => {
+  it('fires on the first pointer press and only once', () => {
     const onDone = renderLoading();
     const overlay = screen.getByRole('button', { name: 'Enter the site' });
-    fireEvent.click(overlay, { clientX: 700, clientY: 300 });
-    fireEvent.click(overlay, { clientX: 100, clientY: 100 });
+    fireEvent.pointerDown(overlay, { clientX: 700, clientY: 300 });
+    fireEvent.pointerDown(overlay, { clientX: 100, clientY: 100 });
+
+    expect(overlay.style.getPropertyValue('--impact-x')).toBe('700px');
+    expect(overlay.style.getPropertyValue('--impact-y')).toBe('300px');
+
     advanceFireSequence();
     expect(onDone).toHaveBeenCalledTimes(1);
   });

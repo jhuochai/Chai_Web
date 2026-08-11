@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useReducedMotion } from 'motion/react';
 import { useLanguage } from '../i18n/LanguageContext';
-import gunHand from '../assets/scenes/gun-hand.webp';
+import gunHand from '../assets/scenes/gun-hand-cropped.webp';
+import { createFireParticles, getAutoTarget, getCanvasMetrics } from './loadingFire';
 import './LoadingScreen.css';
 
 const AUTO_FIRE_MS = 3000;
@@ -9,8 +10,6 @@ const FLASH_MS = 130;
 const FLIGHT_MS = 380;
 const BURST_MS = 950;
 const EXIT_MS = 550;
-
-const SPARK_COLORS = ['#e0bc6a', '#c9a24b', '#3fc1d6', '#ede3d0'];
 
 /**
  * Scene 0: the entrance is a shot, not a spinner. A gun held level on
@@ -42,11 +41,10 @@ export default function LoadingScreen({ onDone }) {
         return;
       }
 
-      const fallback = {
-        x: window.innerWidth * 0.62,
-        y: window.innerHeight * 0.4,
-      };
-      setTarget(point ?? fallback);
+      const impact = point ?? getAutoTarget(window.innerWidth, window.innerHeight);
+      rootRef.current?.style.setProperty('--impact-x', `${impact.x}px`);
+      rootRef.current?.style.setProperty('--impact-y', `${impact.y}px`);
+      setTarget(impact);
       setPhase('firing');
     },
     [reduce]
@@ -107,44 +105,57 @@ export default function LoadingScreen({ onDone }) {
     const ctx = canvas?.getContext?.('2d');
     if (!ctx) return undefined;
 
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    const metrics = getCanvasMetrics(
+      window.innerWidth,
+      window.innerHeight,
+      window.devicePixelRatio || 1
+    );
+    canvas.width = metrics.cssWidth * metrics.dpr;
+    canvas.height = metrics.cssHeight * metrics.dpr;
+    canvas.style.width = `${metrics.cssWidth}px`;
+    canvas.style.height = `${metrics.cssHeight}px`;
+    ctx.setTransform(metrics.dpr, 0, 0, metrics.dpr, 0, 0);
 
-    const particles = Array.from({ length: 70 }, (_, i) => {
-      const angle = (Math.PI * 2 * i) / 70 + Math.random() * 0.4;
-      const speed = 2.2 + Math.random() * 5.2;
-      return {
-        x: target.x,
-        y: target.y,
-        vx: Math.cos(angle) * speed,
-        vy: Math.sin(angle) * speed,
-        life: 1,
-        decay: 0.012 + Math.random() * 0.02,
-        size: 1.4 + Math.random() * 2.4,
-        color: SPARK_COLORS[i % SPARK_COLORS.length],
-      };
-    });
+    const particles = createFireParticles(target);
 
     let alive = true;
     const step = () => {
       if (!alive) return;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.clearRect(0, 0, metrics.cssWidth, metrics.cssHeight);
       let anyAlive = false;
       for (const p of particles) {
         if (p.life <= 0) continue;
         anyAlive = true;
         p.x += p.vx;
         p.y += p.vy;
-        p.vy += 0.055;
-        p.vx *= 0.985;
+        const gravity = p.kind === 'core' ? 0.015 : p.kind === 'arcane' ? 0.025 : 0.085;
+        p.vy += gravity;
+        p.vx *= p.kind === 'spark' ? 0.988 : 0.978;
         p.life -= p.decay;
         ctx.globalAlpha = Math.max(p.life, 0);
-        ctx.fillStyle = p.color;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fill();
+        ctx.globalCompositeOperation = 'lighter';
+        ctx.shadowColor = p.color;
+        ctx.shadowBlur = p.kind === 'core' ? 28 : p.kind === 'arcane' ? 18 : 10;
+
+        if (p.kind === 'spark' || p.kind === 'arcane') {
+          const trail = p.kind === 'spark' ? 4.8 : 2.8;
+          ctx.strokeStyle = p.color;
+          ctx.lineWidth = Math.max(1, p.size * (p.kind === 'spark' ? 0.52 : 0.35));
+          ctx.lineCap = 'round';
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(p.x - p.vx * trail, p.y - p.vy * trail);
+          ctx.stroke();
+        } else {
+          ctx.fillStyle = p.color;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size * (0.6 + p.life * 0.7), 0, Math.PI * 2);
+          ctx.fill();
+        }
       }
       ctx.globalAlpha = 1;
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.shadowBlur = 0;
       if (anyAlive) rafRef.current = window.requestAnimationFrame(step);
     };
     rafRef.current = window.requestAnimationFrame(step);
@@ -155,7 +166,7 @@ export default function LoadingScreen({ onDone }) {
     };
   }, [phase, target]);
 
-  const handleClick = (event) => {
+  const handlePointerDown = (event) => {
     fire({ x: event.clientX, y: event.clientY });
   };
 
@@ -178,7 +189,7 @@ export default function LoadingScreen({ onDone }) {
       role="button"
       tabIndex={0}
       aria-label={t.ui.enterLabel}
-      onClick={handleClick}
+      onPointerDown={handlePointerDown}
       onKeyDown={handleKeyDown}
     >
       <div className="loading-screen__gun" aria-hidden="true">

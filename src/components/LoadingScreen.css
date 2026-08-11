@@ -18,10 +18,10 @@
 
 .loading-screen__gun {
   position: absolute;
-  left: clamp(8px, 4vw, 72px);
+  left: clamp(-24px, -1.5vw, 8px);
   top: 50%;
   transform: translateY(-50%);
-  width: clamp(300px, 38vw, 620px);
+  width: clamp(460px, 52vw, 800px);
 }
 
 .loading-screen__gun-image {
@@ -51,10 +51,10 @@
    Positioned on the trigger guard of the keyed gun art. */
 .loading-screen__glint {
   position: absolute;
-  left: 51%;
-  top: 46%;
-  width: 12px;
-  height: 12px;
+  left: 60%;
+  top: 54%;
+  width: clamp(14px, 1.4vw, 20px);
+  height: clamp(14px, 1.4vw, 20px);
   border-radius: 50%;
   background: radial-gradient(circle, rgba(224, 188, 106, 0.95) 0%, rgba(224, 188, 106, 0) 70%);
   box-shadow: 0 0 18px 4px rgba(224, 188, 106, 0.45);
@@ -84,7 +84,7 @@
 
 .loading-screen__muzzle {
   position: absolute;
-  right: 5%;
+  right: 1.5%;
   top: 29%;
   width: 8px;
   height: 8px;
@@ -95,8 +95,8 @@
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 74px;
-  height: 74px;
+  width: clamp(108px, 11vw, 170px);
+  height: clamp(108px, 11vw, 170px);
   transform: translate(-50%, -50%) scale(0);
   border-radius: 50%;
   background: radial-gradient(
@@ -132,9 +132,9 @@
 
 .loading-screen__bullet {
   position: absolute;
-  width: 26px;
-  height: 3px;
-  margin-top: -1.5px;
+  width: clamp(38px, 4vw, 64px);
+  height: clamp(4px, 0.45vw, 7px);
+  margin-top: -2px;
   border-radius: 2px;
   transform-origin: left center;
   background: linear-gradient(90deg, rgba(224, 188, 106, 0) 0%, #ffe9b8 100%);
@@ -197,5 +197,22 @@
   }
   .loading-screen--exit .loading-screen__glow {
     animation: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .loading-screen__gun {
+    left: -18vw;
+    width: 86vw;
+  }
+
+  .loading-screen__flash {
+    width: 96px;
+    height: 96px;
+  }
+
+  .loading-screen__bullet {
+    width: 34px;
+    height: 4px;
   }
 }
