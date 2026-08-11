@@ -4,6 +4,10 @@ import Hero from './Hero';
 import { LanguageProvider } from '../i18n/LanguageContext';
 import { content } from '../data/content';
 
+const scrollMocks = vi.hoisted(() => ({ scrollToScene: vi.fn() }));
+
+vi.mock('../lib/scrollToScene', () => scrollMocks);
+
 vi.mock('./LiquidEther', () => ({
   default: () => <div data-testid="liquid-ether-stub" />,
 }));
@@ -59,5 +63,6 @@ describe('Hero', () => {
     fireEvent.click(screen.getByRole('button', { name: /Games/ }));
     window.removeEventListener('career-tree:mode', onMode);
     expect(heard).toEqual(['night']);
+    expect(scrollMocks.scrollToScene).toHaveBeenCalledWith('#scene-3', { immediate: false });
   });
 });

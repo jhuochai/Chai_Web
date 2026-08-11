@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import LiquidEther from './LiquidEther';
 import { useLanguage } from '../i18n/LanguageContext';
+import { scrollToScene } from '../lib/scrollToScene';
 import starryScene from '../assets/scenes/hero-background.webp';
 import daylightScene from '../assets/scenes/tree-day.webp';
 import nightScene from '../assets/scenes/tree-night.webp';
@@ -50,9 +51,7 @@ export default function Hero() {
     if (scene.mode) {
       window.dispatchEvent(new CustomEvent('career-tree:mode', { detail: scene.mode }));
     }
-    document.querySelector(scene.target)?.scrollIntoView({
-      behavior: reduce ? 'auto' : 'smooth',
-    });
+    scrollToScene(scene.target, { immediate: reduce });
   };
 
   // Soft parallax: the scene leans a few pixels toward the pointer.

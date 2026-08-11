@@ -14,6 +14,10 @@ vi.mock('./components/LiquidEther', () => ({
   default: () => <div data-testid="liquid-ether-stub" />,
 }));
 
+vi.mock('./components/SmoothScroll', () => ({
+  default: ({ paused }) => <div data-testid="smooth-scroll-stub" data-paused={paused} />,
+}));
+
 describe('App', () => {
   it('renders scenes 1-7 in order (scene 0 is the loading overlay, not a section)', () => {
     const { container } = render(<App />);
@@ -27,5 +31,10 @@ describe('App', () => {
       'scene-6',
       'scene-7',
     ]);
+  });
+
+  it('pauses the shared scroll engine while the loading overlay is active', () => {
+    const { getByTestId } = render(<App />);
+    expect(getByTestId('smooth-scroll-stub')).toHaveAttribute('data-paused', 'true');
   });
 });

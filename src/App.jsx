@@ -11,6 +11,7 @@ import FloatingCompanion from './components/FloatingCompanion';
 import GrainOverlay from './components/GrainOverlay';
 import ClickSpark from './components/ClickSpark';
 import LoadingScreen from './components/LoadingScreen';
+import SmoothScroll from './components/SmoothScroll';
 import { LanguageProvider } from './i18n/LanguageContext';
 
 function Scenes() {
@@ -39,6 +40,7 @@ function App() {
 
   return (
     <LanguageProvider>
+      <SmoothScroll paused={loading} />
       {loading && <LoadingScreen onDone={() => setLoading(false)} />}
       <ClickSpark sparkColor="#e0bc6a" sparkSize={9} sparkRadius={17} sparkCount={5} duration={550}>
         <GrainOverlay />
