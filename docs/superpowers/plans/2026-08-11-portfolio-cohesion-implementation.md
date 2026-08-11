@@ -246,12 +246,12 @@ describe('scrollToScene', () => {
 
 - [ ] **Step 2: Run and verify RED**
 
-Run: `npx.cmd vitest run src/lib/scrollToScene.test.js --pool=forks --maxWorkers=1`  
+Run: `npx.cmd vitest run src/lib/scrollToScene.test.js --pool=forks --maxWorkers=1`
 Expected: FAIL because the module does not exist.
 
 - [ ] **Step 3: Install the approved motion dependencies**
 
-Run: `npm.cmd install lenis gsap @gsap/react`  
+Run: `npm.cmd install lenis gsap @gsap/react`
 Expected: package files contain all three dependencies and install succeeds without audit errors that block runtime.
 
 - [ ] **Step 4: Implement the shared scroll interface**
@@ -282,7 +282,7 @@ Use `scrollToScene(scene.target, { immediate: reduce })`; keep the existing care
 
 - [ ] **Step 7: Verify and commit**
 
-Run: `npx.cmd vitest run src/lib/scrollToScene.test.js src/components/SmoothScroll.test.jsx src/components/Hero.test.jsx --pool=forks --maxWorkers=1`  
+Run: `npx.cmd vitest run src/lib/scrollToScene.test.js src/components/SmoothScroll.test.jsx src/components/Hero.test.jsx --pool=forks --maxWorkers=1`
 Expected: PASS.
 
 ```bash
