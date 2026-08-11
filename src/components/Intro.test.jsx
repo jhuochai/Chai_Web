@@ -11,10 +11,12 @@ function renderIntro() {
 }
 
 describe('Intro', () => {
-  it('renders as #scene-2 with the deco gallery frame', () => {
+  it('renders as #scene-2 with an open composition instead of a decorative frame', () => {
     const { container } = renderIntro();
     expect(container.querySelector('section')).toHaveAttribute('id', 'scene-2');
-    expect(container.querySelector('.framed-panel--deco')).not.toBeNull();
+    expect(container.querySelector('.framed-panel')).not.toBeInTheDocument();
+    expect(container.querySelector('.intro__copy')).toBeInTheDocument();
+    expect(container.querySelector('.intro__character-bridge')).toBeInTheDocument();
   });
 
   it('shows name, positioning statement, and all three traits as text (no badges)', () => {

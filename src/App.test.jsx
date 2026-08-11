@@ -33,6 +33,11 @@ describe('App', () => {
     ]);
   });
 
+  it('wraps every chapter in one continuous atmospheric scene flow', () => {
+    const { container } = render(<App />);
+    expect(container.querySelector('main')).toHaveClass('scene-flow');
+  });
+
   it('pauses the shared scroll engine while the loading overlay is active', () => {
     const { getByTestId } = render(<App />);
     expect(getByTestId('smooth-scroll-stub')).toHaveAttribute('data-paused', 'true');

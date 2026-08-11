@@ -16,7 +16,7 @@ import { LanguageProvider } from './i18n/LanguageContext';
 
 function Scenes() {
   return (
-    <main>
+    <main className="scene-flow">
       <Hero />
       <Intro />
       <CareerTree />
