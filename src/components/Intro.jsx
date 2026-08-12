@@ -56,7 +56,7 @@ export default function Intro() {
             {t.positioning.after}
           </p>
 
-          <ul className="intro__traits" aria-label={t.intro.eyebrow}>
+          <ul className="intro__traits" aria-label={t.intro.strengthsLabel}>
             {t.traits.map((trait) => (
               <li key={trait.key} className={`intro__trait intro__trait--${trait.key}`}>
                 <h3 className="intro__trait-label">{trait.label}</h3>
@@ -65,7 +65,10 @@ export default function Intro() {
             ))}
           </ul>
 
-          <aside className="intro__player-view">
+          <aside className="intro__player-view" aria-labelledby="intro-player-title">
+            <h3 id="intro-player-title" className="intro__player-title">
+              {t.intro.playerViewTitle}
+            </h3>
             <p>{t.personalityBlurb}</p>
           </aside>
         </div>

@@ -53,6 +53,8 @@ const en = {
     "I start with a player's eye for what feels worth stopping for, then use results to refine the next move. That approach has taken a community from 18k to 30k followers and kept an ad test within budget when the signal changed.",
   intro: {
     eyebrow: 'Nice to meet you',
+    strengthsLabel: 'Core strengths',
+    playerViewTitle: 'A player’s eye is where my marketing starts',
   },
   careerTree: {
     eyebrow: 'The Career Tree',
@@ -125,7 +127,7 @@ const en = {
       { id: 'gta5', name: 'Grand Theft Auto V', desc: 'A city-sized sandbox that is as fun to wander as it is to make trouble in.' },
       { id: 'minecraft', name: 'Minecraft', desc: 'I can lose an evening turning a loose idea into a place people can actually explore.' },
       { id: 'palworld', name: 'Palworld', desc: 'The loop of catching, building, and optimizing makes small goals stack up fast.' },
-      { id: 'dont-starve', name: "Don\'t Starve Together", desc: 'Survival is much easier when everyone shares a plan—and remembers who was meant to bring food.' },
+      { id: 'dont-starve', name: "Don't Starve Together", desc: 'Survival is much easier when everyone shares a plan—and remembers who was meant to bring food.' },
       { id: 'raft', name: 'Raft', desc: 'Starting with a tiny platform and gradually making it home is the part I keep coming back for.' },
     ],
   },
@@ -429,6 +431,8 @@ const zh = {
     '我先用玩家視角判斷什麼值得停下來看，再從結果裡找下一步。這套做法讓社群從 1.8 萬成長到 3 萬，也讓我在廣告訊號轉弱時，及時停下投放、守住預算。',
   intro: {
     eyebrow: '很高興認識你',
+    strengthsLabel: '核心能力',
+    playerViewTitle: '玩家視角，是我做行銷的起點',
   },
   careerTree: {
     eyebrow: '生涯大樹',

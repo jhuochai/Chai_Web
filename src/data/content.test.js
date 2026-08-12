@@ -34,6 +34,18 @@ describe('chaptered portfolio content', () => {
     ]);
   });
 
+  it('defines natural bilingual labels for the intro landmarks', () => {
+    expect(content.en.intro).toEqual(expect.objectContaining({
+      strengthsLabel: 'Core strengths',
+      playerViewTitle: "A player’s eye is where my marketing starts",
+    }));
+    expect(content.zh.intro).toEqual(expect.objectContaining({
+      strengthsLabel: '核心能力',
+      playerViewTitle: '玩家視角，是我做行銷的起點',
+    }));
+    expect(Object.keys(content.en.intro).sort()).toEqual(Object.keys(content.zh.intro).sort());
+  });
+
   it('keeps the bilingual game IDs aligned', () => {
     const expectedIds = [
       'mlbb', 'identity-v', 'stardew', 'lol', 'valorant', 'r6', 'gta5',

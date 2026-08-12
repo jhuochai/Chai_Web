@@ -7,6 +7,7 @@ import { LanguageProvider } from '../i18n/LanguageContext';
 import { content } from '../data/content';
 
 const globalStyles = readFileSync(join(process.cwd(), 'src', 'index.css'), 'utf8');
+const introStyles = readFileSync(join(process.cwd(), 'src', 'components', 'Intro.css'), 'utf8');
 
 function renderIntro(lang = 'en') {
   window.localStorage.setItem('site-lang', lang);
@@ -44,6 +45,7 @@ describe('Intro', () => {
       content.en.title,
       positioning,
       ...content.en.traits.flatMap((trait) => [trait.label, trait.desc]),
+      content.en.intro.playerViewTitle,
       content.en.personalityBlurb,
     ];
 
@@ -53,7 +55,12 @@ describe('Intro', () => {
       expect(index).toBeGreaterThan(previousIndex);
       return index;
     }, -1);
-    expect(container.querySelector('.intro__player-view')).toHaveTextContent(content.en.personalityBlurb);
+    expect(
+      screen.getByRole('complementary', { name: content.en.intro.playerViewTitle })
+    ).toHaveTextContent(content.en.personalityBlurb);
+    expect(
+      screen.getByRole('list', { name: content.en.intro.strengthsLabel })
+    ).toBeInTheDocument();
   });
 
   it('uses the authoritative Traditional Chinese copy without losing mixed-script spacing', () => {
@@ -61,7 +68,15 @@ describe('Intro', () => {
 
     expect(screen.getByRole('heading', { name: content.zh.name.display })).toBeInTheDocument();
     expect(container.querySelector('.intro__claim')).toHaveTextContent(content.zh.hero.tagline);
-    expect(container.querySelector('.intro__player-view')).toHaveTextContent(content.zh.personalityBlurb);
+    expect(
+      screen.getByRole('complementary', { name: content.zh.intro.playerViewTitle })
+    ).toHaveTextContent(content.zh.personalityBlurb);
+    expect(
+      screen.getByRole('heading', { name: content.zh.intro.playerViewTitle })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('list', { name: content.zh.intro.strengthsLabel })
+    ).toBeInTheDocument();
     for (const trait of content.zh.traits) {
       expect(screen.getByRole('heading', { name: trait.label })).toBeInTheDocument();
       expect(screen.getByText(trait.desc)).toBeInTheDocument();
@@ -75,5 +90,14 @@ describe('Intro', () => {
     expect(globalStyles).toMatch(/:lang\(zh-Hant\)\s+(?:em|i)[^{,]*(?:,[^{]*)?\{[^}]*font-style:\s*normal/s);
     expect(globalStyles).toMatch(/h1,\s*h2,\s*h3,\s*h4\s*\{[^}]*text-wrap:\s*balance/s);
     expect(globalStyles).toMatch(/p\s*\{[^}]*max-width:\s*70ch[^}]*text-wrap:\s*pretty/s);
+  });
+
+  it('keeps the secondary name at the readable text token', () => {
+    expect(introStyles).toMatch(
+      /\.intro__name-sub\s*\{[^}]*color:\s*var\(--parchment-dim\)/s
+    );
+    expect(introStyles).not.toMatch(
+      /\.intro__name-sub\s*\{[^}]*color:\s*var\(--parchment-faint\)/s
+    );
   });
 });
