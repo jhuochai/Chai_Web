@@ -35,9 +35,13 @@ describe('chaptered portfolio content', () => {
   });
 
   it('keeps the bilingual game IDs aligned', () => {
-    expect(content.zh.careerTree.flowers.map((game) => game.id)).toEqual(
-      content.en.careerTree.flowers.map((game) => game.id)
-    );
+    const expectedIds = [
+      'mlbb', 'identity-v', 'stardew', 'lol', 'valorant', 'r6', 'gta5',
+      'minecraft', 'palworld', 'dont-starve', 'raft',
+    ];
+    for (const lang of ['zh', 'en']) {
+      expect(content[lang].careerTree.flowers.map((game) => game.id)).toEqual(expectedIds);
+    }
   });
 
   it('defines five aligned making-of timeline records in both languages', () => {
