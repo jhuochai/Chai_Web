@@ -29,9 +29,9 @@ describe('LoadingScreen', () => {
   });
 
   // Each phase schedules the next timer from an effect, so timers must be
-  // advanced phase-by-phase (flash+flight 510ms -> burst 950ms -> exit 550ms).
+  // advanced phase-by-phase (flash+flight 430ms -> burst 950ms -> exit 550ms).
   const advanceFireSequence = () => {
-    act(() => vi.advanceTimersByTime(510));
+    act(() => vi.advanceTimersByTime(430));
     act(() => vi.advanceTimersByTime(950));
     act(() => vi.advanceTimersByTime(550));
   };
@@ -55,8 +55,12 @@ describe('LoadingScreen', () => {
 
     expect(overlay.style.getPropertyValue('--impact-x')).toBe('700px');
     expect(overlay.style.getPropertyValue('--impact-y')).toBe('300px');
+    expect(overlay.querySelector('.loading-screen__tracer')).toBeInTheDocument();
 
-    advanceFireSequence();
+    act(() => vi.advanceTimersByTime(430));
+    expect(overlay.querySelector('.loading-screen__impact-ring')).toBeInTheDocument();
+    act(() => vi.advanceTimersByTime(950));
+    act(() => vi.advanceTimersByTime(550));
     expect(onDone).toHaveBeenCalledTimes(1);
   });
 

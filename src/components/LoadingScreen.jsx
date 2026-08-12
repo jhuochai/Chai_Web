@@ -6,8 +6,8 @@ import { createFireParticles, getAutoTarget, getCanvasMetrics } from './loadingF
 import './LoadingScreen.css';
 
 const AUTO_FIRE_MS = 3000;
-const FLASH_MS = 130;
-const FLIGHT_MS = 380;
+const FLASH_MS = 90;
+const FLIGHT_MS = 340;
 const BURST_MS = 950;
 const EXIT_MS = 550;
 
@@ -87,6 +87,11 @@ export default function LoadingScreen({ onDone }) {
     const dx = target.x - startX;
     const dy = target.y - startY;
     const angle = Math.atan2(dy, dx);
+
+    rootRef.current?.style.setProperty('--muzzle-x', `${startX}px`);
+    rootRef.current?.style.setProperty('--muzzle-y', `${startY}px`);
+    rootRef.current?.style.setProperty('--shot-angle', `${angle}rad`);
+    rootRef.current?.style.setProperty('--shot-distance', `${Math.hypot(dx, dy)}px`);
 
     bullet.style.left = `${startX}px`;
     bullet.style.top = `${startY}px`;
@@ -199,7 +204,9 @@ export default function LoadingScreen({ onDone }) {
           <span className="loading-screen__flash" />
         </span>
       </div>
+      {phase === 'firing' && <span className="loading-screen__tracer" aria-hidden="true" />}
       {phase === 'firing' && <span ref={bulletRef} className="loading-screen__bullet" aria-hidden="true" />}
+      {phase === 'burst' && <span className="loading-screen__impact-ring" aria-hidden="true" />}
       <canvas ref={canvasRef} className="loading-screen__canvas" aria-hidden="true" />
       <div className="loading-screen__glow" style={glowStyle} aria-hidden="true" />
     </div>

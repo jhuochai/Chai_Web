@@ -15,8 +15,8 @@ export function getCanvasMetrics(width, height, requestedDpr = 1) {
 
 export function getAutoTarget(width, height) {
   return {
-    x: Math.round(width * 0.68),
-    y: Math.round(height * 0.42),
+    x: Math.round(width * 0.78),
+    y: Math.round(height * 0.44),
   };
 }
 
@@ -45,9 +45,9 @@ export function createFireParticles({ x, y, random = Math.random }) {
   const shared = { x, y, random };
 
   return [
-    ...createLayer({ ...shared, kind: 'core', count: 10, speedMin: 0.4, speedMax: 2.2 }),
-    ...createLayer({ ...shared, kind: 'spark', count: 52, speedMin: 4.5, speedMax: 12 }),
-    ...createLayer({ ...shared, kind: 'ember', count: 34, speedMin: 2, speedMax: 7 }),
-    ...createLayer({ ...shared, kind: 'arcane', count: 12, speedMin: 2.5, speedMax: 8 }),
+    ...createLayer({ ...shared, kind: 'core', count: 18, speedMin: 0.5, speedMax: 3.8 }),
+    ...createLayer({ ...shared, kind: 'spark', count: 96, speedMin: 5.5, speedMax: 18 }),
+    ...createLayer({ ...shared, kind: 'ember', count: 56, speedMin: 2.5, speedMax: 10 }),
+    ...createLayer({ ...shared, kind: 'arcane', count: 28, speedMin: 3.5, speedMax: 12 }),
   ];
 }
