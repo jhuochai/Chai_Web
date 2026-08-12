@@ -1,18 +1,17 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import { vi } from 'vitest';
+import { fireEvent, render, screen } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import Hero from './Hero';
 import { LanguageProvider } from '../i18n/LanguageContext';
 import { content } from '../data/content';
 
 const scrollMocks = vi.hoisted(() => ({ scrollToScene: vi.fn() }));
+const routeMocks = vi.hoisted(() => ({ navigateToRoute: vi.fn() }));
 
 vi.mock('../lib/scrollToScene', () => scrollMocks);
-
-vi.mock('./LiquidEther', () => ({
-  default: () => <div data-testid="liquid-ether-stub" />,
-}));
+vi.mock('../lib/siteRoute', () => routeMocks);
 
 function renderHero() {
+  window.localStorage.setItem('site-lang', 'en');
   return render(
     <LanguageProvider>
       <Hero />
@@ -21,48 +20,58 @@ function renderHero() {
 }
 
 describe('Hero', () => {
-  it('renders as #scene-1 with the tagline inside the glass window, no frame/stats clutter', () => {
+  beforeEach(() => {
+    scrollMocks.scrollToScene.mockReset();
+    routeMocks.navigateToRoute.mockReset();
+  });
+
+  it('renders one industrial observatory with four chapter controls and a back-facing character', () => {
     const { container } = renderHero();
+
     expect(container.querySelector('section')).toHaveAttribute('id', 'scene-1');
-    expect(container.querySelector('.hero__window')).not.toBeNull();
-    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(content.en.hero.tagline);
-    expect(container.querySelector('.framed-panel')).toBeNull();
-    expect(container.querySelector('.hero__stats')).toBeNull();
-    expect(container.querySelector('video')).toBeNull();
-  });
+    expect(container.querySelector('.hero__observatory')).not.toBeNull();
+    expect(screen.getByRole('navigation', { name: content.en.hero.switcherLabel })).toBeInTheDocument();
 
-  it('shows the three chapter labels with the first active', () => {
-    renderHero();
-    for (const scene of content.en.hero.scenes) {
-      expect(screen.getByRole('button', { name: new RegExp(scene.label) })).toBeInTheDocument();
+    for (const entry of content.en.hero.entries) {
+      expect(screen.getByRole('button', { name: entry.label })).toBeInTheDocument();
     }
-    expect(screen.getByRole('button', { name: /Work/ })).toHaveAttribute('aria-pressed', 'true');
+
+    expect(container.querySelectorAll('.hero__scene')).toHaveLength(1);
+    expect(container.querySelector('.hero__character--hanging')).toBeNull();
+    expect(container.querySelector('.hero__character--back')).not.toBeNull();
   });
 
-  it('switches the scene when the pointer rests on a label', () => {
-    const { container } = renderHero();
-    fireEvent.mouseEnter(screen.getByRole('button', { name: /Career/ }));
-    expect(screen.getByRole('button', { name: /Career/ })).toHaveAttribute('aria-pressed', 'true');
-    expect(screen.getByRole('button', { name: /Work/ })).toHaveAttribute('aria-pressed', 'false');
-    expect(container.querySelectorAll('.hero__scene--active')).toHaveLength(1);
-  });
-
-  it('ignores further switches during the crossfade cooldown', () => {
+  it('travels to each available chapter from the console', () => {
     renderHero();
-    fireEvent.mouseEnter(screen.getByRole('button', { name: /Career/ }));
-    fireEvent.mouseEnter(screen.getByRole('button', { name: /Games/ }));
-    expect(screen.getByRole('button', { name: /Career/ })).toHaveAttribute('aria-pressed', 'true');
-    expect(screen.getByRole('button', { name: /Games/ })).toHaveAttribute('aria-pressed', 'false');
-  });
 
-  it('broadcasts the career-tree mode when a chapter is clicked', () => {
-    renderHero();
-    const heard = [];
-    const onMode = (event) => heard.push(event.detail);
-    window.addEventListener('career-tree:mode', onMode);
-    fireEvent.click(screen.getByRole('button', { name: /Games/ }));
-    window.removeEventListener('career-tree:mode', onMode);
-    expect(heard).toEqual(['night']);
+    fireEvent.click(screen.getByRole('button', { name: content.en.hero.entries[1].label }));
+
     expect(scrollMocks.scrollToScene).toHaveBeenCalledWith('#scene-3', { immediate: false });
+  });
+
+  it('announces that the AI lab is being prepared', () => {
+    renderHero();
+
+    expect(screen.queryByRole('status')).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: content.en.hero.entries[3].label }));
+
+    expect(screen.getByRole('status')).toHaveTextContent(/lab is being prepared/i);
+    expect(scrollMocks.scrollToScene).not.toHaveBeenCalled();
+  });
+
+  it('opens the making-of route from the discarded-drafts bin', () => {
+    renderHero();
+
+    fireEvent.click(screen.getByRole('button', { name: /discarded drafts archive/i }));
+
+    expect(routeMocks.navigateToRoute).toHaveBeenCalledWith('/making-of');
+  });
+
+  it('keeps the bookshelf decorative and outside the tab order', () => {
+    const { container } = renderHero();
+    const bookshelf = container.querySelector('.hero__bookshelf');
+
+    expect(bookshelf).toHaveAttribute('aria-hidden', 'true');
+    expect(bookshelf).not.toHaveAttribute('tabindex');
   });
 });

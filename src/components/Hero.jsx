@@ -1,150 +1,145 @@
 import { useEffect, useRef, useState } from 'react';
-import { motion, useReducedMotion } from 'motion/react';
-import LiquidEther from './LiquidEther';
+import { useReducedMotion } from 'motion/react';
 import { useLanguage } from '../i18n/LanguageContext';
 import { scrollToScene } from '../lib/scrollToScene';
-import starryScene from '../assets/scenes/hero-work-tree-shadow.webp';
-import daylightScene from '../assets/scenes/career-tree-day-factory-v2.webp';
-import nightScene from '../assets/scenes/career-tree-night-factory.webp';
+import { navigateToRoute } from '../lib/siteRoute';
+import observatoryScene from '../assets/scenes/hero-observatory.webp';
+import characterBack from '../assets/scenes/hero-character-back.webp';
 import './Hero.css';
 
-// Order matches content.hero.scenes (starry / day / night).
-const SCENE_SOURCES = [starryScene, daylightScene, nightScene];
-const CROSSFADE_MS = 1000;
+const interfaceCopy = {
+  en: {
+    title: 'Chai Yi Chen portfolio observatory',
+    consoleLabel: 'Observatory destinations',
+    labStatus: 'The AI lab is being prepared. New experiments will appear here soon.',
+    binLabel: 'Discarded drafts archive',
+    binHint: 'Making-of archive',
+  },
+  zh: {
+    title: '柴怡辰的作品集觀景台',
+    consoleLabel: '觀景台目的地',
+    labStatus: 'AI 實驗室整備中，之後會把新完成的小程式放進來。',
+    binLabel: '廢案檔案室',
+    binHint: '網站製作幕後',
+  },
+};
 
-// The fluid takes its palette from the artwork it floats over: warm
-// moon-gold over the starry city, mossy daylight golds over the day
-// tree, violet-and-bloom golds over the night tree.
-const FLUID_PALETTES = [
-  ['#e0bc6a', '#f4e3b2', '#3fc1d6'],
-  ['#6e8b3d', '#c9a24b', '#ede3d0'],
-  ['#e0bc6a', '#8b7bd8', '#3fc1d6'],
-];
-
-/**
- * Cinematic glass-window hero: the key visuals sit behind a huge
- * liquid-glass pane, a WebGL fluid layer (LiquidEther) swirls
- * gold/cyan wisps after the cursor, and the scene switches when the
- * pointer rests on one of the two-character labels below the tagline.
- * One brush-script line of text, nothing else.
- */
 export default function Hero() {
   const reduce = useReducedMotion();
   const { lang, t } = useLanguage();
-  const [active, setActive] = useState(0);
-  const coolingRef = useRef(false);
-  const scenesRef = useRef(null);
+  const copy = interfaceCopy[lang];
+  const [showLabStatus, setShowLabStatus] = useState(false);
   const sectionRef = useRef(null);
+  const sceneRef = useRef(null);
   const rafRef = useRef(0);
 
-  const switchScene = (index) => {
-    if (index === active || coolingRef.current) return;
-    coolingRef.current = true;
-    setActive(index);
-    window.setTimeout(() => {
-      coolingRef.current = false;
-    }, CROSSFADE_MS);
-  };
-
-  // Hover previews the scene; click travels to the matching chapter.
-  const goToScene = (scene) => {
-    if (scene.mode) {
-      window.dispatchEvent(new CustomEvent('career-tree:mode', { detail: scene.mode }));
-    }
-    scrollToScene(scene.target, { immediate: reduce });
-  };
-
-  // Soft parallax: the scene leans a few pixels toward the pointer.
   useEffect(() => {
     if (reduce) return undefined;
-    const section = sectionRef.current;
-    const scenes = scenesRef.current;
-    if (!section || !scenes) return undefined;
 
-    const onMove = (event) => {
+    const section = sectionRef.current;
+    const scene = sceneRef.current;
+    if (!section || !scene) return undefined;
+
+    const resetParallax = () => {
+      scene.style.setProperty('--parallax-x', '0px');
+      scene.style.setProperty('--parallax-y', '0px');
+    };
+
+    const onPointerMove = (event) => {
       window.cancelAnimationFrame(rafRef.current);
       rafRef.current = window.requestAnimationFrame(() => {
         const rect = section.getBoundingClientRect();
-        const nx = (event.clientX - rect.left) / rect.width - 0.5;
-        const ny = (event.clientY - rect.top) / rect.height - 0.5;
-        scenes.style.setProperty('--parallax-x', `${(-nx * 16).toFixed(1)}px`);
-        scenes.style.setProperty('--parallax-y', `${(-ny * 10).toFixed(1)}px`);
+        const x = Math.max(-0.5, Math.min(0.5, (event.clientX - rect.left) / rect.width - 0.5));
+        const y = Math.max(-0.5, Math.min(0.5, (event.clientY - rect.top) / rect.height - 0.5));
+
+        scene.style.setProperty('--parallax-x', `${(x * -24).toFixed(1)}px`);
+        scene.style.setProperty('--parallax-y', `${(y * -16).toFixed(1)}px`);
       });
     };
 
-    section.addEventListener('pointermove', onMove);
+    section.addEventListener('pointermove', onPointerMove);
+    section.addEventListener('pointerleave', resetParallax);
+
     return () => {
-      section.removeEventListener('pointermove', onMove);
+      section.removeEventListener('pointermove', onPointerMove);
+      section.removeEventListener('pointerleave', resetParallax);
       window.cancelAnimationFrame(rafRef.current);
     };
   }, [reduce]);
 
+  const activateEntry = (entry) => {
+    if (entry.status === 'coming-soon') {
+      setShowLabStatus(true);
+      return;
+    }
+
+    scrollToScene(entry.target, { immediate: reduce });
+  };
+
   return (
-    <section id="scene-1" className="hero" ref={sectionRef}>
-      <div className="hero__window">
-        <div className="hero__scenes" ref={scenesRef} aria-hidden="true">
-          {SCENE_SOURCES.map((src, index) => (
-            <img
-              key={src}
-              src={src}
-              alt=""
-              className={`hero__scene ${index === active ? 'hero__scene--active' : ''}`}
-              draggable="false"
-            />
-          ))}
+    <section id="scene-1" className="hero" ref={sectionRef} aria-labelledby="hero-title">
+      <h1 id="hero-title" className="visually-hidden">
+        {copy.title}
+      </h1>
+
+      <div className="hero__observatory">
+        <div className="hero__scene-wrap" ref={sceneRef} aria-hidden="true">
+          <img className="hero__scene" src={observatoryScene} alt="" draggable="false" />
         </div>
 
-        {!reduce && (
-          <LiquidEther
-            key={active}
-            className="hero__fluid"
-            colors={FLUID_PALETTES[active]}
-            mouseForce={18}
-            cursorSize={90}
-            resolution={0.5}
-            autoDemo
-            autoSpeed={0.35}
-            autoIntensity={1.8}
-            takeoverDuration={0.25}
-            autoResumeDelay={3000}
-            autoRampDuration={0.6}
-          />
-        )}
+        <div className="hero__atmosphere" aria-hidden="true" />
+        <div className="hero__bookshelf" aria-hidden="true" />
 
-        <div className="hero__grade" aria-hidden="true" />
-        <div className="hero__shine" aria-hidden="true" />
+        <img
+          className="hero__character hero__character--back"
+          src={characterBack}
+          alt=""
+          aria-hidden="true"
+          draggable="false"
+        />
 
-        <motion.div
-          className="hero__foot"
-          initial={reduce ? false : { opacity: 0, y: 26 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
-        >
-          <h1 className={`hero__tagline ${lang === 'en' ? 'hero__tagline--latin' : ''}`}>
-            {t.hero.tagline}
-          </h1>
-
-          <div className="hero__menu" role="group" aria-label={t.hero.switcherLabel}>
-            {t.hero.scenes.map((scene, index) => (
+        <nav className="hero__console" aria-label={t.hero.switcherLabel}>
+          <span className="hero__console-label" aria-hidden="true">
+            {copy.consoleLabel}
+          </span>
+          <div className="hero__entries">
+            {t.hero.entries.map((entry, index) => (
               <button
-                key={scene.id}
+                key={entry.id}
                 type="button"
-                className={`hero__menu-item ${index === active ? 'hero__menu-item--active' : ''}`}
-                onMouseEnter={() => switchScene(index)}
-                onFocus={() => switchScene(index)}
-                onClick={() => goToScene(scene)}
-                aria-pressed={index === active}
+                className="hero__entry"
+                style={{ '--entry-index': index }}
+                onClick={() => activateEntry(entry)}
+                aria-expanded={entry.status === 'coming-soon' ? showLabStatus : undefined}
+                aria-controls={entry.status === 'coming-soon' ? 'hero-lab-status' : undefined}
               >
-                <span className="hero__menu-label">{scene.label}</span>
-                <span className="hero__menu-marquee" aria-hidden="true">
-                  <span className="hero__menu-track">
-                    {Array.from({ length: 12 }, () => scene.label).join(' · ')}
-                  </span>
-                </span>
+                <span className="hero__entry-signal" aria-hidden="true" />
+                <span>{entry.label}</span>
               </button>
             ))}
           </div>
-        </motion.div>
+
+          {showLabStatus && (
+            <p id="hero-lab-status" className="hero__lab-status" role="status">
+              {copy.labStatus}
+            </p>
+          )}
+        </nav>
+
+        <button
+          type="button"
+          className="hero__archive"
+          aria-label={copy.binLabel}
+          data-hint={copy.binHint}
+          onClick={() => navigateToRoute('/making-of')}
+        >
+          <svg viewBox="0 0 32 38" aria-hidden="true">
+            <path d="M5 10h22l-1.8 24H6.8L5 10Z" />
+            <path d="M2.5 7h27M11 7V3h10v4M11.5 15v13M20.5 15v13" />
+          </svg>
+        </button>
+
+        <div className="hero__frame-shine" aria-hidden="true" />
       </div>
     </section>
   );
