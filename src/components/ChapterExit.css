@@ -1,0 +1,17 @@
+.chapter-exit {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.8rem;
+  padding-block: 2rem 4rem;
+}
+
+.chapter-exit__button {
+  min-width: min(100%, 13rem);
+}
+
+@media (max-width: 560px) {
+  .chapter-exit {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}

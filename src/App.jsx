@@ -3,33 +3,37 @@ import Nav from './components/Nav';
 import Hero from './components/Hero';
 import Intro from './components/Intro';
 import CareerTree from './components/CareerTree';
-import Interests from './components/Interests';
 import Portfolio from './components/Portfolio';
-import BuildStory from './components/BuildStory';
 import Contact from './components/Contact';
+import ChapterExit from './components/ChapterExit';
+import MakingOf from './components/MakingOf';
 import FloatingCompanion from './components/FloatingCompanion';
 import GrainOverlay from './components/GrainOverlay';
 import ClickSpark from './components/ClickSpark';
 import LoadingScreen from './components/LoadingScreen';
 import SmoothScroll from './components/SmoothScroll';
 import { LanguageProvider } from './i18n/LanguageContext';
+import { getSiteRoute } from './lib/siteRoute';
 
 function Scenes() {
   return (
     <main className="scene-flow">
       <Hero />
       <Intro />
+      <ChapterExit chapterId="intro" />
       <CareerTree />
-      <Interests />
+      <ChapterExit chapterId="career" />
       <Portfolio />
-      <BuildStory />
+      <ChapterExit chapterId="portfolio" />
       <Contact />
+      <ChapterExit chapterId="contact" />
     </main>
   );
 }
 
 function App() {
   const [loading, setLoading] = useState(true);
+  const [route, setRoute] = useState(getSiteRoute);
 
   useEffect(() => {
     document.body.style.overflow = loading ? 'hidden' : '';
@@ -38,15 +42,27 @@ function App() {
     };
   }, [loading]);
 
+  useEffect(() => {
+    const syncRoute = () => setRoute(getSiteRoute());
+    window.addEventListener('popstate', syncRoute);
+    return () => window.removeEventListener('popstate', syncRoute);
+  }, []);
+
   return (
     <LanguageProvider>
       <SmoothScroll paused={loading} />
       {loading && <LoadingScreen onDone={() => setLoading(false)} />}
       <ClickSpark sparkColor="#e0bc6a" sparkSize={9} sparkRadius={17} sparkCount={5} duration={550}>
         <GrainOverlay />
-        <Nav />
-        <Scenes />
-        <FloatingCompanion />
+        {route === 'making-of' ? (
+          <MakingOf />
+        ) : (
+          <>
+            <Nav />
+            <Scenes />
+            <FloatingCompanion />
+          </>
+        )}
       </ClickSpark>
     </LanguageProvider>
   );
