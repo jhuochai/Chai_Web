@@ -14,6 +14,12 @@ const en = {
   hero: {
     tagline: 'Aim on instinct. Hit with execution.',
     switcherLabel: 'Explore the story',
+    entries: [
+      { id: 'intro', label: 'Introduction', target: '#scene-2' },
+      { id: 'career', label: 'Career Tree', target: '#scene-3' },
+      { id: 'portfolio', label: 'Selected Work', target: '#scene-5' },
+      { id: 'ai-lab', label: 'AI Lab', status: 'coming-soon' },
+    ],
     scenes: [
       { id: 'starry', label: 'Work', target: '#scene-5' },
       { id: 'day', label: 'Career', target: '#scene-3', mode: 'day' },
@@ -30,7 +36,7 @@ const en = {
     {
       key: 'efficiency',
       label: 'Efficiency',
-      desc: 'Fast from idea to execution, with results to show in short cycles.',
+      desc: 'Turned 24 cross-format assets and 26 scripts into live work, moving from brief to publish without losing the thread.',
     },
     {
       key: 'multitasking',
@@ -40,11 +46,11 @@ const en = {
     {
       key: 'creativity',
       label: 'Creativity & Intuition',
-      desc: 'Right-brain thinker. I generate ideas and content fast, and trust instinct to set direction.',
+      desc: 'Used player instincts to shape content directions, then checked them against Meta campaign data before committing more budget.',
     },
   ],
   personalityBlurb:
-    "Right-brain by nature, creativity and instinct are what actually drive the work. Data analysis was never the core strength, it's the tool I use to check whether an instinct actually landed. I'm a deep-in player first, and an executor who moves fast and recalibrates as I go.",
+    "I start with a player's eye for what feels worth stopping for, then use results to refine the next move. That approach has taken a community from 18k to 30k followers and kept an ad test within budget when the signal changed.",
   intro: {
     eyebrow: 'Nice to meet you',
   },
@@ -110,28 +116,17 @@ const en = {
       },
     ],
     flowers: [
-      {
-        id: 'mlbb',
-        name: 'Mobile Legends: Bang Bang',
-        note: 'Grandmaster rank',
-        desc: 'The main ranked grind. Understanding why players tilt, queue again, and spend is field research you cannot fake.',
-      },
-      {
-        id: 'idv',
-        name: 'Identity V',
-        note: 'Survivor Rank 5',
-        desc: 'Asymmetric survival horror — reading the other side\'s intent in seconds is the whole game.',
-      },
-      {
-        id: 'stardew',
-        name: 'Stardew Valley',
-        desc: 'The cozy counterweight. Long-term progression loops and seasonal events, studied one harvest at a time.',
-      },
-      {
-        id: 'shelf',
-        name: 'Also on the shelf',
-        desc: 'League of Legends, Valorant, Rainbow Six Siege, GTA, Minecraft — spanning MOBA, FPS, survival-social, and sims.',
-      },
+      { id: 'mlbb', name: 'Mobile Legends: Bang Bang', note: 'Grandmaster rank', desc: 'My ranked main: the place where a comeback, a tilt queue, and a well-timed reward all make immediate sense.' },
+      { id: 'identity-v', name: 'Identity V', note: 'Survivor Rank 5', desc: 'Reading a hunter\'s intention in seconds makes every rescue and escape feel earned.' },
+      { id: 'stardew', name: 'Stardew Valley', desc: 'A gentle reset between matches; I enjoy building a farm one seasonal goal at a time.' },
+      { id: 'lol', name: 'League of Legends', desc: 'The game that taught me how quickly a team\'s mood can turn on one call or one objective.' },
+      { id: 'valorant', name: 'Valorant', desc: 'I like the clean tension of a round where communication matters as much as aim.' },
+      { id: 'r6', name: 'Rainbow Six Siege', desc: 'Information is the real weapon here: a sound cue can change an entire plan.' },
+      { id: 'gta5', name: 'Grand Theft Auto V', desc: 'A city-sized sandbox that is as fun to wander as it is to make trouble in.' },
+      { id: 'minecraft', name: 'Minecraft', desc: 'I can lose an evening turning a loose idea into a place people can actually explore.' },
+      { id: 'palworld', name: 'Palworld', desc: 'The loop of catching, building, and optimizing makes small goals stack up fast.' },
+      { id: 'dont-starve', name: "Don\'t Starve Together", desc: 'Survival is much easier when everyone shares a plan—and remembers who was meant to bring food.' },
+      { id: 'raft', name: 'Raft', desc: 'Starting with a tiny platform and gradually making it home is the part I keep coming back for.' },
     ],
   },
   interests: {
@@ -204,6 +199,18 @@ const en = {
     ],
     takeaway: 'AI collaboration, aesthetic judgment, and project management — demonstrated, not claimed.',
   },
+  makingOf: {
+    eyebrow: 'Making Of',
+    heading: 'The drafts behind this site',
+    intro: 'A record of the decisions, revisions, and dead ends that shaped the current version.',
+    timeline: [
+      { id: 'idea', label: 'Starting point', desc: 'The first brief connected a game-marketing portfolio with a player’s point of view.', images: [] },
+      { id: 'visual-system', label: 'Visual system', desc: 'I set the industrial Arcane mood, warm metal light, and the rules that keep the site visually coherent.', images: [] },
+      { id: 'ai-collaboration', label: 'AI collaboration and vetoes', desc: 'AI helped generate directions and working material; I compared them, rejected what did not fit, and made the final calls.', images: [] },
+      { id: 'interaction-blockers', label: 'Interaction roadblocks', desc: 'Some movement and interface ideas looked better in theory than in the browser, so I simplified them until they supported the story.', images: [] },
+      { id: 'current-version', label: 'Current version', desc: 'The work continues as a practical lesson in directing AI, refining a visual system, and building from evidence.', images: [] },
+    ],
+  },
   experience: [
     {
       org: '慧邦科技',
@@ -253,7 +260,7 @@ const en = {
     email: 'chaijhuo@gmail.com',
     phone: '0989-521-186',
     location: 'New Taipei City, Taiwan',
-    linkedin: null,
+    linkedin: 'https://www.linkedin.com/in/yichen-chai-3019492b4/',
     resumeUrl: '/resume.pdf',
     resumeLabel: 'Download Resume',
     linkedinPlaceholder: 'LinkedIn link coming soon',
@@ -305,6 +312,7 @@ const en = {
       },
       {
         id: 'koc',
+        visibility: 'private',
         title: 'KOC Partnerships',
         tag: 'Creator Collabs',
         scenario: "Needed creator voices outside the brand's own channels to extend reach.",
@@ -372,6 +380,12 @@ const zh = {
   hero: {
     tagline: '靠直覺瞄準，用效率命中。',
     switcherLabel: '探索故事',
+    entries: [
+      { id: 'intro', label: '自我介紹', target: '#scene-2' },
+      { id: 'career', label: '生涯大樹', target: '#scene-3' },
+      { id: 'portfolio', label: '精選作品', target: '#scene-5' },
+      { id: 'ai-lab', label: 'AI 實驗室', status: 'coming-soon' },
+    ],
     scenes: [
       { id: 'starry', label: '作品', target: '#scene-5' },
       { id: 'day', label: '經歷', target: '#scene-3', mode: 'day' },
@@ -387,7 +401,7 @@ const zh = {
     {
       key: 'efficiency',
       label: '效率',
-      desc: '想法到執行的速度快，能在短時間內產出成果。',
+      desc: '從發想到上線，完成 24 件跨形式素材與 26 份腳本；速度快，也能把細節收好。',
     },
     {
       key: 'multitasking',
@@ -397,11 +411,11 @@ const zh = {
     {
       key: 'creativity',
       label: '創意 / 直覺',
-      desc: '右腦型人才，擅長提出點子、發想內容，靠直覺判斷方向。',
+      desc: '先從玩家感受發想內容，再用 Meta 廣告數據校準方向；直覺有依據，調整也不拖延。',
     },
   ],
   personalityBlurb:
-    '自認是右腦型人才，創意與直覺是驅動一切的引擎，數據分析從來不是強項，而是拿來驗證直覺有沒有打中的工具。身分是深度玩家，也是先動手再回頭校準方向的執行者。',
+    '我先用玩家視角判斷什麼值得停下來看，再從結果裡找下一步。這套做法讓社群從 1.8 萬成長到 3 萬，也讓我在廣告訊號轉弱時，及時停下投放、守住預算。',
   intro: {
     eyebrow: '很高興認識你',
   },
@@ -466,28 +480,17 @@ const zh = {
       },
     ],
     flowers: [
-      {
-        id: 'mlbb',
-        name: '激鬥峽谷',
-        note: '宗師段位',
-        desc: '主力排位場。理解玩家為什麼上頭、為什麼再排一場、為什麼課金——這種田野調查沒辦法用報告補。',
-      },
-      {
-        id: 'idv',
-        name: '第五人格',
-        note: '求生五階',
-        desc: '非對稱生存對抗，幾秒內讀懂對面的意圖就是這個遊戲的全部。',
-      },
-      {
-        id: 'stardew',
-        name: '星露谷物語',
-        desc: '療癒系的另一端。長線養成循環與季節活動，一個收成季一個收成季地研究。',
-      },
-      {
-        id: 'shelf',
-        name: '書架上還有',
-        desc: '英雄聯盟、Valorant、虹彩六號、GTA、Minecraft——橫跨 MOBA、FPS、生存社交與模擬經營。',
-      },
+      { id: 'mlbb', name: 'Mobile Legends: Bang Bang', note: '宗師段位', desc: '我最常打的排位場；逆轉、上頭再排一場，還有獎勵該在何時出現，都能直接感受到。' },
+      { id: 'identity-v', name: '第五人格', note: '求生者五階', desc: '幾秒內讀出監管者的意圖，才能決定是救人、轉點，還是先保住自己。' },
+      { id: 'stardew', name: '星露谷物語', desc: '排位賽之間的休息站；一個季節完成一個目標，慢慢把農場過成自己的樣子。' },
+      { id: 'lol', name: '英雄聯盟', desc: '一波物件、一句溝通，就足以讓整隊氣氛翻轉的經典現場。' },
+      { id: 'valorant', name: '特戰英豪', desc: '一回合裡，溝通和槍法同樣重要；資訊講清楚，隊友才接得住。' },
+      { id: 'r6', name: '虹彩六號：圍攻行動', desc: '聽見一個腳步聲，就可能要把整個進攻計畫重新排過。' },
+      { id: 'gta5', name: '俠盜獵車手 V', desc: '在大城市裡隨意晃、找支線、惹點麻煩，都是它好玩的理由。' },
+      { id: 'minecraft', name: 'Minecraft', desc: '從一個鬆散點子蓋成能讓人走進去探索的地方，常常一玩就是一個晚上。' },
+      { id: 'palworld', name: '幻獸帕魯', desc: '抓帕魯、蓋基地、調整流程；一個小目標接一個小目標，會很快忘記時間。' },
+      { id: 'dont-starve', name: '饑荒聯機版', desc: '大家先把計畫講好、記得誰要帶食物，存活率真的差很多。' },
+      { id: 'raft', name: '木筏求生', desc: '從一小塊木板慢慢把漂流處變成家，是我最喜歡的部分。' },
     ],
   },
   interests: {
@@ -560,6 +563,18 @@ const zh = {
     ],
     takeaway: 'AI 協作力、審美整合、專案管理——不用宣稱，這個網站就是證明。',
   },
+  makingOf: {
+    eyebrow: '製作筆記',
+    heading: '這個網站走過的草稿',
+    intro: '記下讓網站成形的選擇、修改與走不通的路。',
+    timeline: [
+      { id: 'idea', label: '最初構想', desc: '最早的提案，是把遊戲行銷作品集和玩家視角放在同一個敘事裡。', images: [] },
+      { id: 'visual-system', label: '視覺系統', desc: '先定下 Arcane 工業感、金屬暖光和一致的畫面規則，後面的畫面才有共同語言。', images: [] },
+      { id: 'ai-collaboration', label: 'AI 協作與否決', desc: 'AI 協助生成方向與工作素材；我逐一比較、不合適就刪掉，最後的選擇由我負責。', images: [] },
+      { id: 'interaction-blockers', label: '互動卡關', desc: '有些動態和操作在概念上很吸引人，進到瀏覽器後卻不夠清楚；我把它們收斂到能幫助閱讀的程度。', images: [] },
+      { id: 'current-version', label: '目前版本與學習', desc: '現在的版本仍在迭代，也持續練習如何指揮 AI、整理視覺系統，並用成果驗證每個決定。', images: [] },
+    ],
+  },
   experience: [
     {
       org: '慧邦科技',
@@ -609,7 +624,7 @@ const zh = {
     email: 'chaijhuo@gmail.com',
     phone: '0989-521-186',
     location: '新北市板橋區',
-    linkedin: null,
+    linkedin: 'https://www.linkedin.com/in/yichen-chai-3019492b4/',
     resumeUrl: '/resume.pdf',
     resumeLabel: '下載履歷',
     linkedinPlaceholder: 'LinkedIn 連結待補',
@@ -657,6 +672,7 @@ const zh = {
       },
       {
         id: 'koc',
+        visibility: 'private',
         title: 'KOC 異業合作',
         tag: '創作者合作',
         scenario: '需要借助品牌外的創作者聲量擴大觸及。',

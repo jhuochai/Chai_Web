@@ -1,4 +1,28 @@
+import { describe, expect, it } from 'vitest';
 import { content } from './content';
+import { chapterMap } from './chapterMap';
+
+describe('chaptered portfolio content', () => {
+  it('defines four hero entries and eleven distinct games in both languages', () => {
+    for (const lang of ['zh', 'en']) {
+      expect(content[lang].hero.entries).toHaveLength(4);
+      expect(content[lang].careerTree.flowers).toHaveLength(11);
+      expect(new Set(content[lang].careerTree.flowers.map((game) => game.id)).size).toBe(11);
+    }
+  });
+
+  it('keeps the chapter order stable', () => {
+    expect(chapterMap.map((chapter) => chapter.id)).toEqual([
+      'intro', 'career', 'portfolio', 'contact',
+    ]);
+  });
+
+  it('publishes the real LinkedIn profile', () => {
+    expect(content.zh.contact.linkedin).toBe(
+      'https://www.linkedin.com/in/yichen-chai-3019492b4/'
+    );
+  });
+});
 
 describe('content.nav', () => {
   it('has the curated 3-link nav plus cta/lang toggle, in both languages', () => {
@@ -52,7 +76,7 @@ describe('content.buildStory', () => {
 });
 
 describe('content.careerTree', () => {
-  it('has four day ribbons and four night flowers with matching shapes, in both languages', () => {
+  it('has four day ribbons and eleven night flowers with matching shapes, in both languages', () => {
     for (const lang of ['en', 'zh']) {
       const tree = content[lang].careerTree;
       expect(tree.ribbons).toHaveLength(4);
@@ -68,7 +92,7 @@ describe('content.careerTree', () => {
         );
         expect(ribbon.points.length).toBeGreaterThan(0);
       }
-      expect(tree.flowers).toHaveLength(4);
+      expect(tree.flowers).toHaveLength(11);
       for (const flower of tree.flowers) {
         expect(flower).toEqual(
           expect.objectContaining({
