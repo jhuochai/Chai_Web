@@ -1,32 +1,31 @@
 import { getNextChapter } from '../data/chapterMap';
+import { useLanguage } from '../i18n/LanguageContext';
 import { scrollToScene } from '../lib/scrollToScene';
 import './ChapterExit.css';
 
-const chapterLabels = {
-  intro: '自我介紹',
-  career: '職涯故事',
-  portfolio: '作品選集',
-  contact: '聯絡方式',
-};
-
 export default function ChapterExit({ chapterId }) {
+  const { t } = useLanguage();
   const nextChapter = getNextChapter(chapterId);
+  const copy = t.ui.chapterExit;
 
   return (
-    <aside className="chapter-exit container" aria-label="章節導覽">
+    <aside
+      className="chapter-exit container"
+      aria-label={`${copy.landmark}: ${copy.chapters[chapterId]}`}
+    >
       <button
         type="button"
         className="chapter-exit__button btn-glass btn-glass--ghost"
         onClick={() => scrollToScene('#scene-1')}
       >
-        回到首頁
+        {copy.home}
       </button>
       <button
         type="button"
         className="chapter-exit__button btn-glass"
         onClick={() => scrollToScene(nextChapter.target)}
       >
-        前往下一章：{chapterLabels[nextChapter.id]}
+        {copy.next}{copy.chapters[nextChapter.id]}
       </button>
     </aside>
   );

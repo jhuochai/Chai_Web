@@ -361,6 +361,17 @@ const en = {
     enterLabel: 'Enter the site',
     musicOnLabel: 'Turn music on',
     musicOffLabel: 'Turn music off',
+    chapterExit: {
+      landmark: 'Chapter exit',
+      home: 'Back to home',
+      next: 'Next chapter: ',
+      chapters: {
+        intro: 'Introduction',
+        career: 'Career Tree',
+        portfolio: 'Selected Work',
+        contact: 'Contact',
+      },
+    },
   },
 };
 
@@ -719,6 +730,17 @@ const zh = {
     enterLabel: '進入網站',
     musicOnLabel: '開啟音樂',
     musicOffLabel: '關閉音樂',
+    chapterExit: {
+      landmark: '章節出口',
+      home: '回到首頁',
+      next: '前往下一章：',
+      chapters: {
+        intro: '自我介紹',
+        career: '職涯故事',
+        portfolio: '作品選集',
+        contact: '聯絡方式',
+      },
+    },
   },
 };
 

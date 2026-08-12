@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import Intro from './Intro';
 import { LanguageProvider } from '../i18n/LanguageContext';
+import { content } from '../data/content';
 
 function renderIntro() {
   return render(
@@ -31,6 +32,6 @@ describe('Intro', () => {
 
   it('shows the personality blurb', () => {
     renderIntro();
-    expect(screen.getByText(/Right-brain by nature/)).toBeInTheDocument();
+    expect(screen.getByText(content.en.personalityBlurb)).toBeInTheDocument();
   });
 });
