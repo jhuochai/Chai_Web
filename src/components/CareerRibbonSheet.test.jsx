@@ -75,6 +75,89 @@ describe('CareerRibbonSheet', () => {
     expect(trigger.style.getPropertyValue('--ribbon-pull')).toBe('0px');
   });
 
+  it('captures the active pointer and ignores lost capture caused by a successful release', () => {
+    const onOpen = vi.fn();
+    render(<RibbonHarness onOpenSpy={onOpen} />);
+    const trigger = screen.getByRole('button', { name: item.org });
+    trigger.setPointerCapture = vi.fn();
+    trigger.hasPointerCapture = vi.fn(() => true);
+    trigger.releasePointerCapture = vi.fn((pointerId) => {
+      fireEvent.lostPointerCapture(trigger, { pointerId });
+    });
+
+    fireEvent.pointerDown(trigger, { pointerId: 11, clientY: 80 });
+    fireEvent.pointerMove(window, { pointerId: 11, clientY: 230 });
+    fireEvent.pointerUp(window, { pointerId: 11, clientY: 230 });
+
+    expect(trigger.setPointerCapture).toHaveBeenCalledWith(11);
+    expect(trigger.releasePointerCapture).toHaveBeenCalledWith(11);
+    expect(onOpen).toHaveBeenCalledTimes(1);
+    expect(screen.getByRole('dialog', { name: item.org })).toBeInTheDocument();
+  });
+
+  it('restores an unfinished pull when pointer capture is lost', () => {
+    const onOpen = vi.fn();
+    render(<RibbonHarness onOpenSpy={onOpen} />);
+    const trigger = screen.getByRole('button', { name: item.org });
+    trigger.setPointerCapture = vi.fn();
+    trigger.hasPointerCapture = vi.fn(() => false);
+    trigger.releasePointerCapture = vi.fn();
+
+    fireEvent.pointerDown(trigger, { pointerId: 12, clientY: 80 });
+    fireEvent.pointerMove(window, { pointerId: 12, clientY: 130 });
+    fireEvent.lostPointerCapture(trigger, { pointerId: 12 });
+
+    expect(onOpen).not.toHaveBeenCalled();
+    expect(trigger).not.toHaveClass('is-pulling');
+    expect(trigger.style.getPropertyValue('--ribbon-pull')).toBe('0px');
+  });
+
+  it('restores an unfinished pull when the browser window loses focus', () => {
+    const onOpen = vi.fn();
+    render(<RibbonHarness onOpenSpy={onOpen} />);
+    const trigger = screen.getByRole('button', { name: item.org });
+
+    fireEvent.pointerDown(trigger, { pointerId: 13, clientY: 80 });
+    fireEvent.pointerMove(window, { pointerId: 13, clientY: 130 });
+    fireEvent(window, new Event('blur'));
+
+    expect(onOpen).not.toHaveBeenCalled();
+    expect(trigger).not.toHaveClass('is-pulling');
+    expect(trigger.style.getPropertyValue('--ribbon-pull')).toBe('0px');
+  });
+
+  it('keeps dragging functional when pointer capture APIs are unavailable', () => {
+    const onOpen = vi.fn();
+    render(<RibbonHarness onOpenSpy={onOpen} />);
+    const trigger = screen.getByRole('button', { name: item.org });
+    trigger.setPointerCapture = undefined;
+    trigger.hasPointerCapture = undefined;
+    trigger.releasePointerCapture = undefined;
+
+    expect(() => {
+      fireEvent.pointerDown(trigger, { pointerId: 14, clientY: 80 });
+      fireEvent.pointerMove(window, { pointerId: 14, clientY: 230 });
+      fireEvent.pointerUp(window, { pointerId: 14, clientY: 230 });
+    }).not.toThrow();
+
+    expect(onOpen).toHaveBeenCalledTimes(1);
+  });
+
+  it('releases an active pointer capture during unmount cleanup', () => {
+    const { unmount } = render(<RibbonHarness />);
+    const trigger = screen.getByRole('button', { name: item.org });
+    trigger.setPointerCapture = vi.fn();
+    trigger.hasPointerCapture = vi.fn(() => true);
+    trigger.releasePointerCapture = vi.fn();
+
+    fireEvent.pointerDown(trigger, { pointerId: 15, clientY: 80 });
+    unmount();
+
+    expect(trigger.releasePointerCapture).toHaveBeenCalledWith(15);
+    expect(trigger).not.toHaveClass('is-pulling');
+    expect(trigger.style.getPropertyValue('--ribbon-pull')).toBe('0px');
+  });
+
   it('opens with Space, traps focus, locks scroll, and returns focus after Escape', async () => {
     render(<RibbonHarness />);
     const trigger = screen.getByRole('button', { name: item.org });

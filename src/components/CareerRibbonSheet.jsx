@@ -36,20 +36,47 @@ export default function CareerRibbonSheet({ item, open, onOpen, onClose, trigger
 
     trigger.setAttribute('aria-describedby', hintId);
 
-    const resetPull = () => {
+    const releaseCapturedPointer = (pointerId) => {
+      if (pointerId == null) return;
+      if (
+        typeof trigger.hasPointerCapture !== 'function' ||
+        typeof trigger.releasePointerCapture !== 'function'
+      ) {
+        return;
+      }
+      try {
+        if (trigger.hasPointerCapture(pointerId)) trigger.releasePointerCapture(pointerId);
+      } catch {
+        // A browser may already have released capture while dispatching
+        // pointercancel/lostpointercapture. The stable closed state below wins.
+      }
+    };
+
+    const resetPull = ({ release = true, updateState = true } = {}) => {
+      const drag = dragRef.current;
       dragRef.current = null;
-      setReady(false);
+      if (updateState) setReady(false);
       trigger.classList.remove('is-pulling');
       trigger.style.setProperty('--ribbon-pull', '0px');
+      if (release) releaseCapturedPointer(drag?.pointerId);
     };
 
     const onPointerDown = (event) => {
       if (event.button != null && event.button !== 0) return;
+      resetPull();
       dragRef.current = {
         pointerId: event.pointerId,
         startY: event.clientY,
         distance: 0,
       };
+      if (event.pointerId != null && typeof trigger.setPointerCapture === 'function') {
+        try {
+          trigger.setPointerCapture(event.pointerId);
+        } catch {
+          // Window-level listeners preserve drag behavior on browsers that
+          // expose pointer capture but reject it for this event.
+        }
+      }
       setHintVisible(true);
       trigger.classList.add('is-pulling');
     };
@@ -77,6 +104,14 @@ export default function CareerRibbonSheet({ item, open, onOpen, onClose, trigger
       resetPull();
     };
 
+    const onLostPointerCapture = (event) => {
+      const drag = dragRef.current;
+      if (!drag || (drag.pointerId != null && event.pointerId !== drag.pointerId)) return;
+      resetPull({ release: false });
+    };
+
+    const onWindowBlur = () => resetPull();
+
     const onKeyDown = (event) => {
       if (event.key !== 'Enter' && event.key !== ' ') return;
       event.preventDefault();
@@ -94,21 +129,25 @@ export default function CareerRibbonSheet({ item, open, onOpen, onClose, trigger
     trigger.addEventListener('focus', onFocus);
     trigger.addEventListener('blur', onBlur);
     trigger.addEventListener('click', onClick);
+    trigger.addEventListener('lostpointercapture', onLostPointerCapture);
     window.addEventListener('pointermove', onPointerMove, { passive: false });
     window.addEventListener('pointerup', onPointerUp);
     window.addEventListener('pointercancel', onPointerCancel);
+    window.addEventListener('blur', onWindowBlur);
 
     return () => {
-      resetPull();
       trigger.removeAttribute('aria-describedby');
       trigger.removeEventListener('pointerdown', onPointerDown);
       trigger.removeEventListener('keydown', onKeyDown);
       trigger.removeEventListener('focus', onFocus);
       trigger.removeEventListener('blur', onBlur);
       trigger.removeEventListener('click', onClick);
+      trigger.removeEventListener('lostpointercapture', onLostPointerCapture);
       window.removeEventListener('pointermove', onPointerMove);
       window.removeEventListener('pointerup', onPointerUp);
       window.removeEventListener('pointercancel', onPointerCancel);
+      window.removeEventListener('blur', onWindowBlur);
+      resetPull({ updateState: false });
     };
   }, [hintId, triggerRef]);
 
