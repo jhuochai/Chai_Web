@@ -29,6 +29,7 @@ dist-ssr
 # local agent-skill support files
 .agents/
 .codex/
+.worktrees/
 
 # Generated visual exploration: keep the selected masters only.
 design-previews/hero/*
