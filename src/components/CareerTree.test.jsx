@@ -1,4 +1,5 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { vi } from 'vitest';
 import CareerTree from './CareerTree';
 import { LanguageProvider } from '../i18n/LanguageContext';
 import { content } from '../data/content';
@@ -12,6 +13,13 @@ function renderTree() {
 }
 
 describe('CareerTree', () => {
+  it('does not run the walking frames on an idle time interval', () => {
+    const intervalSpy = vi.spyOn(window, 'setInterval');
+    renderTree();
+    expect(intervalSpy).not.toHaveBeenCalledWith(expect.any(Function), 220);
+    intervalSpy.mockRestore();
+  });
+
   it('renders as #scene-3 with the career-tree heading', () => {
     const { container } = renderTree();
     expect(container.querySelector('section')).toHaveAttribute('id', 'scene-3');

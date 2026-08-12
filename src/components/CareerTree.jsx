@@ -1,22 +1,29 @@
 import { useEffect, useRef, useState } from 'react';
-import { motion, useReducedMotion, useScroll, useTransform, AnimatePresence } from 'motion/react';
+import {
+  motion,
+  useMotionValueEvent,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+  AnimatePresence,
+} from 'motion/react';
 import { Sun, MoonStars, X } from '@phosphor-icons/react';
 import FramedPanel from './FramedPanel';
 import RevealSection from './RevealSection';
 import { useLanguage } from '../i18n/LanguageContext';
-import treeDay from '../assets/scenes/tree-day.webp';
-import treeNight from '../assets/scenes/tree-night.webp';
+import treeDay from '../assets/scenes/career-tree-day-factory-v2.webp';
+import treeNight from '../assets/scenes/career-tree-night-factory.webp';
 import ribbonSprite from '../assets/scenes/tree-ribbon.webp';
 import flowerSprite from '../assets/scenes/single-flower.webp';
-import walkFrame0 from '../assets/scenes/character-walk-0.webp';
-import walkFrame1 from '../assets/scenes/character-walk-1.webp';
-import walkFrame2 from '../assets/scenes/character-walk-2.webp';
-import walkFrame3 from '../assets/scenes/character-walk-3.webp';
+import walkFrame0 from '../assets/scenes/character-walk-aligned-0.webp';
+import walkFrame1 from '../assets/scenes/character-walk-aligned-1.webp';
+import walkFrame2 from '../assets/scenes/character-walk-aligned-2.webp';
+import walkFrame3 from '../assets/scenes/character-walk-aligned-3.webp';
+import { getWalkFrame } from './careerWalk';
 import './CareerTree.css';
 
 // Contact pose → passing pose → contact (other leg) → passing.
 const WALK_FRAMES = [walkFrame0, walkFrame1, walkFrame2, walkFrame3];
-const WALK_FRAME_MS = 220;
 
 // Hotspot anchors in % of the BACKGROUND IMAGE (not the stage): the day
 // tree has glowing ribbons and the night tree glowing flower clusters
@@ -25,17 +32,17 @@ const WALK_FRAME_MS = 220;
 // these glued to the branches at every viewport size. Kept within
 // 22-78% horizontally so no hotspot is cropped away down to ~1024px.
 const RIBBON_SPOTS = {
-  gamesofa: { left: '48%', top: '33%' },
-  ntpu: { left: '65.5%', top: '37%' },
-  actg: { left: '37.5%', top: '50%' },
-  eelin: { left: '71%', top: '64%' },
+  gamesofa: { left: '34.3%', top: '47.7%' },
+  ntpu: { left: '65.9%', top: '54.1%' },
+  actg: { left: '38.9%', top: '61.8%' },
+  eelin: { left: '59.6%', top: '63.6%' },
 };
 
 const FLOWER_SPOTS = {
-  mlbb: { left: '72.5%', top: '33%' },
-  idv: { left: '24%', top: '55%' },
-  stardew: { left: '59%', top: '16%' },
-  shelf: { left: '75%', top: '55%' },
+  mlbb: { left: '64.4%', top: '43.4%' },
+  idv: { left: '34.9%', top: '48.5%' },
+  stardew: { left: '44.7%', top: '26.9%' },
+  shelf: { left: '60.2%', top: '64%' },
 };
 
 const LEAF_COLORS = ['rgba(201,162,75,0.75)', 'rgba(224,188,106,0.6)', 'rgba(110,139,61,0.65)'];
@@ -132,6 +139,10 @@ function WalkStrip() {
   });
   const x = useTransform(scrollYProgress, [0, 1], ['-18vw', '82vw']);
 
+  useMotionValueEvent(scrollYProgress, 'change', (latest) => {
+    if (!reduce) setFrame(getWalkFrame(latest, WALK_FRAMES.length));
+  });
+
   useEffect(() => {
     if (reduce) return undefined;
     // Preload every pose so the first cycle doesn't flicker.
@@ -139,11 +150,7 @@ function WalkStrip() {
       const img = new Image();
       img.src = src;
     }
-    const timer = window.setInterval(
-      () => setFrame((prev) => (prev + 1) % WALK_FRAMES.length),
-      WALK_FRAME_MS
-    );
-    return () => window.clearInterval(timer);
+    return undefined;
   }, [reduce]);
 
   return (

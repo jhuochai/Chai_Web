@@ -29,3 +29,10 @@ dist-ssr
 # local agent-skill support files
 .agents/
 .codex/
+
+# Generated visual exploration: keep the selected masters only.
+design-previews/hero/*
+!design-previews/hero/hero-factory-tree-shadow-c.png
+design-previews/career/*
+!design-previews/career/career-tree-day-final-v2.png
+!design-previews/career/career-tree-night-final.png

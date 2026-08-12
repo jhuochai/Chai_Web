@@ -57,7 +57,7 @@
   background: var(--void-raised);
 }
 
-/* Mimics object-fit: cover for the 2400x1018 tree art: full stage
+/* Mimics object-fit: cover for the 16:9 scene art: full stage
    height, centered, width from the image's own aspect ratio — so the
    hotspots inside can use image-space percentages and stay glued to
    the painted ribbons/flowers at any viewport size. */
@@ -66,7 +66,7 @@
   top: 0;
   left: 50%;
   height: 100%;
-  aspect-ratio: 2400 / 1018;
+  aspect-ratio: 1672 / 941;
   transform: translateX(-50%);
 }
 

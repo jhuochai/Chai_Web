@@ -3,9 +3,9 @@ import { motion, useReducedMotion } from 'motion/react';
 import LiquidEther from './LiquidEther';
 import { useLanguage } from '../i18n/LanguageContext';
 import { scrollToScene } from '../lib/scrollToScene';
-import starryScene from '../assets/scenes/hero-background.webp';
-import daylightScene from '../assets/scenes/tree-day.webp';
-import nightScene from '../assets/scenes/tree-night.webp';
+import starryScene from '../assets/scenes/hero-work-tree-shadow.webp';
+import daylightScene from '../assets/scenes/career-tree-day-factory-v2.webp';
+import nightScene from '../assets/scenes/career-tree-night-factory.webp';
 import './Hero.css';
 
 // Order matches content.hero.scenes (starry / day / night).
