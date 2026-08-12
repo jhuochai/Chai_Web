@@ -8,19 +8,29 @@ import {
   AnimatePresence,
 } from 'motion/react';
 import { Sun, MoonStars, X } from '@phosphor-icons/react';
+import { useGSAP } from '@gsap/react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import FramedPanel from './FramedPanel';
+import CareerRibbonSheet from './CareerRibbonSheet';
 import RevealSection from './RevealSection';
 import { useLanguage } from '../i18n/LanguageContext';
 import treeDay from '../assets/scenes/career-tree-day-factory-v2.webp';
 import treeNight from '../assets/scenes/career-tree-night-factory.webp';
-import ribbonSprite from '../assets/scenes/tree-ribbon.webp';
 import flowerSprite from '../assets/scenes/single-flower.webp';
+import ribbonSmoke from '../assets/scenes/ribbons/ribbon-smoke.webp';
+import ribbonCopper from '../assets/scenes/ribbons/ribbon-copper.webp';
+import ribbonMoss from '../assets/scenes/ribbons/ribbon-moss.webp';
+import ribbonPlum from '../assets/scenes/ribbons/ribbon-plum.webp';
 import walkFrame0 from '../assets/scenes/character-walk-aligned-0.webp';
 import walkFrame1 from '../assets/scenes/character-walk-aligned-1.webp';
 import walkFrame2 from '../assets/scenes/character-walk-aligned-2.webp';
 import walkFrame3 from '../assets/scenes/character-walk-aligned-3.webp';
 import { getWalkFrame } from './careerWalk';
+import { createCareerScrollTrigger } from './careerScroll';
 import './CareerTree.css';
+
+gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 // Contact pose → passing pose → contact (other leg) → passing.
 const WALK_FRAMES = [walkFrame0, walkFrame1, walkFrame2, walkFrame3];
@@ -36,6 +46,13 @@ const RIBBON_SPOTS = {
   ntpu: { left: '65.9%', top: '54.1%' },
   actg: { left: '38.9%', top: '61.8%' },
   eelin: { left: '59.6%', top: '63.6%' },
+};
+
+const RIBBON_ASSETS = {
+  gamesofa: ribbonSmoke,
+  ntpu: ribbonCopper,
+  actg: ribbonMoss,
+  eelin: ribbonPlum,
 };
 
 const FLOWER_SPOTS = {
@@ -179,6 +196,11 @@ export default function CareerTree() {
   const tree = t.careerTree;
   const [night, setNight] = useState(false);
   const [activeId, setActiveId] = useState(null);
+  const [interactive, setInteractive] = useState(false);
+  const sectionRef = useRef(null);
+  const stageRef = useRef(null);
+  const cameraRef = useRef(null);
+  const ribbonTriggerRefs = useRef(new Map());
   const closeButtonRef = useRef(null);
 
   const items = night ? tree.flowers : tree.ribbons;
@@ -186,6 +208,47 @@ export default function CareerTree() {
   const activeItem = activeId
     ? [...tree.ribbons, ...tree.flowers].find((item) => item.id === activeId)
     : null;
+  const activeFlower = night ? activeItem : null;
+
+  const getRibbonTriggerRef = (id) => {
+    if (!ribbonTriggerRefs.current.has(id)) {
+      ribbonTriggerRefs.current.set(id, { current: null });
+    }
+    return ribbonTriggerRefs.current.get(id);
+  };
+
+  useGSAP(
+    () => {
+      if (reduce) {
+        setInteractive(true);
+        return;
+      }
+      if (import.meta.env.MODE === 'test' || !stageRef.current || !cameraRef.current) return;
+
+      setInteractive(false);
+      gsap.set(cameraRef.current, { scale: 1, transformOrigin: '50% 48%' });
+      gsap.set(stageRef.current, { '--camera-progress': 0 });
+      gsap.to(cameraRef.current, {
+        scale: 1.16,
+        ease: 'none',
+        scrollTrigger: createCareerScrollTrigger(stageRef.current, ({ progress }) => {
+            stageRef.current?.style.setProperty('--camera-progress', progress.toFixed(3));
+            setInteractive((current) => {
+              const next = progress >= 0.72;
+              return current === next ? current : next;
+            });
+          }),
+      });
+    },
+    { scope: sectionRef, dependencies: [reduce], revertOnUpdate: true }
+  );
+
+  useEffect(() => {
+    if (import.meta.env.MODE !== 'test') return undefined;
+    const onTestProgress = (event) => setInteractive(event.detail >= 0.72);
+    window.addEventListener('career-tree:test-progress', onTestProgress);
+    return () => window.removeEventListener('career-tree:test-progress', onTestProgress);
+  }, []);
 
   // The hero's chapter menu can send visitors here in a specific mode
   // ("Career" lands on the day tree, "Games" on the night bloom).
@@ -199,14 +262,14 @@ export default function CareerTree() {
   }, []);
 
   useEffect(() => {
-    if (!activeItem) return undefined;
+    if (!activeFlower) return undefined;
     closeButtonRef.current?.focus();
     const onKeyDown = (event) => {
       if (event.key === 'Escape') setActiveId(null);
     };
     document.addEventListener('keydown', onKeyDown);
     return () => document.removeEventListener('keydown', onKeyDown);
-  }, [activeItem]);
+  }, [activeFlower]);
 
   const toggleNight = () => {
     setNight((prev) => !prev);
@@ -214,7 +277,7 @@ export default function CareerTree() {
   };
 
   return (
-    <section id="scene-3" className="career-tree">
+    <section id="scene-3" className="career-tree" ref={sectionRef}>
       <WalkStrip />
 
       <RevealSection className="career-tree__heading container">
@@ -223,36 +286,81 @@ export default function CareerTree() {
         <p className="career-tree__intro">{tree.intro}</p>
       </RevealSection>
 
-      <div className={`career-tree__stage ${night ? 'career-tree__stage--night' : ''}`}>
-        {/* Reproduces object-fit: cover for the wide tree art, so the
-            hotspots inside share the image's own coordinate system. */}
-        <div className="career-tree__canvas">
-          <img
-            src={treeDay}
-            alt=""
-            className={`career-tree__sky ${night ? '' : 'career-tree__sky--active'}`}
-            draggable="false"
-          />
-          <img
-            src={treeNight}
-            alt=""
-            className={`career-tree__sky ${night ? 'career-tree__sky--active' : ''}`}
-            loading="lazy"
-            draggable="false"
-          />
-          {items.map((item) => (
-            <button
-              key={`${night ? 'flower' : 'ribbon'}-${item.id}`}
-              type="button"
-              className="career-tree__spot"
-              style={spots[item.id]}
-              onClick={() => setActiveId(item.id)}
-              aria-label={night ? item.name : item.org}
-              aria-haspopup="dialog"
+      <div
+        ref={stageRef}
+        className={`career-tree__stage ${night ? 'career-tree__stage--night' : ''}`}
+        data-interactive={interactive}
+      >
+        <div ref={cameraRef} className="career-tree__camera">
+          {/* Reproduces object-fit: cover for the wide tree art, so the
+              hotspots inside share the image's own coordinate system. */}
+          <div className="career-tree__canvas">
+            <img
+              src={treeDay}
+              alt=""
+              className={`career-tree__sky ${night ? '' : 'career-tree__sky--active'}`}
+              draggable="false"
             />
-          ))}
+            <img
+              src={treeNight}
+              alt=""
+              className={`career-tree__sky ${night ? 'career-tree__sky--active' : ''}`}
+              loading="lazy"
+              draggable="false"
+            />
+            {night
+              ? items.map((item) => (
+                  <button
+                    key={`flower-${item.id}`}
+                    type="button"
+                    className="career-tree__spot career-tree__spot--flower"
+                    style={spots[item.id]}
+                    onClick={() => setActiveId(item.id)}
+                    aria-label={item.name}
+                    aria-haspopup="dialog"
+                    disabled={!interactive}
+                  />
+                ))
+              : items.map((item) => {
+                  const triggerRef = getRibbonTriggerRef(item.id);
+                  return (
+                    <div key={`ribbon-${item.id}`}>
+                      <button
+                        ref={triggerRef}
+                        type="button"
+                        className="career-tree__spot career-tree__spot--ribbon"
+                        data-ribbon-id={item.id}
+                        style={spots[item.id]}
+                        aria-label={item.org}
+                        aria-haspopup="dialog"
+                        aria-expanded={activeId === item.id}
+                        disabled={!interactive}
+                      >
+                        <img
+                          src={RIBBON_ASSETS[item.id]}
+                          alt=""
+                          data-testid="career-ribbon-asset"
+                          draggable="false"
+                        />
+                      </button>
+                      <CareerRibbonSheet
+                        item={{
+                          ...item,
+                          dragHint: tree.pullHint,
+                          pullReady: tree.pullReady,
+                          closeLabel: tree.closeLabel,
+                        }}
+                        open={activeId === item.id}
+                        onOpen={() => setActiveId(item.id)}
+                        onClose={() => setActiveId(null)}
+                        triggerRef={triggerRef}
+                      />
+                    </div>
+                  );
+                })}
+          </div>
+          <LeafCanvas dense={Boolean(activeItem)} />
         </div>
-        <LeafCanvas dense={Boolean(activeItem)} />
 
         <button
           type="button"
@@ -260,17 +368,18 @@ export default function CareerTree() {
           onClick={toggleNight}
           aria-label={night ? tree.toggleToDay : tree.toggleToNight}
           aria-pressed={night}
+          disabled={!interactive}
         >
           {night ? <Sun size={20} weight="light" /> : <MoonStars size={20} weight="light" />}
           <span>{night ? tree.dayLabel : tree.nightLabel}</span>
         </button>
 
         <p className="career-tree__hint" aria-live="polite">
-          {night ? tree.nightHint : tree.dayHint}
+          {night ? tree.nightHint : tree.pullHint}
         </p>
 
         <AnimatePresence>
-          {activeItem && (
+          {activeFlower && (
             <motion.div
               className="career-tree__backdrop"
               initial={reduce ? false : { opacity: 0 }}
@@ -293,7 +402,7 @@ export default function CareerTree() {
                   className="career-tree__card"
                   role="dialog"
                   aria-modal="true"
-                  aria-label={night ? activeItem.name : activeItem.org}
+                  aria-label={activeFlower.name}
                 >
                   <button
                     ref={closeButtonRef}
@@ -306,32 +415,16 @@ export default function CareerTree() {
                   </button>
 
                   <img
-                    src={activeItem.org ? ribbonSprite : flowerSprite}
+                    src={flowerSprite}
                     alt=""
                     className="career-tree__card-emblem"
                     aria-hidden="true"
                     draggable="false"
                   />
 
-                  {activeItem.org ? (
-                    <>
-                      <p className="eyebrow">{activeItem.period}</p>
-                      <h3 className="career-tree__card-title">{activeItem.org}</h3>
-                      <p className="career-tree__card-role">{activeItem.role}</p>
-                      <p className="career-tree__card-summary">{activeItem.summary}</p>
-                      <ul className="career-tree__card-points">
-                        {activeItem.points.map((point) => (
-                          <li key={point}>{point}</li>
-                        ))}
-                      </ul>
-                    </>
-                  ) : (
-                    <>
-                      {activeItem.note && <p className="eyebrow">{activeItem.note}</p>}
-                      <h3 className="career-tree__card-title">{activeItem.name}</h3>
-                      <p className="career-tree__card-summary">{activeItem.desc}</p>
-                    </>
-                  )}
+                  {activeFlower.note && <p className="eyebrow">{activeFlower.note}</p>}
+                  <h3 className="career-tree__card-title">{activeFlower.name}</h3>
+                  <p className="career-tree__card-summary">{activeFlower.desc}</p>
                 </FramedPanel>
               </motion.div>
             </motion.div>

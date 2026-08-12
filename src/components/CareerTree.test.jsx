@@ -1,6 +1,7 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
 import CareerTree from './CareerTree';
+import { createCareerScrollTrigger } from './careerScroll';
 import { LanguageProvider } from '../i18n/LanguageContext';
 import { content } from '../data/content';
 
@@ -13,6 +14,19 @@ function renderTree() {
 }
 
 describe('CareerTree', () => {
+  it('pins only when the tree stage itself reaches the viewport top', () => {
+    const stage = document.createElement('div');
+    const config = createCareerScrollTrigger(stage, () => {});
+
+    expect(config).toEqual(expect.objectContaining({
+      trigger: stage,
+      pin: stage,
+      start: 'top top',
+      end: '+=140%',
+      scrub: 0.7,
+    }));
+  });
+
   it('does not run the walking frames on an idle time interval', () => {
     const intervalSpy = vi.spyOn(window, 'setInterval');
     renderTree();
@@ -35,6 +49,7 @@ describe('CareerTree', () => {
 
   it('switches to flowers (games) in night mode and back', () => {
     renderTree();
+    fireEvent(window, new CustomEvent('career-tree:test-progress', { detail: 0.8 }));
     fireEvent.click(screen.getByRole('button', { name: 'Switch to night' }));
     for (const flower of content.en.careerTree.flowers) {
       expect(screen.getByRole('button', { name: flower.name })).toBeInTheDocument();
@@ -46,17 +61,51 @@ describe('CareerTree', () => {
     ).toBeInTheDocument();
   });
 
-  it('opens a ribbon detail card and closes it with Escape', async () => {
+  it('keeps hotspots disabled until the camera push completes', () => {
+    const { container } = renderTree();
+    const stage = container.querySelector('.career-tree__stage');
+    const ribbon = screen.getByRole('button', {
+      name: content.en.careerTree.ribbons[0].org,
+    });
+
+    expect(stage).toHaveAttribute('data-interactive', 'false');
+    expect(ribbon).toBeDisabled();
+
+    fireEvent(window, new CustomEvent('career-tree:test-progress', { detail: 0.8 }));
+
+    expect(stage).toHaveAttribute('data-interactive', 'true');
+    expect(ribbon).toBeEnabled();
+  });
+
+  it('opens a ribbon chapter with Enter and returns focus after Escape', async () => {
     renderTree();
+    fireEvent(window, new CustomEvent('career-tree:test-progress', { detail: 0.8 }));
     const ribbon = content.en.careerTree.ribbons[0];
-    fireEvent.click(screen.getByRole('button', { name: ribbon.org }));
+    const trigger = screen.getByRole('button', { name: ribbon.org });
+    trigger.focus();
+    fireEvent.keyDown(trigger, { key: 'Enter' });
     const dialog = screen.getByRole('dialog', { name: ribbon.org });
     expect(dialog).toBeInTheDocument();
+    expect(dialog).toHaveClass('career-ribbon-sheet__panel');
     expect(screen.getByText(ribbon.role)).toBeInTheDocument();
     expect(screen.getByText(ribbon.points[0])).toBeInTheDocument();
     fireEvent.keyDown(document, { key: 'Escape' });
-    // AnimatePresence keeps the card mounted until the exit animation ends.
     await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
+    expect(trigger).toHaveFocus();
+  });
+
+  it('renders four distinct low-saturation ribbon assets in day mode', () => {
+    const { container } = renderTree();
+    const assets = screen
+      .getAllByTestId('career-ribbon-asset')
+      .map((image) => image.getAttribute('src'));
+    expect(assets).toHaveLength(4);
+    expect(new Set(assets).size).toBe(4);
+    expect(
+      Array.from(container.querySelectorAll('[data-ribbon-id]')).map((node) =>
+        node.getAttribute('data-ribbon-id')
+      )
+    ).toEqual(content.en.careerTree.ribbons.map((ribbon) => ribbon.id));
   });
 
   it('switches to night mode when the hero broadcasts games mode', () => {
@@ -69,6 +118,7 @@ describe('CareerTree', () => {
 
   it('opens a flower detail card in night mode', () => {
     renderTree();
+    fireEvent(window, new CustomEvent('career-tree:test-progress', { detail: 0.8 }));
     fireEvent.click(screen.getByRole('button', { name: 'Switch to night' }));
     const flower = content.en.careerTree.flowers[0];
     fireEvent.click(screen.getByRole('button', { name: flower.name }));

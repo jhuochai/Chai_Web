@@ -1,0 +1,173 @@
+.career-ribbon-sheet__gesture-hint {
+  position: fixed;
+  left: 50%;
+  bottom: clamp(24px, 5vh, 52px);
+  z-index: 42;
+  max-width: calc(100vw - 32px);
+  margin: 0;
+  padding: 10px 16px;
+  transform: translateX(-50%);
+  border: 1px solid rgba(197, 166, 103, 0.42);
+  border-radius: 999px;
+  background: rgba(15, 20, 24, 0.92);
+  color: #f0e6cf;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.34);
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  line-height: 1.4;
+  text-align: center;
+  pointer-events: none;
+}
+
+.career-ribbon-sheet__gesture-hint.is-ready {
+  border-color: rgba(224, 188, 106, 0.78);
+  color: var(--gold-bright);
+}
+
+.career-ribbon-sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 44;
+  display: flex;
+  align-items: flex-end;
+  background: rgba(9, 13, 16, 0.5);
+  isolation: isolate;
+}
+
+.career-ribbon-sheet__panel {
+  position: relative;
+  width: 100%;
+  max-height: min(88dvh, 920px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background:
+    linear-gradient(180deg, rgba(41, 48, 52, 0.97), rgba(17, 22, 25, 0.99) 18%),
+    var(--void-raised);
+  border-top: 1px solid rgba(197, 166, 103, 0.5);
+  box-shadow: 0 -30px 90px rgba(0, 0, 0, 0.5);
+  color: var(--parchment);
+}
+
+.career-ribbon-sheet__panel::before {
+  content: '';
+  display: block;
+  width: 46px;
+  height: 3px;
+  margin: 12px auto 0;
+  border-radius: 999px;
+  background: rgba(224, 188, 106, 0.56);
+}
+
+.career-ribbon-sheet__close {
+  position: sticky;
+  top: 16px;
+  z-index: 1;
+  display: grid;
+  width: 46px;
+  height: 46px;
+  margin: 8px clamp(16px, 4vw, 54px) -54px auto;
+  padding: 0;
+  place-items: center;
+  border: 1px solid rgba(224, 188, 106, 0.44);
+  border-radius: 50%;
+  background: rgba(15, 20, 24, 0.92);
+  color: var(--parchment);
+  cursor: pointer;
+}
+
+.career-ribbon-sheet__close:hover,
+.career-ribbon-sheet__close:focus-visible {
+  border-color: var(--gold-bright);
+  color: var(--gold-bright);
+  outline: 2px solid rgba(224, 188, 106, 0.35);
+  outline-offset: 3px;
+}
+
+.career-ribbon-sheet__content {
+  width: min(100% - 40px, 820px);
+  margin-inline: auto;
+  padding: clamp(48px, 7vh, 84px) 0 clamp(56px, 9vh, 110px);
+}
+
+.career-ribbon-sheet__period,
+.career-ribbon-sheet__role {
+  margin: 0;
+  color: var(--gold-bright);
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+}
+
+.career-ribbon-sheet__content h3 {
+  max-width: 20ch;
+  margin: 12px 0 0;
+  font-size: clamp(2rem, 5vw, 4.25rem);
+  line-height: 1.08;
+  text-wrap: balance;
+}
+
+.career-ribbon-sheet__role {
+  margin-top: 14px;
+  color: var(--cool-blue-text);
+  letter-spacing: 0.04em;
+}
+
+.career-ribbon-sheet__summary {
+  max-width: 62ch;
+  margin: clamp(26px, 5vh, 48px) 0 0;
+  color: var(--parchment);
+  font-size: clamp(1.05rem, 1.8vw, 1.3rem);
+  line-height: 1.7;
+  text-wrap: pretty;
+}
+
+.career-ribbon-sheet__points {
+  display: grid;
+  max-width: 70ch;
+  margin: clamp(28px, 5vh, 52px) 0 0;
+  padding: 0;
+  gap: 18px;
+  list-style: none;
+}
+
+.career-ribbon-sheet__points li {
+  position: relative;
+  padding-left: 24px;
+  color: var(--parchment-dim);
+  font-size: 0.98rem;
+  line-height: 1.75;
+}
+
+.career-ribbon-sheet__points li::before {
+  content: '';
+  position: absolute;
+  top: 0.78em;
+  left: 0;
+  width: 10px;
+  height: 1px;
+  background: var(--gold);
+}
+
+@media (max-width: 600px) {
+  .career-ribbon-sheet__panel {
+    max-height: 92dvh;
+  }
+
+  .career-ribbon-sheet__content {
+    width: min(100% - 32px, 820px);
+    padding-top: 54px;
+  }
+
+  .career-ribbon-sheet__close {
+    margin-right: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .career-ribbon-sheet__gesture-hint,
+  .career-ribbon-sheet,
+  .career-ribbon-sheet__panel {
+    animation: none;
+    transition: none;
+  }
+}

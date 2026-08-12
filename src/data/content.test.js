@@ -170,4 +170,15 @@ describe('content.careerTree', () => {
     const zhFlowers = content.zh.careerTree.flowers.map((f) => f.id);
     expect(enFlowers).toEqual(zhFlowers);
   });
+
+  it('provides aligned instructions for pulling a career ribbon', () => {
+    expect(content.en.careerTree).toEqual(expect.objectContaining({
+      pullHint: 'Hold the ribbon and pull down',
+      pullReady: 'Release to open this work chapter',
+    }));
+    expect(content.zh.careerTree).toEqual(expect.objectContaining({
+      pullHint: '按住絲帶，向下拉開',
+      pullReady: '放開後展開這段工作經歷',
+    }));
+  });
 });

@@ -51,10 +51,30 @@
 /* --- tree stage --- */
 
 .career-tree__stage {
+  --camera-progress: 0;
   position: relative;
   min-height: 100dvh;
   overflow: hidden;
   background: var(--void-raised);
+}
+
+.career-tree__stage::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    radial-gradient(circle at 50% 43%, transparent 34%, rgba(8, 13, 15, 0.2) 82%),
+    linear-gradient(180deg, rgba(114, 135, 137, 0.04), rgba(10, 15, 17, 0.16));
+  opacity: calc(var(--camera-progress) * 0.72);
+  pointer-events: none;
+}
+
+.career-tree__camera {
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% 48%;
+  will-change: transform;
 }
 
 /* Mimics object-fit: cover for the 16:9 scene art: full stage
@@ -144,6 +164,16 @@
   transition: transform 0.3s var(--ease-reveal);
 }
 
+.career-tree__spot:disabled {
+  cursor: default;
+  pointer-events: none;
+}
+
+.career-tree__stage[data-interactive='false'] .career-tree__toggle {
+  opacity: 0.58;
+  cursor: default;
+}
+
 .career-tree__spot:hover,
 .career-tree__spot:focus-visible {
   transform: translate(-50%, -50%) scale(1.25);
@@ -154,6 +184,72 @@
     rgba(63, 193, 214, 0.22) 48%,
     rgba(63, 193, 214, 0) 74%
   );
+}
+
+.career-tree__spot:focus-visible {
+  outline: 2px solid var(--gold-bright);
+  outline-offset: 3px;
+}
+
+.career-tree__spot--ribbon {
+  width: clamp(68px, 6.8vw, 112px);
+  height: clamp(118px, 15vh, 178px);
+  border-radius: 0;
+  background: transparent;
+  animation: none;
+  cursor: grab;
+  touch-action: none;
+}
+
+.career-tree__spot--ribbon::before {
+  content: '';
+  position: absolute;
+  inset: -14px -18px;
+  z-index: -1;
+  border-radius: 46%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(20, 29, 28, 0.7) 0%,
+    rgba(27, 35, 32, 0.44) 48%,
+    transparent 76%
+  );
+  filter: blur(4px);
+  pointer-events: none;
+}
+
+.career-tree__spot--ribbon:hover,
+.career-tree__spot--ribbon:focus-visible {
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(218, 196, 147, 0.12), transparent 68%);
+}
+
+.career-tree__spot--ribbon.is-pulling {
+  cursor: grabbing;
+}
+
+.career-tree__spot--ribbon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center top;
+  transform: translateY(var(--ribbon-pull, 0px));
+  transform-origin: 50% 0;
+  transition: transform 0.44s var(--ease-reveal), filter 0.28s ease;
+  filter: drop-shadow(0 10px 12px rgba(0, 0, 0, 0.46));
+  pointer-events: none;
+  user-select: none;
+}
+
+.career-tree__spot--ribbon.is-pulling img {
+  transition: filter 0.28s ease;
+  filter: drop-shadow(0 18px 18px rgba(0, 0, 0, 0.56));
+}
+
+.career-tree__spot--ribbon:hover img,
+.career-tree__spot--ribbon:focus-visible img {
+  filter:
+    drop-shadow(0 12px 14px rgba(0, 0, 0, 0.5))
+    drop-shadow(0 0 8px rgba(204, 180, 126, 0.18));
 }
 
 @keyframes spot-pulse {
@@ -266,10 +362,68 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .career-tree__camera {
+    transform: none !important;
+    will-change: auto;
+  }
+
+  .career-tree__spot,
   .career-tree__spot img {
     animation: none;
+    transition: none;
   }
   .career-tree__sky {
     transition: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .career-tree__stage {
+    min-height: 100svh;
+  }
+
+  .career-tree__canvas {
+    left: 0;
+    width: 100%;
+    height: 100%;
+    aspect-ratio: auto;
+    transform: none;
+  }
+
+  .career-tree__sky {
+    object-fit: cover;
+  }
+
+  .career-tree__spot--ribbon {
+    width: 64px;
+    height: 118px;
+  }
+
+  .career-tree__spot--ribbon[data-ribbon-id='gamesofa'] {
+    left: 18% !important;
+  }
+
+  .career-tree__spot--ribbon[data-ribbon-id='ntpu'] {
+    left: 82% !important;
+  }
+
+  .career-tree__spot--ribbon[data-ribbon-id='actg'] {
+    left: 34% !important;
+  }
+
+  .career-tree__spot--ribbon[data-ribbon-id='eelin'] {
+    left: 68% !important;
+  }
+
+  .career-tree__toggle {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 10px 14px;
+  }
+
+  .career-tree__hint {
+    max-width: calc(100vw - 32px);
+    white-space: normal;
+    text-align: center;
   }
 }

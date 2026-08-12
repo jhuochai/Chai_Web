@@ -67,6 +67,8 @@ const en = {
     toggleToDay: 'Switch to day',
     dayHint: 'Pull a ribbon to open a work chapter',
     nightHint: 'Pick a flower to see what I play',
+    pullHint: 'Hold the ribbon and pull down',
+    pullReady: 'Release to open this work chapter',
     closeLabel: 'Close',
     ribbons: [
       {
@@ -444,6 +446,8 @@ const zh = {
     toggleToDay: '切換到白天',
     dayHint: '拉開一條絲帶，展開一段工作經歷',
     nightHint: '點一朵花，看看我常玩的遊戲',
+    pullHint: '按住絲帶，向下拉開',
+    pullReady: '放開後展開這段工作經歷',
     closeLabel: '關閉',
     ribbons: [
       {
