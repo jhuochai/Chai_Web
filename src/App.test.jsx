@@ -47,6 +47,13 @@ describe('App', () => {
     expect(container.querySelector('main')).toHaveClass('scene-flow');
   });
 
+  it('keeps the walker absent until an explicit chapter transition', () => {
+    const { container } = render(<App />);
+    expect(container.querySelector('.floating-companion')).toBeNull();
+    expect(container.querySelector('.career-tree__walker')).toBeNull();
+    expect(container.querySelector('.chapter-transition__walker')).toBeNull();
+  });
+
   it('pauses the shared scroll engine while the loading overlay is active', () => {
     const { getByTestId } = render(<App />);
     expect(getByTestId('smooth-scroll-stub')).toHaveAttribute('data-paused', 'true');

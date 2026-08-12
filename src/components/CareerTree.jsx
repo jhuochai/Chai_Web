@@ -1,10 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import {
-  motion,
-  useMotionValueEvent,
   useReducedMotion,
-  useScroll,
-  useTransform,
 } from 'motion/react';
 import { Sun, MoonStars } from '@phosphor-icons/react';
 import { useGSAP } from '@gsap/react';
@@ -31,18 +27,10 @@ import ribbonSmoke from '../assets/scenes/ribbons/ribbon-smoke.webp';
 import ribbonCopper from '../assets/scenes/ribbons/ribbon-copper.webp';
 import ribbonMoss from '../assets/scenes/ribbons/ribbon-moss.webp';
 import ribbonPlum from '../assets/scenes/ribbons/ribbon-plum.webp';
-import walkFrame0 from '../assets/scenes/character-walk-aligned-0.webp';
-import walkFrame1 from '../assets/scenes/character-walk-aligned-1.webp';
-import walkFrame2 from '../assets/scenes/character-walk-aligned-2.webp';
-import walkFrame3 from '../assets/scenes/character-walk-aligned-3.webp';
-import { getWalkFrame } from './careerWalk';
 import { createCareerScrollTrigger } from './careerScroll';
 import './CareerTree.css';
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
-
-// Contact pose → passing pose → contact (other leg) → passing.
-const WALK_FRAMES = [walkFrame0, walkFrame1, walkFrame2, walkFrame3];
 
 // Hotspot anchors in % of the BACKGROUND IMAGE (not the stage): the day
 // tree has glowing ribbons and the night tree glowing flower clusters
@@ -171,50 +159,6 @@ function LeafCanvas({ dense }) {
 }
 
 /**
- * Scroll-linked walking pass: the character crosses the strip from left
- * to right as it scrolls through the viewport, cycling through the four
- * walk poses like a hand-drawn flipbook. Used both to enter the tree
- * scene and to walk off toward the next scene.
- */
-function WalkStrip() {
-  const stripRef = useRef(null);
-  const reduce = useReducedMotion();
-  const [frame, setFrame] = useState(0);
-  const { scrollYProgress } = useScroll({
-    target: stripRef,
-    offset: ['start end', 'end start'],
-  });
-  const x = useTransform(scrollYProgress, [0, 1], ['-18vw', '82vw']);
-
-  useMotionValueEvent(scrollYProgress, 'change', (latest) => {
-    if (!reduce) setFrame(getWalkFrame(latest, WALK_FRAMES.length));
-  });
-
-  useEffect(() => {
-    if (reduce) return undefined;
-    // Preload every pose so the first cycle doesn't flicker.
-    for (const src of WALK_FRAMES) {
-      const img = new Image();
-      img.src = src;
-    }
-    return undefined;
-  }, [reduce]);
-
-  return (
-    <div className="career-tree__walk" ref={stripRef} aria-hidden="true">
-      <motion.img
-        src={WALK_FRAMES[frame]}
-        alt=""
-        className="career-tree__walker"
-        style={reduce ? undefined : { x }}
-        loading="lazy"
-        draggable="false"
-      />
-    </div>
-  );
-}
-
-/**
  * Scene 3: the career tree. Day hangs work-history ribbons on the
  * branches; night blooms flowers holding the games she plays. A
  * sun/moon toggle crossfades the sky; clicking a hotspot opens its
@@ -297,8 +241,6 @@ export default function CareerTree() {
 
   return (
     <section id="scene-3" className="career-tree" ref={sectionRef}>
-      <WalkStrip />
-
       <RevealSection className="career-tree__heading container">
         <p className="eyebrow">{tree.eyebrow}</p>
         <h2>{tree.heading}</h2>
@@ -408,7 +350,6 @@ export default function CareerTree() {
 
       </div>
 
-      <WalkStrip />
     </section>
   );
 }

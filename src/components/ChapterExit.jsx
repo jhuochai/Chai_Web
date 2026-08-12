@@ -1,6 +1,7 @@
 import { getNextChapter } from '../data/chapterMap';
 import { useLanguage } from '../i18n/LanguageContext';
 import { scrollToScene } from '../lib/scrollToScene';
+import { playChapterTransition } from '../lib/chapterTransition';
 import './ChapterExit.css';
 
 export default function ChapterExit({ chapterId }) {
@@ -23,7 +24,7 @@ export default function ChapterExit({ chapterId }) {
       <button
         type="button"
         className="chapter-exit__button btn-glass"
-        onClick={() => scrollToScene(nextChapter.target)}
+        onClick={() => playChapterTransition(nextChapter.target)}
       >
         {copy.next}{copy.chapters[nextChapter.id]}
       </button>

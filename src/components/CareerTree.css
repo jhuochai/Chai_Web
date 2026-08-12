@@ -3,32 +3,6 @@
   padding-block: clamp(48px, 8vh, 120px) 0;
 }
 
-/* --- walking pass --- */
-
-.career-tree__walk {
-  position: relative;
-  height: clamp(220px, 32vh, 340px);
-  overflow: hidden;
-}
-
-.career-tree__walker {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: clamp(150px, 14vw, 240px);
-  height: auto;
-  user-select: none;
-  /* The four-pose flipbook carries the gait; the drop shadow hugs the
-     real silhouette now that the sprites have true alpha. */
-  filter: drop-shadow(0 18px 30px rgba(0, 0, 0, 0.55));
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .career-tree__walker {
-    left: 40%;
-  }
-}
-
 /* --- heading --- */
 
 .career-tree__heading {

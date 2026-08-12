@@ -77,6 +77,12 @@ describe('CareerTree', () => {
     expect(ribbon).toBeEnabled();
   });
 
+  it('contains no scroll-linked walking strip or persistent walker', () => {
+    const { container } = renderTree();
+    expect(container.querySelector('.career-tree__walk')).toBeNull();
+    expect(container.querySelector('.career-tree__walker')).toBeNull();
+  });
+
   it('opens a ribbon chapter with Enter and returns focus after Escape', async () => {
     renderTree();
     fireEvent(window, new CustomEvent('career-tree:test-progress', { detail: 0.8 }));

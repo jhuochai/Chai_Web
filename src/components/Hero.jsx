@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { useReducedMotion } from 'motion/react';
 import { useLanguage } from '../i18n/LanguageContext';
-import { scrollToScene } from '../lib/scrollToScene';
 import { navigateToRoute } from '../lib/siteRoute';
+import { playChapterTransition } from '../lib/chapterTransition';
 import observatoryScene from '../assets/scenes/hero-observatory.webp';
 import characterBack from '../assets/scenes/hero-character-back.webp';
 import './Hero.css';
@@ -80,7 +80,7 @@ export default function Hero() {
       return;
     }
 
-    scrollToScene(entry.target, { immediate: reduce });
+    playChapterTransition(entry.target);
   };
 
   return (

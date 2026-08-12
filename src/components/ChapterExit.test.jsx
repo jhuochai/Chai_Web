@@ -5,8 +5,10 @@ import { LanguageProvider } from '../i18n/LanguageContext';
 import { content } from '../data/content';
 
 const scrollMocks = vi.hoisted(() => ({ scrollToScene: vi.fn() }));
+const transitionMocks = vi.hoisted(() => ({ playChapterTransition: vi.fn() }));
 
 vi.mock('../lib/scrollToScene', () => scrollMocks);
+vi.mock('../lib/chapterTransition', () => transitionMocks);
 
 function renderChapterExit(chapterId = 'intro') {
   return render(
@@ -32,8 +34,10 @@ describe('ChapterExit', () => {
     fireEvent.click(screen.getByRole('button', { name: content.en.ui.chapterExit.home }));
     fireEvent.click(screen.getByRole('button', { name: /Career Tree/i }));
 
-    expect(scrollMocks.scrollToScene).toHaveBeenNthCalledWith(1, '#scene-1');
-    expect(scrollMocks.scrollToScene).toHaveBeenNthCalledWith(2, '#scene-3');
+    expect(scrollMocks.scrollToScene).toHaveBeenCalledOnce();
+    expect(scrollMocks.scrollToScene).toHaveBeenCalledWith('#scene-1');
+    expect(transitionMocks.playChapterTransition).toHaveBeenCalledOnce();
+    expect(transitionMocks.playChapterTransition).toHaveBeenCalledWith('#scene-3');
   });
 
   it('gives every chapter exit a distinct localized landmark name', () => {

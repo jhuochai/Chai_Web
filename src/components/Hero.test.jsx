@@ -6,9 +6,11 @@ import { content } from '../data/content';
 
 const scrollMocks = vi.hoisted(() => ({ scrollToScene: vi.fn() }));
 const routeMocks = vi.hoisted(() => ({ navigateToRoute: vi.fn() }));
+const transitionMocks = vi.hoisted(() => ({ playChapterTransition: vi.fn() }));
 
 vi.mock('../lib/scrollToScene', () => scrollMocks);
 vi.mock('../lib/siteRoute', () => routeMocks);
+vi.mock('../lib/chapterTransition', () => transitionMocks);
 
 function renderHero() {
   window.localStorage.setItem('site-lang', 'en');
@@ -23,6 +25,7 @@ describe('Hero', () => {
   beforeEach(() => {
     scrollMocks.scrollToScene.mockReset();
     routeMocks.navigateToRoute.mockReset();
+    transitionMocks.playChapterTransition.mockReset();
   });
 
   afterEach(() => {
@@ -50,12 +53,11 @@ describe('Hero', () => {
 
     for (const entry of content.en.hero.entries.slice(0, 3)) {
       fireEvent.click(screen.getByRole('button', { name: entry.label }));
-      expect(scrollMocks.scrollToScene).toHaveBeenLastCalledWith(entry.target, {
-        immediate: false,
-      });
+      expect(transitionMocks.playChapterTransition).toHaveBeenLastCalledWith(entry.target);
     }
 
-    expect(scrollMocks.scrollToScene).toHaveBeenCalledTimes(3);
+    expect(transitionMocks.playChapterTransition).toHaveBeenCalledTimes(3);
+    expect(scrollMocks.scrollToScene).not.toHaveBeenCalled();
   });
 
   it('cancels a queued parallax frame when the pointer leaves the observatory', () => {

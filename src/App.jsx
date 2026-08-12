@@ -6,14 +6,15 @@ import CareerTree from './components/CareerTree';
 import Portfolio from './components/Portfolio';
 import Contact from './components/Contact';
 import ChapterExit from './components/ChapterExit';
+import ChapterTransition from './components/ChapterTransition';
 import MakingOf from './components/MakingOf';
-import FloatingCompanion from './components/FloatingCompanion';
 import GrainOverlay from './components/GrainOverlay';
 import ClickSpark from './components/ClickSpark';
 import LoadingScreen from './components/LoadingScreen';
 import SmoothScroll from './components/SmoothScroll';
 import { LanguageProvider } from './i18n/LanguageContext';
 import { getSiteRoute } from './lib/siteRoute';
+import { scrollToScene } from './lib/scrollToScene';
 
 function Scenes() {
   return (
@@ -60,7 +61,7 @@ function App() {
           <>
             <Nav />
             <Scenes />
-            <FloatingCompanion />
+            <ChapterTransition onTravel={scrollToScene} />
           </>
         )}
       </ClickSpark>
