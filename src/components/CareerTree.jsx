@@ -5,19 +5,28 @@ import {
   useReducedMotion,
   useScroll,
   useTransform,
-  AnimatePresence,
 } from 'motion/react';
-import { Sun, MoonStars, X } from '@phosphor-icons/react';
+import { Sun, MoonStars } from '@phosphor-icons/react';
 import { useGSAP } from '@gsap/react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import FramedPanel from './FramedPanel';
 import CareerRibbonSheet from './CareerRibbonSheet';
+import GameBloom from './GameBloom';
 import RevealSection from './RevealSection';
 import { useLanguage } from '../i18n/LanguageContext';
 import treeDay from '../assets/scenes/career-tree-day-factory-v2.webp';
 import treeNight from '../assets/scenes/career-tree-night-factory.webp';
-import flowerSprite from '../assets/scenes/single-flower.webp';
+import bloom01 from '../assets/scenes/blooms/bloom-01.webp';
+import bloom02 from '../assets/scenes/blooms/bloom-02.webp';
+import bloom03 from '../assets/scenes/blooms/bloom-03.webp';
+import bloom04 from '../assets/scenes/blooms/bloom-04.webp';
+import bloom05 from '../assets/scenes/blooms/bloom-05.webp';
+import bloom06 from '../assets/scenes/blooms/bloom-06.webp';
+import bloom07 from '../assets/scenes/blooms/bloom-07.webp';
+import bloom08 from '../assets/scenes/blooms/bloom-08.webp';
+import bloom09 from '../assets/scenes/blooms/bloom-09.webp';
+import bloom10 from '../assets/scenes/blooms/bloom-10.webp';
+import bloom11 from '../assets/scenes/blooms/bloom-11.webp';
 import ribbonSmoke from '../assets/scenes/ribbons/ribbon-smoke.webp';
 import ribbonCopper from '../assets/scenes/ribbons/ribbon-copper.webp';
 import ribbonMoss from '../assets/scenes/ribbons/ribbon-moss.webp';
@@ -55,12 +64,33 @@ const RIBBON_ASSETS = {
   eelin: ribbonPlum,
 };
 
-const FLOWER_SPOTS = {
-  mlbb: { left: '64.4%', top: '43.4%' },
-  idv: { left: '34.9%', top: '48.5%' },
-  stardew: { left: '44.7%', top: '26.9%' },
-  shelf: { left: '60.2%', top: '64%' },
+const GAME_BLOOM_LAYOUT = {
+  mlbb: { left: '40.8%', top: '61.3%', mobileLeft: '18%', mobileTop: '62%', size: 'lg', branch: 'lower-left' },
+  'identity-v': { left: '34.8%', top: '48.2%', mobileLeft: '50%', mobileTop: '48%', size: 'md', branch: 'crown-left' },
+  stardew: { left: '44.5%', top: '26.4%', mobileLeft: '50%', mobileTop: '24%', size: 'sm', branch: 'crown-center' },
+  lol: { left: '58.2%', top: '30.1%', mobileLeft: '82%', mobileTop: '27%', size: 'lg', branch: 'crown-right' },
+  valorant: { left: '34.7%', top: '36.4%', mobileLeft: '18%', mobileTop: '32%', size: 'sm', branch: 'crown-left' },
+  r6: { left: '64.4%', top: '42.6%', mobileLeft: '82%', mobileTop: '42%', size: 'md', branch: 'crown-right' },
+  gta5: { left: '53.4%', top: '44.7%', mobileLeft: '50%', mobileTop: '37%', size: 'sm', branch: 'crown-center' },
+  minecraft: { left: '63.1%', top: '54.7%', mobileLeft: '82%', mobileTop: '58%', size: 'md', branch: 'lower-right' },
+  palworld: { left: '60.1%', top: '63.8%', mobileLeft: '72%', mobileTop: '72%', size: 'lg', branch: 'lower-right' },
+  'dont-starve': { left: '47.5%', top: '51.2%', mobileLeft: '18%', mobileTop: '48%', size: 'md', branch: 'crown-left' },
+  raft: { left: '52.4%', top: '59.2%', mobileLeft: '36%', mobileTop: '72%', size: 'sm', branch: 'lower-left' },
 };
+
+const GAME_BLOOM_ASSETS = [
+  bloom01,
+  bloom02,
+  bloom03,
+  bloom04,
+  bloom05,
+  bloom06,
+  bloom07,
+  bloom08,
+  bloom09,
+  bloom10,
+  bloom11,
+];
 
 const LEAF_COLORS = ['rgba(201,162,75,0.75)', 'rgba(224,188,106,0.6)', 'rgba(110,139,61,0.65)'];
 
@@ -201,14 +231,13 @@ export default function CareerTree() {
   const stageRef = useRef(null);
   const cameraRef = useRef(null);
   const ribbonTriggerRefs = useRef(new Map());
-  const closeButtonRef = useRef(null);
 
-  const items = night ? tree.flowers : tree.ribbons;
-  const spots = night ? FLOWER_SPOTS : RIBBON_SPOTS;
+  const nightItems = tree.flowers.slice(0, GAME_BLOOM_ASSETS.length);
+  const items = night ? nightItems : tree.ribbons;
+  const spots = RIBBON_SPOTS;
   const activeItem = activeId
-    ? [...tree.ribbons, ...tree.flowers].find((item) => item.id === activeId)
+    ? [...tree.ribbons, ...nightItems].find((item) => item.id === activeId)
     : null;
-  const activeFlower = night ? activeItem : null;
 
   const getRibbonTriggerRef = (id) => {
     if (!ribbonTriggerRefs.current.has(id)) {
@@ -219,7 +248,7 @@ export default function CareerTree() {
 
   useGSAP(
     () => {
-      if (reduce) {
+      if (reduce || new URLSearchParams(window.location.search).has('impact-qa')) {
         setInteractive(true);
         return;
       }
@@ -261,16 +290,6 @@ export default function CareerTree() {
     return () => window.removeEventListener('career-tree:mode', onMode);
   }, []);
 
-  useEffect(() => {
-    if (!activeFlower) return undefined;
-    closeButtonRef.current?.focus();
-    const onKeyDown = (event) => {
-      if (event.key === 'Escape') setActiveId(null);
-    };
-    document.addEventListener('keydown', onKeyDown);
-    return () => document.removeEventListener('keydown', onKeyDown);
-  }, [activeFlower]);
-
   const toggleNight = () => {
     setNight((prev) => !prev);
     setActiveId(null);
@@ -309,18 +328,27 @@ export default function CareerTree() {
               draggable="false"
             />
             {night
-              ? items.map((item) => (
-                  <button
-                    key={`flower-${item.id}`}
-                    type="button"
-                    className="career-tree__spot career-tree__spot--flower"
-                    style={spots[item.id]}
-                    onClick={() => setActiveId(item.id)}
-                    aria-label={item.name}
-                    aria-haspopup="dialog"
-                    disabled={!interactive}
-                  />
-                ))
+              ? items.map((item, index) => {
+                  const position = GAME_BLOOM_LAYOUT[item.id];
+                  return (
+                    <GameBloom
+                      key={`flower-${item.id}`}
+                      game={item}
+                      position={position}
+                      size={position.size}
+                      asset={GAME_BLOOM_ASSETS[index]}
+                      active={activeId === item.id}
+                      disabled={!interactive}
+                      onOpen={setActiveId}
+                      onClose={() => setActiveId(null)}
+                      labels={{
+                        close: tree.closeGameLabel,
+                        play: tree.playGameLabel,
+                        mediaFuture: tree.mediaFuture,
+                      }}
+                    />
+                  );
+                })
               : items.map((item) => {
                   const triggerRef = getRibbonTriggerRef(item.id);
                   return (
@@ -378,58 +406,6 @@ export default function CareerTree() {
           {night ? tree.nightHint : tree.pullHint}
         </p>
 
-        <AnimatePresence>
-          {activeFlower && (
-            <motion.div
-              className="career-tree__backdrop"
-              initial={reduce ? false : { opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={reduce ? undefined : { opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              onClick={(event) => {
-                if (event.target === event.currentTarget) setActiveId(null);
-              }}
-            >
-              <motion.div
-                initial={reduce ? false : { opacity: 0, scale: 0.92, y: 18 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={reduce ? undefined : { opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                className="career-tree__card-wrap"
-              >
-                <FramedPanel
-                  variant="deco"
-                  className="career-tree__card"
-                  role="dialog"
-                  aria-modal="true"
-                  aria-label={activeFlower.name}
-                >
-                  <button
-                    ref={closeButtonRef}
-                    type="button"
-                    className="career-tree__close btn-glass btn-glass--ghost"
-                    onClick={() => setActiveId(null)}
-                    aria-label={tree.closeLabel}
-                  >
-                    <X size={18} weight="light" />
-                  </button>
-
-                  <img
-                    src={flowerSprite}
-                    alt=""
-                    className="career-tree__card-emblem"
-                    aria-hidden="true"
-                    draggable="false"
-                  />
-
-                  {activeFlower.note && <p className="eyebrow">{activeFlower.note}</p>}
-                  <h3 className="career-tree__card-title">{activeFlower.name}</h3>
-                  <p className="career-tree__card-summary">{activeFlower.desc}</p>
-                </FramedPanel>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </div>
 
       <WalkStrip />

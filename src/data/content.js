@@ -70,6 +70,9 @@ const en = {
     pullHint: 'Hold the ribbon and pull down',
     pullReady: 'Release to open this work chapter',
     closeLabel: 'Close',
+    closeGameLabel: 'Close game details',
+    playGameLabel: 'Play gameplay clip',
+    mediaFuture: 'When I capture a moment worth keeping, I will add the screenshot or short clip here.',
     ribbons: [
       {
         id: 'gamesofa',
@@ -449,6 +452,9 @@ const zh = {
     pullHint: '按住絲帶，向下拉開',
     pullReady: '放開後展開這段工作經歷',
     closeLabel: '關閉',
+    closeGameLabel: '關閉遊戲內容',
+    playGameLabel: '播放遊玩片段',
+    mediaFuture: '之後實際錄到值得留下的片段，我會把截圖或短影片補在這裡。',
     ribbons: [
       {
         id: 'gamesofa',

@@ -122,7 +122,48 @@ describe('CareerTree', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Switch to night' }));
     const flower = content.en.careerTree.flowers[0];
     fireEvent.click(screen.getByRole('button', { name: flower.name }));
-    expect(screen.getByRole('dialog', { name: flower.name })).toBeInTheDocument();
+    const dialog = screen.getByRole('dialog', { name: flower.name });
+    expect(dialog).toBeInTheDocument();
+    expect(dialog.closest('.framed-panel')).toBeNull();
     expect(screen.getByText(flower.desc)).toBeInTheDocument();
+  });
+
+  it('renders eleven distinct game blooms without the old shelf group', () => {
+    renderTree();
+    fireEvent(window, new CustomEvent('career-tree:test-progress', { detail: 0.8 }));
+    fireEvent.click(screen.getByRole('button', { name: 'Switch to night' }));
+
+    const blooms = screen.getAllByTestId('game-bloom');
+    expect(blooms).toHaveLength(11);
+    expect(new Set(blooms.map((node) => node.dataset.asset)).size).toBe(11);
+    expect(screen.queryByText(/Bookshelf|書架上還有/i)).not.toBeInTheDocument();
+  });
+
+  it('uses three bloom sizes and keeps at most three blooms on a branch', () => {
+    renderTree();
+    fireEvent(window, new CustomEvent('career-tree:test-progress', { detail: 0.8 }));
+    fireEvent.click(screen.getByRole('button', { name: 'Switch to night' }));
+
+    const blooms = screen.getAllByTestId('game-bloom');
+    expect(new Set(blooms.map((node) => node.dataset.position)).size).toBe(11);
+    expect(new Set(blooms.map((node) => node.dataset.size))).toEqual(
+      new Set(['sm', 'md', 'lg'])
+    );
+
+    const branchCounts = blooms.reduce((counts, bloom) => {
+      counts[bloom.dataset.branch] = (counts[bloom.dataset.branch] ?? 0) + 1;
+      return counts;
+    }, {});
+    expect(Math.max(...Object.values(branchCounts))).toBeLessThanOrEqual(3);
+  });
+
+  it('keeps the camera interaction gate in QA mode while preserving test control', () => {
+    window.history.replaceState({}, '', '/?impact-qa=2');
+    const { container } = renderTree();
+    expect(container.querySelector('.career-tree__stage')).toHaveAttribute(
+      'data-interactive',
+      'true'
+    );
+    window.history.replaceState({}, '', '/');
   });
 });
