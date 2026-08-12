@@ -18,12 +18,13 @@
 }
 
 .chapter-transition__walker {
+  --walk-start: -18vw;
   position: absolute;
   left: 0;
   bottom: 0;
   width: clamp(168px, 16vw, 260px);
   height: clamp(240px, 35vh, 380px);
-  transform: translateX(-18vw);
+  transform: translateX(var(--walk-start));
   animation: chapter-transition-walk 900ms linear forwards;
   filter: drop-shadow(0 18px 30px rgba(0, 0, 0, 0.62));
 }
@@ -45,7 +46,7 @@
 
 @keyframes chapter-transition-walk {
   from {
-    transform: translateX(-18vw);
+    transform: translateX(var(--walk-start));
   }
   to {
     transform: translateX(105vw);
@@ -88,6 +89,7 @@
 
 @media (max-width: 600px) {
   .chapter-transition__walker {
+    --walk-start: calc(-100% - 16px);
     width: clamp(142px, 38vw, 190px);
     height: clamp(210px, 31vh, 300px);
   }

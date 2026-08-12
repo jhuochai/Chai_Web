@@ -122,4 +122,5 @@ describe('ChapterTransition', () => {
 
     expect(intervalSpy).not.toHaveBeenCalled();
   });
+
 });
