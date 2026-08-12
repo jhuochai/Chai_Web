@@ -48,11 +48,48 @@ describe('chaptered portfolio content', () => {
 
   it('keeps the bilingual game IDs aligned', () => {
     const expectedIds = [
-      'mlbb', 'identity-v', 'stardew', 'lol', 'valorant', 'r6', 'gta5',
+      'wild-rift', 'identity-v', 'stardew', 'lol', 'valorant', 'r6', 'gta5',
       'minecraft', 'palworld', 'dont-starve', 'raft',
     ];
     for (const lang of ['zh', 'en']) {
       expect(content[lang].careerTree.flowers.map((game) => game.id)).toEqual(expectedIds);
+    }
+  });
+
+  it('uses the approved eleven game display names exactly', () => {
+    expect(content.zh.careerTree.flowers.map(({ id, name }) => [id, name])).toEqual([
+      ['wild-rift', '激鬥峽谷'],
+      ['identity-v', '第五人格'],
+      ['stardew', '星露谷物語'],
+      ['lol', '英雄聯盟'],
+      ['valorant', 'Valorant'],
+      ['r6', '虹彩六號'],
+      ['gta5', 'GTA 5'],
+      ['minecraft', 'Minecraft'],
+      ['palworld', 'Palworld'],
+      ['dont-starve', '飢荒'],
+      ['raft', 'Raft'],
+    ]);
+    expect(content.en.careerTree.flowers.map(({ id, name }) => [id, name])).toEqual([
+      ['wild-rift', 'Wild Rift'],
+      ['identity-v', 'Identity V'],
+      ['stardew', 'Stardew Valley'],
+      ['lol', 'League of Legends'],
+      ['valorant', 'Valorant'],
+      ['r6', 'Rainbow Six Siege'],
+      ['gta5', 'GTA 5'],
+      ['minecraft', 'Minecraft'],
+      ['palworld', 'Palworld'],
+      ['dont-starve', "Don't Starve Together"],
+      ['raft', 'Raft'],
+    ]);
+  });
+
+  it('keeps the legacy player list aligned until that section is retired', () => {
+    for (const lang of ['zh', 'en']) {
+      expect(content[lang].portfolio.player.games.map((game) => game.name)).toEqual(
+        content[lang].careerTree.flowers.map((game) => game.name)
+      );
     }
   });
 

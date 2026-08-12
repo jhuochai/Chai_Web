@@ -37,6 +37,7 @@ export default function GameBloom({
   const [assetFailed, setAssetFailed] = useState(false);
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [videoFailed, setVideoFailed] = useState(false);
+  const [posterFailed, setPosterFailed] = useState(false);
   const titleId = useId();
   const descriptionId = useId();
   const copy = { ...DEFAULT_LABELS, ...labels };
@@ -47,6 +48,7 @@ export default function GameBloom({
     if (!active) {
       setVideoLoaded(false);
       setVideoFailed(false);
+      setPosterFailed(false);
       return undefined;
     }
 
@@ -169,8 +171,13 @@ export default function GameBloom({
                       <span>{copy.play}</span>
                     </button>
                   )
-                ) : game.poster ? (
-                  <img src={game.poster} alt="" loading="lazy" />
+                ) : game.poster && !posterFailed ? (
+                  <img
+                    src={game.poster}
+                    alt=""
+                    loading="lazy"
+                    onError={() => setPosterFailed(true)}
+                  />
                 ) : (
                   <p className="game-bloom__media-future">{copy.mediaFuture}</p>
                 )}

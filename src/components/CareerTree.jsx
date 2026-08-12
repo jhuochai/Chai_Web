@@ -65,7 +65,7 @@ const RIBBON_ASSETS = {
 };
 
 const GAME_BLOOM_LAYOUT = {
-  mlbb: { left: '40.8%', top: '61.3%', mobileLeft: '18%', mobileTop: '62%', size: 'lg', branch: 'lower-left' },
+  'wild-rift': { left: '40.8%', top: '61.3%', mobileLeft: '18%', mobileTop: '62%', size: 'lg', branch: 'lower-left' },
   'identity-v': { left: '34.8%', top: '48.2%', mobileLeft: '50%', mobileTop: '48%', size: 'md', branch: 'crown-left' },
   stardew: { left: '44.5%', top: '26.4%', mobileLeft: '50%', mobileTop: '24%', size: 'sm', branch: 'crown-center' },
   lol: { left: '58.2%', top: '30.1%', mobileLeft: '82%', mobileTop: '27%', size: 'lg', branch: 'crown-right' },
@@ -73,7 +73,7 @@ const GAME_BLOOM_LAYOUT = {
   r6: { left: '64.4%', top: '42.6%', mobileLeft: '82%', mobileTop: '42%', size: 'md', branch: 'crown-right' },
   gta5: { left: '53.4%', top: '44.7%', mobileLeft: '50%', mobileTop: '37%', size: 'sm', branch: 'crown-center' },
   minecraft: { left: '63.1%', top: '54.7%', mobileLeft: '82%', mobileTop: '58%', size: 'md', branch: 'lower-right' },
-  palworld: { left: '60.1%', top: '63.8%', mobileLeft: '72%', mobileTop: '72%', size: 'lg', branch: 'lower-right' },
+  palworld: { left: '60.1%', top: '65.5%', mobileLeft: '72%', mobileTop: '72%', size: 'lg', branch: 'lower-right' },
   'dont-starve': { left: '47.5%', top: '51.2%', mobileLeft: '18%', mobileTop: '48%', size: 'md', branch: 'crown-left' },
   raft: { left: '52.4%', top: '59.2%', mobileLeft: '36%', mobileTop: '72%', size: 'sm', branch: 'lower-left' },
 };

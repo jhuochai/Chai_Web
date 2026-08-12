@@ -52,6 +52,15 @@ describe('GameBloom', () => {
     expect(screen.queryByRole('button', { name: 'Play clip' })).not.toBeInTheDocument();
   });
 
+  it('falls back to the future-media note when a poster fails to load', () => {
+    render(<BloomHarness game={{ ...baseGame, poster: '/missing-poster.webp' }} />);
+    fireEvent.click(screen.getByRole('button', { name: 'Raft' }));
+    fireEvent.error(document.querySelector('img[src="/missing-poster.webp"]'));
+
+    expect(document.querySelector('img[src="/missing-poster.webp"]')).toBeNull();
+    expect(screen.getByText(labels.mediaFuture)).toBeInTheDocument();
+  });
+
   it('opens a frameless dialog, locks scroll, and returns focus after Escape', async () => {
     render(<BloomHarness />);
     const trigger = screen.getByRole('button', { name: 'Raft' });

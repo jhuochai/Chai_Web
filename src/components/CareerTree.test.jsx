@@ -157,6 +157,48 @@ describe('CareerTree', () => {
     expect(Math.max(...Object.values(branchCounts))).toBeLessThanOrEqual(3);
   });
 
+  it.each([
+    { width: 1280, height: 720, mobile: false },
+    { width: 795, height: 698, mobile: false },
+    { width: 390, height: 844, mobile: true },
+  ])('keeps bloom hit bounds separate at $width×$height', ({ width, height, mobile }) => {
+    renderTree();
+    fireEvent(window, new CustomEvent('career-tree:test-progress', { detail: 0.8 }));
+    fireEvent.click(screen.getByRole('button', { name: 'Switch to night' }));
+
+    const visualDiameter = (size) => {
+      if (mobile) return { sm: 42, md: 50, lg: 58 }[size];
+      const scale = { sm: [44, 4.2, 58], md: [54, 5.1, 72], lg: [66, 6.2, 88] }[size];
+      return Math.max(scale[0], Math.min((width * scale[1]) / 100, scale[2]));
+    };
+    const canvasWidth = mobile ? width : Math.max(width, height * (1672 / 941));
+    const canvasOffset = mobile ? 0 : (width - canvasWidth) / 2;
+    const bounds = screen.getAllByTestId('game-bloom').map((bloom) => {
+      const style = bloom.style;
+      const left = Number.parseFloat(mobile ? style.getPropertyValue('--bloom-mobile-left') : style.left);
+      const top = Number.parseFloat(mobile ? style.getPropertyValue('--bloom-mobile-top') : style.top);
+      const hit = Math.max(52, visualDiameter(bloom.dataset.size));
+      const centerX = canvasOffset + (canvasWidth * left) / 100;
+      const centerY = (height * top) / 100;
+      return {
+        id: bloom.dataset.gameId,
+        left: centerX - hit / 2,
+        right: centerX + hit / 2,
+        top: centerY - hit / 2,
+        bottom: centerY + hit / 2,
+      };
+    });
+
+    for (let first = 0; first < bounds.length; first += 1) {
+      for (let second = first + 1; second < bounds.length; second += 1) {
+        const a = bounds[first];
+        const b = bounds[second];
+        const overlaps = a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
+        expect(overlaps, `${a.id} overlaps ${b.id}`).toBe(false);
+      }
+    }
+  });
+
   it('keeps the camera interaction gate in QA mode while preserving test control', () => {
     window.history.replaceState({}, '', '/?impact-qa=2');
     const { container } = renderTree();
