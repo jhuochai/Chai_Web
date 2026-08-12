@@ -84,6 +84,29 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+:lang(zh-Hant) body {
+  font-family: 'LXGW WenKai TC', 'Noto Sans TC', system-ui, sans-serif;
+  letter-spacing: 0.02em;
+  line-break: strict;
+}
+
+:lang(zh-Hant) h1,
+:lang(zh-Hant) h2,
+:lang(zh-Hant) h3,
+:lang(zh-Hant) h4 {
+  font-family: 'LXGW WenKai TC', 'Noto Sans TC', system-ui, sans-serif;
+  letter-spacing: 0.02em;
+}
+
+:lang(zh-Hant) p {
+  line-height: 1.9;
+}
+
+:lang(zh-Hant) em,
+:lang(zh-Hant) i {
+  font-style: normal;
+}
+
 #root {
   min-height: 100dvh;
 }
@@ -131,10 +154,13 @@ h4 {
   color: var(--parchment);
   margin: 0;
   letter-spacing: -0.01em;
+  text-wrap: balance;
 }
 
 p {
   margin: 0;
+  max-width: 70ch;
+  text-wrap: pretty;
 }
 
 ul {

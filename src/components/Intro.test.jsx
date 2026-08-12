@@ -1,9 +1,15 @@
 import { render, screen } from '@testing-library/react';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { beforeEach, describe, expect, it } from 'vitest';
 import Intro from './Intro';
 import { LanguageProvider } from '../i18n/LanguageContext';
 import { content } from '../data/content';
 
-function renderIntro() {
+const globalStyles = readFileSync(join(process.cwd(), 'src', 'index.css'), 'utf8');
+
+function renderIntro(lang = 'en') {
+  window.localStorage.setItem('site-lang', lang);
   return render(
     <LanguageProvider>
       <Intro />
@@ -12,26 +18,62 @@ function renderIntro() {
 }
 
 describe('Intro', () => {
-  it('renders as #scene-2 with an open composition instead of a decorative frame', () => {
-    const { container } = renderIntro();
-    expect(container.querySelector('section')).toHaveAttribute('id', 'scene-2');
-    expect(container.querySelector('.framed-panel')).not.toBeInTheDocument();
-    expect(container.querySelector('.intro__copy')).toBeInTheDocument();
-    expect(container.querySelector('.intro__character-bridge')).toBeInTheDocument();
+  beforeEach(() => {
+    window.localStorage.clear();
   });
 
-  it('shows name, positioning statement, and all three traits as text (no badges)', () => {
+  it('renders an open, text-led introduction without a frame, person, or numbered resume rows', () => {
     const { container } = renderIntro();
-    expect(screen.getByRole('heading', { name: /Chai Yi Chen/ })).toBeInTheDocument();
-    expect(screen.getByText(/instinct and creativity/)).toBeInTheDocument();
-    expect(screen.getByText('Efficiency')).toBeInTheDocument();
-    expect(screen.getByText('Multitasking')).toBeInTheDocument();
-    expect(screen.getByText('Creativity & Intuition')).toBeInTheDocument();
+
+    expect(container.querySelector('section')).toHaveAttribute('id', 'scene-2');
+    expect(container.querySelector('.intro__copy')).toBeInTheDocument();
+    expect(container.querySelector('.framed-panel')).toBeNull();
+    expect(container.querySelector('.intro__character-bridge, .intro img')).toBeNull();
+    expect(container.querySelector('.intro__trait-index')).toBeNull();
     expect(container.querySelector('.badge, .pill, .tag')).toBeNull();
   });
 
-  it('shows the personality blurb', () => {
-    renderIntro();
-    expect(screen.getByText(content.en.personalityBlurb)).toBeInTheDocument();
+  it('presents the claim, identity, positioning, evidence, and player view in that order', () => {
+    const { container } = renderIntro();
+    const text = container.textContent;
+    const positioning = `${content.en.positioning.before}${content.en.positioning.emphasis}${content.en.positioning.after}`;
+
+    const checkpoints = [
+      content.en.hero.tagline,
+      content.en.name.display,
+      content.en.title,
+      positioning,
+      ...content.en.traits.flatMap((trait) => [trait.label, trait.desc]),
+      content.en.personalityBlurb,
+    ];
+
+    checkpoints.forEach((copy) => expect(text).toContain(copy));
+    checkpoints.reduce((previousIndex, copy) => {
+      const index = text.indexOf(copy);
+      expect(index).toBeGreaterThan(previousIndex);
+      return index;
+    }, -1);
+    expect(container.querySelector('.intro__player-view')).toHaveTextContent(content.en.personalityBlurb);
+  });
+
+  it('uses the authoritative Traditional Chinese copy without losing mixed-script spacing', () => {
+    const { container } = renderIntro('zh');
+
+    expect(screen.getByRole('heading', { name: content.zh.name.display })).toBeInTheDocument();
+    expect(container.querySelector('.intro__claim')).toHaveTextContent(content.zh.hero.tagline);
+    expect(container.querySelector('.intro__player-view')).toHaveTextContent(content.zh.personalityBlurb);
+    for (const trait of content.zh.traits) {
+      expect(screen.getByRole('heading', { name: trait.label })).toBeInTheDocument();
+      expect(screen.getByText(trait.desc)).toBeInTheDocument();
+    }
+  });
+
+  it('scopes legible Traditional Chinese typography globally', () => {
+    expect(globalStyles).toMatch(/:lang\(zh-Hant\)[^{]*\{[^}]*font-family:\s*['"]LXGW WenKai TC['"]/s);
+    expect(globalStyles).toMatch(/:lang\(zh-Hant\)[^{]*\{[^}]*letter-spacing:\s*0\.02em/s);
+    expect(globalStyles).toMatch(/:lang\(zh-Hant\)\s+p\s*\{[^}]*line-height:\s*1\.9/s);
+    expect(globalStyles).toMatch(/:lang\(zh-Hant\)\s+(?:em|i)[^{,]*(?:,[^{]*)?\{[^}]*font-style:\s*normal/s);
+    expect(globalStyles).toMatch(/h1,\s*h2,\s*h3,\s*h4\s*\{[^}]*text-wrap:\s*balance/s);
+    expect(globalStyles).toMatch(/p\s*\{[^}]*max-width:\s*70ch[^}]*text-wrap:\s*pretty/s);
   });
 });
