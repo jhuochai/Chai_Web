@@ -18,9 +18,48 @@ describe('chaptered portfolio content', () => {
   });
 
   it('publishes the real LinkedIn profile', () => {
-    expect(content.zh.contact.linkedin).toBe(
-      'https://www.linkedin.com/in/yichen-chai-3019492b4/'
+    for (const lang of ['zh', 'en']) {
+      expect(content[lang].contact.linkedin).toBe(
+        'https://www.linkedin.com/in/yichen-chai-3019492b4/'
+      );
+    }
+  });
+
+  it('keeps the bilingual hero entry contract aligned', () => {
+    const expectedIds = ['intro', 'career', 'portfolio', 'ai-lab'];
+    expect(content.en.hero.entries.map((entry) => entry.id)).toEqual(expectedIds);
+    expect(content.zh.hero.entries.map((entry) => entry.id)).toEqual(expectedIds);
+    expect(content.zh.hero.entries.map((entry) => entry.label)).toEqual([
+      '自我介紹', '生涯大樹', '精選作品', 'AI 實驗室',
+    ]);
+  });
+
+  it('keeps the bilingual game IDs aligned', () => {
+    expect(content.zh.careerTree.flowers.map((game) => game.id)).toEqual(
+      content.en.careerTree.flowers.map((game) => game.id)
     );
+  });
+
+  it('defines five aligned making-of timeline records in both languages', () => {
+    const expectedShape = ['desc', 'id', 'images', 'label'];
+    for (const lang of ['zh', 'en']) {
+      const timeline = content[lang].makingOf.timeline;
+      expect(timeline).toHaveLength(5);
+      for (const record of timeline) {
+        expect(Object.keys(record).sort()).toEqual(expectedShape);
+        expect(record.images).toEqual([]);
+      }
+    }
+    expect(content.zh.makingOf.timeline.map((record) => record.id)).toEqual(
+      content.en.makingOf.timeline.map((record) => record.id)
+    );
+  });
+
+  it('keeps the KOC source case private', () => {
+    for (const lang of ['zh', 'en']) {
+      const koc = content[lang].portfolio.cases.find((caseStudy) => caseStudy.id === 'koc');
+      expect(koc).toEqual(expect.objectContaining({ visibility: 'private' }));
+    }
   });
 });
 

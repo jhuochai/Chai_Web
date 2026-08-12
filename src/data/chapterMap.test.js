@@ -6,4 +6,11 @@ describe('chapterMap', () => {
     expect(getNextChapter('intro')).toEqual(chapterMap[1]);
     expect(getNextChapter('contact')).toEqual(chapterMap[0]);
   });
+
+  it('keeps every middle chapter transition in sequence', () => {
+    expect(getNextChapter('intro').id).toBe('career');
+    expect(getNextChapter('career').id).toBe('portfolio');
+    expect(getNextChapter('portfolio').id).toBe('contact');
+    expect(getNextChapter('contact').id).toBe('intro');
+  });
 });
