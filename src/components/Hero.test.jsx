@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import Hero from './Hero';
 import { LanguageProvider } from '../i18n/LanguageContext';
 import { content } from '../data/content';
@@ -25,6 +25,10 @@ describe('Hero', () => {
     routeMocks.navigateToRoute.mockReset();
   });
 
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   it('renders one industrial observatory with four chapter controls and a back-facing character', () => {
     const { container } = renderHero();
 
@@ -44,9 +48,27 @@ describe('Hero', () => {
   it('travels to each available chapter from the console', () => {
     renderHero();
 
-    fireEvent.click(screen.getByRole('button', { name: content.en.hero.entries[1].label }));
+    for (const entry of content.en.hero.entries.slice(0, 3)) {
+      fireEvent.click(screen.getByRole('button', { name: entry.label }));
+      expect(scrollMocks.scrollToScene).toHaveBeenLastCalledWith(entry.target, {
+        immediate: false,
+      });
+    }
 
-    expect(scrollMocks.scrollToScene).toHaveBeenCalledWith('#scene-3', { immediate: false });
+    expect(scrollMocks.scrollToScene).toHaveBeenCalledTimes(3);
+  });
+
+  it('cancels a queued parallax frame when the pointer leaves the observatory', () => {
+    const requestFrame = vi.spyOn(window, 'requestAnimationFrame').mockReturnValue(42);
+    const cancelFrame = vi.spyOn(window, 'cancelAnimationFrame');
+    const { container } = renderHero();
+    const section = container.querySelector('.hero');
+
+    fireEvent.pointerMove(section, { clientX: 120, clientY: 180 });
+    fireEvent.pointerLeave(section);
+
+    expect(requestFrame).toHaveBeenCalledOnce();
+    expect(cancelFrame).toHaveBeenLastCalledWith(42);
   });
 
   it('announces that the AI lab is being prepared', () => {

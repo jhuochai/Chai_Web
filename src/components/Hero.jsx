@@ -31,7 +31,7 @@ export default function Hero() {
   const [showLabStatus, setShowLabStatus] = useState(false);
   const sectionRef = useRef(null);
   const sceneRef = useRef(null);
-  const rafRef = useRef(0);
+  const rafRef = useRef(null);
 
   useEffect(() => {
     if (reduce) return undefined;
@@ -41,12 +41,18 @@ export default function Hero() {
     if (!section || !scene) return undefined;
 
     const resetParallax = () => {
+      if (rafRef.current !== null) {
+        window.cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
+      }
       scene.style.setProperty('--parallax-x', '0px');
       scene.style.setProperty('--parallax-y', '0px');
     };
 
     const onPointerMove = (event) => {
-      window.cancelAnimationFrame(rafRef.current);
+      if (rafRef.current !== null) {
+        window.cancelAnimationFrame(rafRef.current);
+      }
       rafRef.current = window.requestAnimationFrame(() => {
         const rect = section.getBoundingClientRect();
         const x = Math.max(-0.5, Math.min(0.5, (event.clientX - rect.left) / rect.width - 0.5));
@@ -54,6 +60,7 @@ export default function Hero() {
 
         scene.style.setProperty('--parallax-x', `${(x * -24).toFixed(1)}px`);
         scene.style.setProperty('--parallax-y', `${(y * -16).toFixed(1)}px`);
+        rafRef.current = null;
       });
     };
 
@@ -63,7 +70,7 @@ export default function Hero() {
     return () => {
       section.removeEventListener('pointermove', onPointerMove);
       section.removeEventListener('pointerleave', resetParallax);
-      window.cancelAnimationFrame(rafRef.current);
+      resetParallax();
     };
   }, [reduce]);
 
