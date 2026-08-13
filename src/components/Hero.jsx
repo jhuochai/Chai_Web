@@ -24,7 +24,7 @@ const interfaceCopy = {
     approachLabel: '駕駛艙距離',
     approachNear: '靠近操作台',
     approachBack: '退回艦長身後',
-    labStatus: 'AI 實驗室正在整備中；新的探索很快會在這裡出現。',
+    labStatus: 'AI 實驗艙正在整備中；新的探索很快會在這裡出現。',
     binLabel: '廢棄草稿檔案桶',
     binHint: '開啟製作過程檔案',
   },

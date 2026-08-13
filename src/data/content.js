@@ -12,18 +12,12 @@ const en = {
   },
   title: 'Game Marketing Coordinator',
   hero: {
-    tagline: 'Aim on instinct. Hit with execution.',
     switcherLabel: 'Explore the story',
     entries: [
       { id: 'intro', label: "Captain's Office", target: '/profile' },
       { id: 'career', label: 'Route Tree Station', target: '/career-tree' },
       { id: 'portfolio', label: 'Selected Work', target: '/portfolio' },
       { id: 'ai-lab', label: 'AI Lab', status: 'coming-soon' },
-    ],
-    scenes: [
-      { id: 'starry', label: 'Work', target: '#scene-5' },
-      { id: 'day', label: 'Career', target: '#scene-3', mode: 'day' },
-      { id: 'night', label: 'Games', target: '#scene-3', mode: 'night' },
     ],
   },
   positioning: {
@@ -53,6 +47,7 @@ const en = {
     "I start with a player's eye for what feels worth stopping for, then use results to refine the next move. That approach has taken a community from 18k to 30k followers and kept an ad test within budget when the signal changed.",
   intro: {
     eyebrow: 'Nice to meet you',
+    claim: 'Aim on instinct. Hit with execution.',
     strengthsLabel: 'Core strengths',
     playerViewTitle: 'A player’s eye is where my marketing starts',
   },
@@ -270,7 +265,6 @@ const en = {
     linkedin: 'https://www.linkedin.com/in/yichen-chai-3019492b4/',
     resumeUrl: '/resume.pdf',
     resumeLabel: 'Download Resume',
-    linkedinPlaceholder: 'LinkedIn link coming soon',
   },
   messageForm: {
     triggerLabel: 'Leave a Message',
@@ -328,16 +322,6 @@ const en = {
         result: '3 partnerships shipped, from outreach to published content.',
         imageSeed: 'koc-collaboration',
       },
-      {
-        id: 'rog',
-        title: 'ROG Phone 9 Pitch',
-        tag: 'Self-Initiated',
-        scenario: 'Wanted to test a marketing pitch for hardcore mobile gamers on my own initiative.',
-        approach:
-          'Designed a player reward concept and promo material direction, then ran exploratory data analysis on PC player behavior with Python and Pandas to find retention patterns.',
-        result: 'A self-driven pitch that pairs creative concept with real behavioral data.',
-        imageSeed: 'rog-phone9-pitch',
-      },
     ],
     player: {
       heading: "Marketing Through a Player's Eyes",
@@ -358,8 +342,6 @@ const en = {
       ],
     },
   },
-  closingStatement:
-    "Creative sets the direction. Efficiency gets it made. That's how I do game marketing, and what I want to keep doing next.",
   ui: {
     portraitNote: 'Placeholder photo, real portrait coming soon',
     imageNote: 'Placeholder visual, real screenshot coming soon',
@@ -371,17 +353,6 @@ const en = {
     enterLabel: 'Enter the site',
     musicOnLabel: 'Turn music on',
     musicOffLabel: 'Turn music off',
-    chapterExit: {
-      landmark: 'Chapter exit',
-      home: 'Back to home',
-      next: 'Next chapter: ',
-      chapters: {
-        intro: 'Introduction',
-        career: 'Career Tree',
-        portfolio: 'Selected Work',
-        contact: 'Contact',
-      },
-    },
   },
 };
 
@@ -399,18 +370,12 @@ const zh = {
   },
   title: '遊戲行銷企劃',
   hero: {
-    tagline: '靠直覺瞄準，用效率命中。',
     switcherLabel: '探索故事',
     entries: [
       { id: 'intro', label: '艦長辦公室', target: '/profile' },
-      { id: 'career', label: '航線樹站', target: '/career-tree' },
-      { id: 'portfolio', label: '精選作品', target: '/portfolio' },
-      { id: 'ai-lab', label: 'AI 實驗室', status: 'coming-soon' },
-    ],
-    scenes: [
-      { id: 'starry', label: '作品', target: '#scene-5' },
-      { id: 'day', label: '經歷', target: '#scene-3', mode: 'day' },
-      { id: 'night', label: '遊戲', target: '#scene-3', mode: 'night' },
+      { id: 'career', label: '航跡樹站', target: '/career-tree' },
+      { id: 'portfolio', label: '影像分析艙', target: '/portfolio' },
+      { id: 'ai-lab', label: 'AI 實驗艙', status: 'coming-soon' },
     ],
   },
   positioning: {
@@ -439,6 +404,7 @@ const zh = {
     '我先用玩家視角判斷什麼值得停下來看，再從結果裡找下一步。這套做法讓社群從 1.8 萬成長到 3 萬，也讓我在廣告訊號轉弱時，及時停下投放、守住預算。',
   intro: {
     eyebrow: '很高興認識你',
+    claim: '靠直覺瞄準，用效率命中。',
     strengthsLabel: '核心能力',
     playerViewTitle: '玩家視角，是我做行銷的起點',
   },
@@ -655,7 +621,6 @@ const zh = {
     linkedin: 'https://www.linkedin.com/in/yichen-chai-3019492b4/',
     resumeUrl: '/resume.pdf',
     resumeLabel: '下載履歷',
-    linkedinPlaceholder: 'LinkedIn 連結待補',
   },
   messageForm: {
     triggerLabel: '留言給我',
@@ -708,16 +673,6 @@ const zh = {
         result: '3 組合作從接洽到上線曝光全數完成。',
         imageSeed: 'koc-collaboration',
       },
-      {
-        id: 'rog',
-        title: 'ROG Phone 9 提案',
-        tag: '自主專案',
-        scenario: '想為硬核手遊玩家族群自主測試一份行銷提案。',
-        approach:
-          '設計玩家獎勵機制與宣傳素材概念，並以 Python、Pandas 對 PC 玩家行為數據進行探索性分析，找出留存模式。',
-        result: '一份結合創意概念與真實行為數據的自主提案。',
-        imageSeed: 'rog-phone9-pitch',
-      },
     ],
     player: {
       heading: '玩家視角做行銷',
@@ -738,7 +693,6 @@ const zh = {
       ],
     },
   },
-  closingStatement: '創意提出方向，效率把它做出來。這是我做遊戲行銷企劃的方式，也是接下來想繼續做下去的事。',
   ui: {
     portraitNote: '暫用素材，正式人像待補',
     imageNote: '暫用素材，正式截圖待補',
@@ -750,17 +704,6 @@ const zh = {
     enterLabel: '進入網站',
     musicOnLabel: '開啟音樂',
     musicOffLabel: '關閉音樂',
-    chapterExit: {
-      landmark: '章節出口',
-      home: '回到首頁',
-      next: '前往下一章：',
-      chapters: {
-        intro: '自我介紹',
-        career: '職涯故事',
-        portfolio: '作品選集',
-        contact: '聯絡方式',
-      },
-    },
   },
 };
 

@@ -23,7 +23,8 @@ describe("Captain's Office", () => {
     const { container } = renderIntro();
     const text = container.textContent;
 
-    expect(text).toContain(content.en.hero.tagline);
+    expect(text).toContain(content.en.intro.claim);
+    expect(content.en.hero.tagline).toBeUndefined();
     expect(text).toContain(content.en.name.display);
     expect(text).toContain(content.en.title);
     for (const trait of content.en.traits) expect(text).toContain(trait.desc);

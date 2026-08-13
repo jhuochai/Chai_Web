@@ -87,6 +87,34 @@ describe('RouteMap', () => {
     expect(onClose).toHaveBeenCalledTimes(1);
   });
 
+  it('hands focus to comms without restoring focus to its detached route-map control', async () => {
+    const onOpenContact = vi.fn();
+    function Harness() {
+      const [open, setOpen] = useState(false);
+      return (
+        <LanguageProvider>
+          <button type="button" onClick={() => setOpen(true)}>Route map opener</button>
+          <RouteMap
+            open={open}
+            currentRoute="/"
+            onClose={() => setOpen(false)}
+            onTravel={() => {}}
+            onOpenContact={onOpenContact}
+          />
+        </LanguageProvider>
+      );
+    }
+    render(<Harness />);
+    const opener = screen.getByRole('button', { name: 'Route map opener' });
+    opener.focus();
+    fireEvent.click(opener);
+    fireEvent.click(screen.getByRole('button', { name: 'Comms' }));
+
+    await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
+    expect(onOpenContact).toHaveBeenCalledTimes(1);
+    expect(opener).not.toHaveFocus();
+  });
+
   it('closes on Escape and only on a safe backdrop click', () => {
     const onClose = vi.fn();
     renderRouteMap({ onClose });

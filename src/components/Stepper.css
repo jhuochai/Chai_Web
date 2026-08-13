@@ -46,6 +46,7 @@
   transition: color 0.3s ease;
   border: none;
   background: none;
+  min-height: 44px;
   padding: 8px 12px;
   font-family: var(--body);
   font-size: 14px;
@@ -75,6 +76,7 @@
   font-family: var(--body);
   font-weight: 700;
   font-size: 14px;
+  min-height: 44px;
   padding: 9px 22px;
   cursor: pointer;
 }

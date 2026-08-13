@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import App from './App';
 
@@ -81,5 +81,20 @@ describe('App station routes', () => {
   it('pauses the shared scroll engine while the loading overlay is active', () => {
     render(<App />);
     expect(screen.getByTestId('smooth-scroll-stub')).toHaveAttribute('data-paused', 'true');
+  });
+
+  it.each(routes)('opens global comms from the route map at %s and returns focus to the global map button', async (pathname) => {
+    window.history.replaceState({}, '', pathname);
+    render(<App />);
+
+    const routeMapButton = screen.getByRole('button', { name: 'Open route map' });
+    routeMapButton.focus();
+    fireEvent.click(routeMapButton);
+    fireEvent.click(screen.getByRole('button', { name: 'Comms' }));
+
+    expect(screen.getByRole('dialog', { name: 'Ship communications console' })).toBeInTheDocument();
+    expect(screen.queryByRole('dialog', { name: 'Ship route map' })).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: 'Close communications console' }));
+    await waitFor(() => expect(routeMapButton).toHaveFocus());
   });
 });

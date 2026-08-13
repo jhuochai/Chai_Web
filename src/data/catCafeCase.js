@@ -21,7 +21,7 @@ const assets = {
 };
 
 const zh = {
-  pageTitle: '精選作品',
+  pageTitle: '影像分析艙',
   pageIntro: '不是把貼文排成一面牆，而是回頭看每一種內容，究竟讓玩家做了什麼。',
   title: '貓咪造咖',
   subtitle: '從內容節奏到社群成長的實戰紀錄',

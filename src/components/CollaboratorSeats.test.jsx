@@ -12,5 +12,6 @@ describe('CollaboratorSeats', () => {
     expect(screen.getAllByText(/pending/i)).toHaveLength(2);
     expect(container.querySelector('img')).toBeNull();
     expect(container.querySelector('blockquote')).toBeNull();
+    expect(screen.getByText(/collaborators and choices/i)).toBeInTheDocument();
   });
 });

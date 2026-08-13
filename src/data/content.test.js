@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { content } from './content';
-import { chapterMap } from './chapterMap';
+import { STATIONS } from './stations';
 
 describe('chaptered portfolio content', () => {
   it('defines four hero entries and eleven distinct games in both languages', () => {
@@ -12,8 +12,8 @@ describe('chaptered portfolio content', () => {
   });
 
   it('keeps the chapter order stable', () => {
-    expect(chapterMap.map((chapter) => chapter.id)).toEqual([
-      'intro', 'career', 'portfolio', 'contact',
+    expect(STATIONS.filter((station) => station.next).map((station) => station.id)).toEqual([
+      'cockpit', 'profile', 'career-tree', 'portfolio',
     ]);
   });
 
@@ -30,12 +30,23 @@ describe('chaptered portfolio content', () => {
     expect(content.en.hero.entries.map((entry) => entry.id)).toEqual(expectedIds);
     expect(content.zh.hero.entries.map((entry) => entry.id)).toEqual(expectedIds);
     expect(content.zh.hero.entries.map((entry) => entry.label)).toEqual([
-      '艦長辦公室', '航線樹站', '精選作品', 'AI 實驗室',
+      '艦長辦公室', '航跡樹站', '影像分析艙', 'AI 實驗艙',
     ]);
     expect(content.en.hero.entries.slice(0, 3).map((entry) => entry.target)).toEqual([
       '/profile', '/career-tree', '/portfolio',
     ]);
     expect(content.en.hero.entries.every((entry) => !entry.target?.startsWith('#'))).toBe(true);
+  });
+
+  it('does not keep retired hash-route scenes or public proposal placeholders in active hero data', () => {
+    for (const lang of ['en', 'zh']) {
+      expect(content[lang].hero.scenes).toBeUndefined();
+      expect(content[lang].hero.tagline).toBeUndefined();
+      expect(content[lang].intro.claim).toEqual(expect.any(String));
+      expect(content[lang].contact.linkedinPlaceholder).toBeUndefined();
+      expect(content[lang].portfolio.cases.some((entry) => entry.id === 'rog')).toBe(false);
+      expect(content[lang].closingStatement).toBeUndefined();
+    }
   });
 
   it('defines natural bilingual labels for the intro landmarks', () => {

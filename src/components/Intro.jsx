@@ -47,7 +47,7 @@ export default function Intro() {
               <h2 id="intro-name" className="intro__name">{t.name.display}</h2>
               <p className="intro__name-sub">{t.name.sub}</p>
               <p className="intro__title">{t.title}</p>
-              <p className="intro__claim">{t.hero.tagline}</p>
+              <p className="intro__claim">{t.intro.claim}</p>
             </div>
           </div>
           <p className="intro__positioning">{t.positioning.before}<em>{t.positioning.emphasis}</em>{t.positioning.after}</p>

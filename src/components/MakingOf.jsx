@@ -8,9 +8,9 @@ export default function MakingOf() {
   const { lang, t } = useLanguage();
   const { makingOf } = t;
   const labels = lang === 'zh'
-    ? { archive: '廢案檔案室', back: '回到觀景台', note: '這裡保留的不只是成品，而是一路做決定的痕跡。' }
-    : { archive: 'Discarded Draft Archive', back: 'Return to the observatory', note: 'Not just the outcome, but the decisions that shaped it.' };
-  const returnToObservatory = () => {
+    ? { archive: '網站製作檔案', back: '回到駕駛艙', note: '這裡保存一路做決定的痕跡，也記下共同完成它的協作者。' }
+    : { archive: 'Making-of Archive', back: 'Return to the cockpit', note: 'A record of the decisions and collaborators that shaped the work.' };
+  const returnToCockpit = () => {
     window.scrollTo({ top: 0, behavior: 'auto' });
     navigateToRoute('/');
   };
@@ -18,7 +18,7 @@ export default function MakingOf() {
   return (
     <main className="making-of">
       <header className="making-of__masthead container">
-        <button className="making-of__back" type="button" onClick={returnToObservatory}>
+        <button className="making-of__back" type="button" onClick={returnToCockpit}>
           <ArrowLeft aria-hidden="true" size={18} />
           {labels.back}
         </button>

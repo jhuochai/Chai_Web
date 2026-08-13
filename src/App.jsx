@@ -7,6 +7,7 @@ import CareerTree from './components/CareerTree';
 import Portfolio from './components/Portfolio';
 import ChapterTransition from './components/ChapterTransition';
 import MakingOf from './components/MakingOf';
+import Contact from './components/Contact';
 import GrainOverlay from './components/GrainOverlay';
 import ClickSpark from './components/ClickSpark';
 import LoadingScreen from './components/LoadingScreen';
@@ -35,6 +36,7 @@ function StationScene({ route, onTravel }) {
 function App() {
   const [loading, setLoading] = useState(true);
   const [route, setRoute] = useState(getSiteRoute);
+  const [contactOpen, setContactOpen] = useState(false);
   const focusTimerRef = useRef(null);
 
   useEffect(() => {
@@ -45,7 +47,10 @@ function App() {
   }, [loading]);
 
   useEffect(() => {
-    const syncRoute = () => setRoute(getSiteRoute());
+    const syncRoute = () => {
+      setContactOpen(false);
+      setRoute(getSiteRoute());
+    };
     window.addEventListener('popstate', syncRoute);
     return () => window.removeEventListener('popstate', syncRoute);
   }, []);
@@ -75,9 +80,18 @@ function App() {
           <MakingOf />
         ) : (
           <>
-            <Nav currentRoute={route} onTravel={playStationTransition} onOpenContact={() => {}} />
+            <Nav
+              currentRoute={route}
+              onTravel={playStationTransition}
+              onOpenContact={() => setContactOpen(true)}
+            />
             <StationScene route={route} onTravel={playStationTransition} />
             <ChapterTransition onTravel={completeStationTravel} />
+            <Contact
+              open={contactOpen}
+              onClose={() => setContactOpen(false)}
+              returnFocusTo={() => document.querySelector('.nav__route-map')}
+            />
           </>
         )}
       </ClickSpark>

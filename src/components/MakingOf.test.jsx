@@ -17,11 +17,18 @@ describe('MakingOf', () => {
 
     expect(container.querySelectorAll('.making-of__timeline > li')).toHaveLength(5);
     expect(container.querySelector('.collaborator-seats')).toBeInTheDocument();
+    expect(screen.getByText(/decisions and collaborators/i)).toBeInTheDocument();
+  });
+
+  it('uses the approved archive name and returns to the cockpit', () => {
+    render(<LanguageProvider><MakingOf /></LanguageProvider>);
+    expect(screen.getByText('Making-of Archive')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Return to the cockpit/i })).toBeInTheDocument();
   });
 
   it('returns to the observatory through the route helper', () => {
     render(<LanguageProvider><MakingOf /></LanguageProvider>);
-    fireEvent.click(screen.getByRole('button', { name: /observatory/i }));
+    fireEvent.click(screen.getByRole('button', { name: /cockpit/i }));
     expect(routeMocks.navigateToRoute).toHaveBeenCalledWith('/');
   });
 });

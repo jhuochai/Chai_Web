@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { X } from '@phosphor-icons/react';
+import { Broadcast, X } from '@phosphor-icons/react';
 import { STATIONS, getStationByRoute } from '../data/stations';
 import { useLanguage } from '../i18n/LanguageContext';
 import './RouteMap.css';
@@ -34,6 +34,7 @@ export default function RouteMap({ open, currentRoute, onClose, onTravel, onOpen
   const dialogRef = useRef(null);
   const closeRef = useRef(null);
   const openerRef = useRef(null);
+  const returnFocusRef = useRef(true);
   const labels = copy[lang];
   const currentStation = getCurrentStation(currentRoute);
 
@@ -41,6 +42,7 @@ export default function RouteMap({ open, currentRoute, onClose, onTravel, onOpen
     if (!open) return undefined;
 
     openerRef.current = document.activeElement;
+    returnFocusRef.current = true;
     const previousOverflow = document.body.style.overflow;
     const backgroundNodes = Array.from(document.body.children).filter(
       (node) => !node.classList.contains('route-map')
@@ -95,7 +97,7 @@ export default function RouteMap({ open, currentRoute, onClose, onTravel, onOpen
         if (ariaHidden === null) node.removeAttribute('aria-hidden');
         else node.setAttribute('aria-hidden', ariaHidden);
       });
-      window.setTimeout(() => openerRef.current?.focus?.(), 0);
+      if (returnFocusRef.current) window.setTimeout(() => openerRef.current?.focus?.(), 0);
     };
   }, [open, onClose]);
 
@@ -108,6 +110,7 @@ export default function RouteMap({ open, currentRoute, onClose, onTravel, onOpen
   };
 
   const openComms = () => {
+    returnFocusRef.current = false;
     onOpenContact();
     onClose();
   };
@@ -165,7 +168,7 @@ export default function RouteMap({ open, currentRoute, onClose, onTravel, onOpen
         </ol>
 
         <button type="button" className="route-map__comms" onClick={openComms}>
-          <span aria-hidden="true">◎</span>
+          <Broadcast aria-hidden="true" size={19} weight="light" />
           {labels.comms}
         </button>
       </section>
