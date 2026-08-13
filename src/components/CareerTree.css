@@ -1,25 +1,6 @@
 .career-tree {
   position: relative;
-  padding-block: clamp(48px, 8vh, 120px) 0;
-}
-
-/* --- heading --- */
-
-.career-tree__heading {
-  text-align: center;
-  margin-bottom: clamp(28px, 4vh, 56px);
-}
-
-.career-tree__heading h2 {
-  margin-top: 12px;
-  font-size: clamp(30px, 3.4vw, 48px);
-}
-
-.career-tree__intro {
-  margin: 16px auto 0;
-  max-width: 56ch;
-  color: var(--parchment-dim);
-  line-height: 1.75;
+  padding: 0;
 }
 
 /* --- tree stage --- */
@@ -48,6 +29,8 @@
   position: absolute;
   inset: 0;
   transform-origin: 50% 48%;
+  transform: translateY(calc(var(--camera-progress) * 1.4%)) scale(calc(1 + var(--camera-progress) * 0.29));
+  transition: transform 180ms ease-out;
   will-change: transform;
 }
 
@@ -89,7 +72,8 @@
 
 .career-tree__toggle {
   position: absolute;
-  top: clamp(16px, 3vh, 32px);
+  top: auto;
+  bottom: max(clamp(82px, 12vh, 118px), calc(env(safe-area-inset-bottom) + 72px));
   right: clamp(16px, 3vw, 40px);
   z-index: 3;
   display: inline-flex;
@@ -104,7 +88,7 @@
 .career-tree__hint {
   position: absolute;
   left: 50%;
-  bottom: clamp(18px, 3.5vh, 40px);
+  bottom: max(clamp(18px, 3.5vh, 40px), env(safe-area-inset-bottom));
   transform: translateX(-50%);
   z-index: 2;
   font-family: var(--mono);
@@ -114,6 +98,49 @@
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
   white-space: nowrap;
 }
+
+.career-tree__station-label {
+  position: absolute;
+  top: clamp(22px, 5vh, 54px);
+  left: 50%;
+  z-index: 2;
+  margin: 0;
+  color: rgba(245, 235, 211, calc(0.76 - var(--camera-progress) * 0.48));
+  font-family: var(--mono);
+  font-size: clamp(11px, 1.4vw, 14px);
+  letter-spacing: 0.2em;
+  text-shadow: 0 3px 14px rgba(0, 0, 0, 0.78);
+  transform: translateX(-50%) scale(calc(1 - var(--camera-progress) * 0.18));
+  pointer-events: none;
+}
+
+.career-tree__camera-controls {
+  position: absolute;
+  left: clamp(16px, 3vw, 40px);
+  bottom: max(clamp(72px, 10vh, 104px), calc(env(safe-area-inset-bottom) + 62px));
+  z-index: 4;
+  display: inline-flex;
+  overflow: hidden;
+  border: 1px solid rgba(229, 218, 194, 0.3);
+  border-radius: 999px;
+  background: rgba(7, 14, 18, 0.68);
+}
+
+.career-tree__camera-controls button {
+  display: grid;
+  width: 44px;
+  min-height: 44px;
+  place-items: center;
+  border: 0;
+  border-right: 1px solid rgba(229, 218, 194, 0.2);
+  background: transparent;
+  color: var(--parchment);
+  font: 24px/1 var(--mono);
+}
+
+.career-tree__camera-controls button:last-child { border-right: 0; }
+.career-tree__camera-controls button:hover,
+.career-tree__camera-controls button:focus-visible { background: rgba(201, 162, 75, 0.2); color: var(--gold-bright); }
 
 /* --- hotspots: glow halos over the ribbons/flowers painted in the
    background art itself (no duplicate sprite on top) --- */
@@ -135,12 +162,15 @@
     rgba(224, 188, 106, 0) 72%
   );
   animation: spot-pulse 2.4s ease-in-out infinite;
-  transition: transform 0.3s var(--ease-reveal);
+  transition: transform 0.3s var(--ease-reveal), opacity 0.24s ease, filter 0.24s ease;
 }
 
 .career-tree__spot:disabled {
   cursor: default;
   pointer-events: none;
+  opacity: calc(0.18 + var(--camera-progress) * 0.3);
+  filter: saturate(0.72);
+  transform: translate(-50%, -50%) scale(calc(0.58 + var(--camera-progress) * 0.42));
 }
 
 .career-tree__stage[data-interactive='false'] .career-tree__toggle {
@@ -209,7 +239,7 @@
   transform: translateY(var(--ribbon-pull, 0px));
   transform-origin: 50% 0;
   transition: transform 0.44s var(--ease-reveal), filter 0.28s ease;
-  filter: drop-shadow(0 10px 12px rgba(0, 0, 0, 0.46));
+  filter: sepia(0.9) saturate(0.72) hue-rotate(350deg) brightness(1.12) drop-shadow(0 10px 12px rgba(0, 0, 0, 0.46)) drop-shadow(0 0 7px rgba(215, 177, 91, 0.22));
   pointer-events: none;
   user-select: none;
 }
@@ -240,7 +270,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .career-tree__camera {
-    transform: none !important;
+    transition: none;
     will-change: auto;
   }
 
@@ -297,6 +327,9 @@
     min-height: 44px;
     padding: 10px 14px;
   }
+
+  .career-tree__toggle { bottom: max(88px, calc(env(safe-area-inset-bottom) + 66px)); }
+  .career-tree__camera-controls { bottom: max(72px, calc(env(safe-area-inset-bottom) + 54px)); }
 
   .career-tree__hint {
     max-width: calc(100vw - 32px);

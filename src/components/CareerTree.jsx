@@ -3,12 +3,8 @@ import {
   useReducedMotion,
 } from 'motion/react';
 import { Sun, MoonStars } from '@phosphor-icons/react';
-import { useGSAP } from '@gsap/react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import CareerRibbonSheet from './CareerRibbonSheet';
 import GameBloom from './GameBloom';
-import RevealSection from './RevealSection';
 import { useLanguage } from '../i18n/LanguageContext';
 import treeDay from '../assets/scenes/career-tree-day-factory-v2.webp';
 import treeNight from '../assets/scenes/career-tree-night-factory.webp';
@@ -24,13 +20,8 @@ import bloom09 from '../assets/scenes/blooms/bloom-09.webp';
 import bloom10 from '../assets/scenes/blooms/bloom-10.webp';
 import bloom11 from '../assets/scenes/blooms/bloom-11.webp';
 import ribbonSmoke from '../assets/scenes/ribbons/ribbon-smoke.webp';
-import ribbonCopper from '../assets/scenes/ribbons/ribbon-copper.webp';
-import ribbonMoss from '../assets/scenes/ribbons/ribbon-moss.webp';
-import ribbonPlum from '../assets/scenes/ribbons/ribbon-plum.webp';
-import { createCareerScrollTrigger } from './careerScroll';
+import { createCareerCameraController, INTERACTIVE_PROGRESS } from './careerCamera';
 import './CareerTree.css';
-
-gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 // Hotspot anchors in % of the BACKGROUND IMAGE (not the stage): the day
 // tree has glowing ribbons and the night tree glowing flower clusters
@@ -39,18 +30,13 @@ gsap.registerPlugin(useGSAP, ScrollTrigger);
 // these glued to the branches at every viewport size. Kept within
 // 22-78% horizontally so no hotspot is cropped away down to ~1024px.
 const RIBBON_SPOTS = {
-  gamesofa: { left: '34.3%', top: '47.7%' },
-  ntpu: { left: '65.9%', top: '54.1%' },
-  actg: { left: '38.9%', top: '61.8%' },
-  eelin: { left: '59.6%', top: '63.6%' },
+  gamesofa: { left: '34.3%', top: '47.7%', anchor: 'crown-left' },
+  ntpu: { left: '65.9%', top: '54.1%', anchor: 'crown-right' },
+  actg: { left: '38.9%', top: '61.8%', anchor: 'lower-left' },
+  eelin: { left: '59.6%', top: '63.6%', anchor: 'lower-right' },
 };
 
-const RIBBON_ASSETS = {
-  gamesofa: ribbonSmoke,
-  ntpu: ribbonCopper,
-  actg: ribbonMoss,
-  eelin: ribbonPlum,
-};
+const RIBBON_ASSET = ribbonSmoke;
 
 const GAME_BLOOM_LAYOUT = {
   'wild-rift': { left: '40.8%', top: '61.3%', mobileLeft: '18%', mobileTop: '62%', size: 'lg', branch: 'lower-left' },
@@ -165,15 +151,18 @@ function LeafCanvas({ dense }) {
  * chapter in a framed card while the leaves pick up.
  */
 export default function CareerTree() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const reduce = useReducedMotion();
   const tree = t.careerTree;
   const [night, setNight] = useState(false);
   const [activeId, setActiveId] = useState(null);
-  const [interactive, setInteractive] = useState(false);
+  const query = new URLSearchParams(window.location.search);
+  const initialProgress = reduce ? 1 : (query.has('impact-qa') ? INTERACTIVE_PROGRESS : 0);
+  const [progress, setProgress] = useState(initialProgress);
   const sectionRef = useRef(null);
   const stageRef = useRef(null);
   const cameraRef = useRef(null);
+  const controllerRef = useRef(null);
   const ribbonTriggerRefs = useRef(new Map());
 
   const nightItems = tree.flowers.slice(0, GAME_BLOOM_ASSETS.length);
@@ -190,35 +179,25 @@ export default function CareerTree() {
     return ribbonTriggerRefs.current.get(id);
   };
 
-  useGSAP(
-    () => {
-      if (reduce || new URLSearchParams(window.location.search).has('impact-qa')) {
-        setInteractive(true);
-        return;
-      }
-      if (import.meta.env.MODE === 'test' || !stageRef.current || !cameraRef.current) return;
-
-      setInteractive(false);
-      gsap.set(cameraRef.current, { scale: 1, transformOrigin: '50% 48%' });
-      gsap.set(stageRef.current, { '--camera-progress': 0 });
-      gsap.to(cameraRef.current, {
-        scale: 1.16,
-        ease: 'none',
-        scrollTrigger: createCareerScrollTrigger(stageRef.current, ({ progress }) => {
-            stageRef.current?.style.setProperty('--camera-progress', progress.toFixed(3));
-            setInteractive((current) => {
-              const next = progress >= 0.72;
-              return current === next ? current : next;
-            });
-          }),
-      });
-    },
-    { scope: sectionRef, dependencies: [reduce], revertOnUpdate: true }
-  );
+  const interactive = progress >= INTERACTIVE_PROGRESS;
 
   useEffect(() => {
-    if (import.meta.env.MODE !== 'test') return undefined;
-    const onTestProgress = (event) => setInteractive(event.detail >= 0.72);
+    if (!stageRef.current) return undefined;
+    const controller = createCareerCameraController({
+      stage: stageRef.current,
+      reduceMotion: reduce,
+      initialProgress,
+      onProgress: setProgress,
+    });
+    controllerRef.current = controller;
+    return () => {
+      controller.destroy();
+      controllerRef.current = null;
+    };
+  }, [initialProgress, reduce]);
+
+  useEffect(() => {
+    const onTestProgress = (event) => controllerRef.current?.setProgress(event.detail);
     window.addEventListener('career-tree:test-progress', onTestProgress);
     return () => window.removeEventListener('career-tree:test-progress', onTestProgress);
   }, []);
@@ -239,18 +218,23 @@ export default function CareerTree() {
     setActiveId(null);
   };
 
+  const stationLabel = night
+    ? (lang === 'zh' ? '遊戲' : 'Games')
+    : (lang === 'zh' ? '航跡' : 'Career');
+  const hint = interactive
+    ? (night ? tree.nightHint : tree.pullHint)
+    : (lang === 'zh' ? '向上滾動，靠近航跡樹' : 'Scroll up to approach the route tree');
+
   return (
     <section id="scene-3" className="career-tree" ref={sectionRef}>
-      <RevealSection className="career-tree__heading container">
-        <p className="eyebrow">{tree.eyebrow}</p>
-        <h2>{tree.heading}</h2>
-        <p className="career-tree__intro">{tree.intro}</p>
-      </RevealSection>
-
       <div
         ref={stageRef}
         className={`career-tree__stage ${night ? 'career-tree__stage--night' : ''}`}
         data-interactive={interactive}
+        data-camera-progress={progress.toFixed(3)}
+        style={{ '--camera-progress': progress }}
+        tabIndex={0}
+        aria-label={stationLabel}
       >
         <div ref={cameraRef} className="career-tree__camera">
           {/* Reproduces object-fit: cover for the wide tree art, so the
@@ -300,6 +284,8 @@ export default function CareerTree() {
                         type="button"
                         className="career-tree__spot career-tree__spot--ribbon"
                         data-ribbon-id={item.id}
+                        data-ribbon-family="route-gold"
+                        data-branch-anchor={spots[item.id].anchor}
                         style={spots[item.id]}
                         aria-label={item.org}
                         aria-haspopup="dialog"
@@ -307,7 +293,7 @@ export default function CareerTree() {
                         disabled={!interactive}
                       >
                         <img
-                          src={RIBBON_ASSETS[item.id]}
+                          src={RIBBON_ASSET}
                           alt=""
                           data-testid="career-ribbon-asset"
                           draggable="false"
@@ -332,6 +318,8 @@ export default function CareerTree() {
           <LeafCanvas dense={Boolean(activeItem)} />
         </div>
 
+        <p className="career-tree__station-label" aria-hidden="true">{stationLabel}</p>
+
         <button
           type="button"
           className="career-tree__toggle btn-glass"
@@ -344,8 +332,13 @@ export default function CareerTree() {
           <span>{night ? tree.dayLabel : tree.nightLabel}</span>
         </button>
 
+        <div className="career-tree__camera-controls" aria-label={lang === 'zh' ? '航跡樹鏡頭控制' : 'Route tree camera controls'}>
+          <button type="button" onClick={() => controllerRef.current?.approach()} aria-label={lang === 'zh' ? '靠近航跡樹' : 'Approach the route tree'}>+</button>
+          <button type="button" onClick={() => controllerRef.current?.retreat()} aria-label={lang === 'zh' ? '遠離航跡樹' : 'Retreat from the route tree'}>−</button>
+        </div>
+
         <p className="career-tree__hint" aria-live="polite">
-          {night ? tree.nightHint : tree.pullHint}
+          {hint}
         </p>
 
       </div>

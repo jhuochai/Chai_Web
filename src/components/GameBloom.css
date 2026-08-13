@@ -7,6 +7,11 @@
   isolation: isolate;
 }
 
+.career-tree__stage[data-interactive='false'] .game-bloom {
+  opacity: calc(0.2 + var(--camera-progress) * 0.28);
+  transform: translate(-50%, -50%) scale(calc(0.55 + var(--camera-progress) * 0.34));
+}
+
 .career-tree__spot.game-bloom:hover,
 .career-tree__spot.game-bloom:focus-visible {
   background: transparent;
@@ -23,6 +28,20 @@
   transform: translateY(5px);
 }
 
+.game-bloom__stem {
+  position: absolute;
+  z-index: -1;
+  left: 50%;
+  top: 55%;
+  width: clamp(4px, 0.5vw, 7px);
+  height: clamp(28px, 4.2vw, 52px);
+  border-radius: 999px 999px 46% 46%;
+  background: linear-gradient(90deg, #3a3222, #bd9653 52%, #514127);
+  box-shadow: 0 0 8px rgba(209, 164, 86, 0.24);
+  transform: translateX(-50%) rotate(9deg);
+  transform-origin: top center;
+}
+
 .game-bloom--sm { --bloom-visual: clamp(44px, 4.2vw, 58px); }
 .game-bloom--md { --bloom-visual: clamp(54px, 5.1vw, 72px); }
 .game-bloom--lg { --bloom-visual: clamp(66px, 6.2vw, 88px); }
@@ -37,7 +56,7 @@
   transform: translate(-50%, -50%);
   pointer-events: none;
   user-select: none;
-  filter: drop-shadow(0 10px 9px rgba(1, 7, 18, 0.72)) drop-shadow(0 0 8px rgba(111, 151, 255, 0.2));
+  filter: sepia(0.42) saturate(0.82) hue-rotate(164deg) brightness(1.08) drop-shadow(0 10px 9px rgba(1, 7, 18, 0.72)) drop-shadow(0 0 8px rgba(138, 158, 255, 0.3));
   transition: filter 0.24s ease, transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
 }
 

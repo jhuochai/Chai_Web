@@ -212,7 +212,10 @@ export default function GameBloom({
         data-position={`${position.left}-${position.top}`}
         data-size={size}
         data-branch={position.branch}
+        data-branch-anchor={position.branch}
+        data-family="lumen-forge-bloom"
       >
+        <span className="game-bloom__stem" aria-hidden="true" />
         {!assetFailed && (
           <img
             src={asset}

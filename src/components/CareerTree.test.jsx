@@ -1,7 +1,6 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { act, render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
 import CareerTree from './CareerTree';
-import { createCareerScrollTrigger } from './careerScroll';
 import { LanguageProvider } from '../i18n/LanguageContext';
 import { content } from '../data/content';
 
@@ -14,17 +13,10 @@ function renderTree() {
 }
 
 describe('CareerTree', () => {
-  it('pins only when the tree stage itself reaches the viewport top', () => {
-    const stage = document.createElement('div');
-    const config = createCareerScrollTrigger(stage, () => {});
-
-    expect(config).toEqual(expect.objectContaining({
-      trigger: stage,
-      pin: stage,
-      start: 'top top',
-      end: '+=140%',
-      scrub: 0.7,
-    }));
+  it('does not render the retired ScrollTrigger camera pathway', () => {
+    const { container } = renderTree();
+    expect(container.querySelector('[data-scroll-trigger]')).toBeNull();
+    expect(container.querySelector('.career-tree__heading')).toBeNull();
   });
 
   it('does not run the walking frames on an idle time interval', () => {
@@ -34,10 +26,21 @@ describe('CareerTree', () => {
     intervalSpy.mockRestore();
   });
 
-  it('renders as #scene-3 with the career-tree heading', () => {
+  it('renders a concise in-scene route label instead of a separate heading block', () => {
     const { container } = renderTree();
     expect(container.querySelector('section')).toHaveAttribute('id', 'scene-3');
-    expect(screen.getByText(content.en.careerTree.heading)).toBeInTheDocument();
+    expect(screen.getByText('Career')).toBeInTheDocument();
+    expect(screen.queryByText(content.en.careerTree.heading)).toBeNull();
+  });
+
+  it('uses one localized in-scene station label for each day and night mode', () => {
+    renderTree();
+    expect(screen.getByText('Career')).toBeInTheDocument();
+    fireEvent(window, new CustomEvent('career-tree:test-progress', { detail: 0.8 }));
+    fireEvent.click(screen.getByRole('button', { name: 'Switch to night' }));
+    expect(screen.getByText('Games')).toBeInTheDocument();
+    expect(screen.queryByText('航跡 / Career')).toBeNull();
+    expect(screen.queryByText('遊戲 / Games')).toBeNull();
   });
 
   it('shows the four work-experience ribbons in day mode', () => {
@@ -77,6 +80,23 @@ describe('CareerTree', () => {
     expect(ribbon).toBeEnabled();
   });
 
+  it('uses negative wheel movement to approach and enables stories at the near threshold', () => {
+    const { container } = renderTree();
+    const stage = container.querySelector('.career-tree__stage');
+    const event = new WheelEvent('wheel', { deltaY: -1100, cancelable: true });
+    act(() => stage.dispatchEvent(event));
+
+    expect(event.defaultPrevented).toBe(true);
+    expect(stage).toHaveAttribute('data-interactive', 'true');
+    expect(screen.getByRole('button', { name: content.en.careerTree.ribbons[0].org })).toBeEnabled();
+  });
+
+  it('provides explicit approach and retreat controls alongside the focused keyboard alternative', () => {
+    renderTree();
+    expect(screen.getByRole('button', { name: 'Approach the route tree' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Retreat from the route tree' })).toBeInTheDocument();
+  });
+
   it('contains no scroll-linked walking strip or persistent walker', () => {
     const { container } = renderTree();
     expect(container.querySelector('.career-tree__walk')).toBeNull();
@@ -100,13 +120,15 @@ describe('CareerTree', () => {
     expect(trigger).toHaveFocus();
   });
 
-  it('renders four distinct low-saturation ribbon assets in day mode', () => {
+  it('renders four branch-attached ribbons from the same gold visual family in day mode', () => {
     const { container } = renderTree();
     const assets = screen
       .getAllByTestId('career-ribbon-asset')
       .map((image) => image.getAttribute('src'));
     expect(assets).toHaveLength(4);
-    expect(new Set(assets).size).toBe(4);
+    expect(new Set(assets).size).toBe(1);
+    expect(container.querySelectorAll('[data-ribbon-family="route-gold"]').length).toBe(4);
+    expect(container.querySelectorAll('[data-branch-anchor]').length).toBe(4);
     expect(
       Array.from(container.querySelectorAll('[data-ribbon-id]')).map((node) =>
         node.getAttribute('data-ribbon-id')
@@ -141,7 +163,8 @@ describe('CareerTree', () => {
 
     const blooms = screen.getAllByTestId('game-bloom');
     expect(blooms).toHaveLength(11);
-    expect(new Set(blooms.map((node) => node.dataset.asset)).size).toBe(11);
+    expect(blooms.every((node) => node.dataset.family === 'lumen-forge-bloom')).toBe(true);
+    expect(blooms.every((node) => node.dataset.branchAnchor)).toBeTruthy();
     expect(screen.queryByText(/Bookshelf|書架上還有/i)).not.toBeInTheDocument();
   });
 
@@ -166,7 +189,9 @@ describe('CareerTree', () => {
   it.each([
     { width: 1280, height: 720, mobile: false },
     { width: 795, height: 698, mobile: false },
+    { width: 644, height: 698, mobile: false },
     { width: 390, height: 844, mobile: true },
+    { width: 360, height: 800, mobile: true },
   ])('keeps bloom hit bounds separate at $width×$height', ({ width, height, mobile }) => {
     renderTree();
     fireEvent(window, new CustomEvent('career-tree:test-progress', { detail: 0.8 }));
