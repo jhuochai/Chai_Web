@@ -1,61 +1,56 @@
-import { fireEvent, render, screen } from '@testing-library/react';
-import { vi } from 'vitest';
+import { act, render, screen } from '@testing-library/react';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import App from './App';
 
 vi.mock('./components/ClickSpark', () => ({
   default: ({ children }) => <div>{children}</div>,
 }));
 
-vi.mock('./components/CircularGallery', () => ({
-  default: () => <div data-testid="circular-gallery-stub" />,
-}));
-
-vi.mock('./components/LiquidEther', () => ({
-  default: () => <div data-testid="liquid-ether-stub" />,
-}));
-
 vi.mock('./components/SmoothScroll', () => ({
   default: ({ paused }) => <div data-testid="smooth-scroll-stub" data-paused={paused} />,
 }));
 
-describe('App', () => {
-  it('renders the retained home chapters in order (scene 0 is the loading overlay, not a section)', () => {
+const routes = [
+  ['/', 'scene-1'],
+  ['/profile', 'scene-2'],
+  ['/career-tree', 'scene-3'],
+  ['/portfolio', 'scene-5'],
+];
+
+describe('App station routes', () => {
+  beforeEach(() => window.history.replaceState({}, '', '/'));
+  afterEach(() => window.history.replaceState({}, '', '/'));
+
+  it.each(routes)('renders only %s at %s', (pathname, stationId) => {
+    window.history.replaceState({}, '', pathname);
     const { container } = render(<App />);
-    const ids = Array.from(container.querySelectorAll('main > section')).map((el) => el.id);
-    expect(ids).toEqual([
-      'scene-1',
-      'scene-2',
-      'scene-3',
-      'scene-5',
-      'scene-7',
-    ]);
+
+    expect(container.querySelector(`section#${stationId}`)).toBeInTheDocument();
+    expect(container.querySelectorAll('main > section')).toHaveLength(1);
+    expect(container.querySelector('header.nav')).toBeInTheDocument();
+    expect(container.querySelector('.chapter-exit')).toBeNull();
   });
 
-  it('renders the making-of route and returns to home through browser history', () => {
+  it('renders the making-of archive without the formal station navigation', () => {
     window.history.replaceState({}, '', '/making-of');
-    render(<App />);
+    const { container } = render(<App />);
 
-    expect(screen.getByRole('heading', { name: /網站製作幕後|drafts behind this site/i })).toBeInTheDocument();
-    window.history.replaceState({}, '', '/');
-    fireEvent.popState(window);
-
-    expect(screen.queryByRole('heading', { name: /網站製作幕後|drafts behind this site/i })).not.toBeInTheDocument();
+    expect(container.querySelector('main.making-of')).toBeInTheDocument();
+    expect(container.querySelector('header.nav')).toBeNull();
+    expect(container.querySelectorAll('main > section')).toHaveLength(1);
   });
 
-  it('wraps every chapter in one continuous atmospheric scene flow', () => {
+  it('updates the rendered station after browser history changes', () => {
     const { container } = render(<App />);
-    expect(container.querySelector('main')).toHaveClass('scene-flow');
-  });
+    window.history.replaceState({}, '', '/portfolio');
+    act(() => window.dispatchEvent(new PopStateEvent('popstate')));
 
-  it('keeps the walker absent until an explicit chapter transition', () => {
-    const { container } = render(<App />);
-    expect(container.querySelector('.floating-companion')).toBeNull();
-    expect(container.querySelector('.career-tree__walker')).toBeNull();
-    expect(container.querySelector('.chapter-transition__walker')).toBeNull();
+    expect(container.querySelector('section#scene-5')).toBeInTheDocument();
+    expect(container.querySelectorAll('main > section')).toHaveLength(1);
   });
 
   it('pauses the shared scroll engine while the loading overlay is active', () => {
-    const { getByTestId } = render(<App />);
-    expect(getByTestId('smooth-scroll-stub')).toHaveAttribute('data-paused', 'true');
+    render(<App />);
+    expect(screen.getByTestId('smooth-scroll-stub')).toHaveAttribute('data-paused', 'true');
   });
 });

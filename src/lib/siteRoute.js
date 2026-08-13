@@ -1,5 +1,13 @@
 export function getSiteRoute(pathname = window.location.pathname) {
-  return pathname === '/making-of' ? 'making-of' : 'home';
+  const routes = {
+    '/': 'cockpit',
+    '/profile': 'profile',
+    '/career-tree': 'career-tree',
+    '/portfolio': 'portfolio',
+    '/making-of': 'making-of',
+  };
+
+  return routes[pathname] ?? 'cockpit';
 }
 
 export function navigateToRoute(pathname) {

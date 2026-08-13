@@ -4,8 +4,6 @@ import Hero from './components/Hero';
 import Intro from './components/Intro';
 import CareerTree from './components/CareerTree';
 import Portfolio from './components/Portfolio';
-import Contact from './components/Contact';
-import ChapterExit from './components/ChapterExit';
 import ChapterTransition from './components/ChapterTransition';
 import MakingOf from './components/MakingOf';
 import GrainOverlay from './components/GrainOverlay';
@@ -16,18 +14,17 @@ import { LanguageProvider } from './i18n/LanguageContext';
 import { getSiteRoute } from './lib/siteRoute';
 import { scrollToScene } from './lib/scrollToScene';
 
-function Scenes() {
+function StationScene({ route }) {
+  const station = {
+    cockpit: <Hero />,
+    profile: <Intro />,
+    'career-tree': <CareerTree />,
+    portfolio: <Portfolio />,
+  }[route] ?? <Hero />;
+
   return (
     <main className="scene-flow">
-      <Hero />
-      <Intro />
-      <ChapterExit chapterId="intro" />
-      <CareerTree />
-      <ChapterExit chapterId="career" />
-      <Portfolio />
-      <ChapterExit chapterId="portfolio" />
-      <Contact />
-      <ChapterExit chapterId="contact" />
+      {station}
     </main>
   );
 }
@@ -60,7 +57,7 @@ function App() {
         ) : (
           <>
             <Nav />
-            <Scenes />
+            <StationScene route={route} />
             <ChapterTransition onTravel={scrollToScene} />
           </>
         )}
