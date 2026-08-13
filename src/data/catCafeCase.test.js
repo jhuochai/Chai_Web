@@ -34,6 +34,7 @@ describe('catCafeCase', () => {
       'version-120',
     ]);
     expect(zh.pillars.flatMap((pillar) => pillar.items).find((item) => item.id === 'ufo-day').format).toBe('static');
+    expect(zh.pillars.flatMap((pillar) => pillar.items).find((item) => item.id === 'donation').alt).toContain('收據');
   });
 
   it('uses only the reliable hero metrics and the approved growth claim', () => {
@@ -42,6 +43,9 @@ describe('catCafeCase', () => {
     expect(values).toEqual(['51,173', '3,898', '1,476', '383', '50']);
     expect(catCafeCase.zh.growth).toContain('18k → 30k');
     expect(catCafeCase.zh.growth).toContain('+67%');
+    expect(catCafeCase.zh.hero.note).toContain('三萬粉－2');
+    expect(catCafeCase.zh.hero.note).toContain('第一篇');
+    expect(catCafeCase.zh.darkChess.signal).not.toContain('預設');
     expect(JSON.stringify(catCafeCase)).not.toMatch(/互動率|engagement rate/i);
   });
 });

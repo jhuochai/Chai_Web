@@ -38,7 +38,7 @@ describe('Portfolio', () => {
 
     expect(container.querySelectorAll('.portfolio-pillar__head h3')).toHaveLength(4);
     expect(screen.getByRole('heading', { name: '暗棋廣告受眾測試' })).toBeInTheDocument();
-    expect(screen.getByText(/成效訊號未達預期/)).toBeInTheDocument();
+    expect(screen.getByText(/實際成效未達預期/)).toBeInTheDocument();
     expect(screen.getByText(/即時停止投放/)).toBeInTheDocument();
   });
 

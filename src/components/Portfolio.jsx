@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { ArrowUpRight, Play, X } from '@phosphor-icons/react';
+import { ArrowUpRight, X } from '@phosphor-icons/react';
 import RevealSection from './RevealSection';
 import { catCafeCase } from '../data/catCafeCase';
 import { useLanguage } from '../i18n/LanguageContext';
@@ -18,7 +18,7 @@ function EvidenceFigure({ item, copy, onOpen }) {
         <span className="portfolio-evidence__image-wrap">
           <img src={item.src} alt={item.alt} loading="lazy" decoding="async" />
           <span className="portfolio-evidence__action" aria-hidden="true">
-            {item.format === 'video-poster' ? <Play size={18} weight="fill" /> : <ArrowUpRight size={18} />}
+            <ArrowUpRight size={18} />
           </span>
         </span>
       </button>
@@ -31,7 +31,7 @@ function EvidenceFigure({ item, copy, onOpen }) {
   );
 }
 
-function EvidenceLightbox({ item, copy, onClose }) {
+function EvidenceLightbox({ item, copy, onClose, returnFocusTo }) {
   const closeRef = useRef(null);
 
   useEffect(() => {
@@ -69,8 +69,9 @@ function EvidenceLightbox({ item, copy, onClose }) {
         if (ariaHidden === null) node.removeAttribute('aria-hidden');
         else node.setAttribute('aria-hidden', ariaHidden);
       });
+      queueMicrotask(() => returnFocusTo?.focus());
     };
-  }, [onClose]);
+  }, [onClose, returnFocusTo]);
 
   return createPortal(
     <div
@@ -109,7 +110,6 @@ export default function Portfolio() {
 
   const closeLightbox = () => {
     setActiveItem(null);
-    window.requestAnimationFrame(() => openerRef.current?.focus());
   };
 
   return (
@@ -124,7 +124,7 @@ export default function Portfolio() {
 
         <RevealSection as="article" delay={0.05} className="portfolio-hero">
           <div className="portfolio-hero__visual">
-            <img src={work.hero.src} alt={work.hero.alt} decoding="async" />
+            <img src={work.hero.src} alt={work.hero.alt} loading="lazy" decoding="async" width="404" height="590" />
             <span className="portfolio-hero__stamp">18k → 30k</span>
           </div>
           <div className="portfolio-hero__story">
@@ -191,7 +191,14 @@ export default function Portfolio() {
         </RevealSection>
       </div>
 
-      {activeItem ? <EvidenceLightbox item={activeItem} copy={work.lightbox} onClose={closeLightbox} /> : null}
+      {activeItem ? (
+        <EvidenceLightbox
+          item={activeItem}
+          copy={work.lightbox}
+          onClose={closeLightbox}
+          returnFocusTo={openerRef.current}
+        />
+      ) : null}
     </section>
   );
 }

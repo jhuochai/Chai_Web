@@ -246,12 +246,14 @@
 
 .portfolio-pillar__works {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1.18fr) minmax(220px, 0.82fr);
   gap: clamp(26px, 4vw, 58px);
 }
 
 .portfolio-evidence:nth-child(2) {
   margin-top: clamp(52px, 8vw, 104px);
+  width: 90%;
+  justify-self: end;
 }
 
 .portfolio-evidence__open {
@@ -529,6 +531,7 @@
 
   .portfolio-evidence:nth-child(2) {
     margin-top: 0;
+    width: 100%;
   }
 
   .portfolio-evidence__image-wrap {

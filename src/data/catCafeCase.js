@@ -29,9 +29,9 @@ const zh = {
   summary: '我獨立負責 FB、IG、Threads 的內容企劃、發佈與社群回覆，並把角色、節慶、互動機制與遊戲資訊拆成可持續測試的內容支柱。',
   hero: {
     src: assets.thirtyK,
-    title: '三萬粉里程碑',
-    alt: '貓咪造咖三萬粉絲慶祝短片的主視覺，貓咪角色站在明亮宮殿中央。',
-    note: '把里程碑從單向公告，轉成讓玩家一起參與、慶祝與擴散的社群事件。',
+    title: '三萬粉系列里程碑',
+    alt: '貓咪造咖三萬粉系列第一篇影片主視覺，貓咪角色站在明亮宮殿中央。',
+    note: '畫面為本機保存的三萬粉系列第一篇；下列成效來自成效表中的「三萬粉－2」。待第二篇成品補入後，這張主圖會一併替換。',
   },
   metrics: [
     { id: 'impressions', value: '51,173', label: '曝光' },
@@ -79,7 +79,7 @@ const zh = {
           title: '吃啥咪轉盤',
           alt: '貓咪造咖吃啥咪互動轉盤短影音封面。',
           format: 'video-poster',
-          formatLabel: '互動短影音',
+          formatLabel: '互動短影音封面',
           proof: '121 次分享、42 次收藏；把「不知道吃什麼」變成可重複使用的玩家小工具。',
         },
         {
@@ -154,7 +154,7 @@ const zh = {
     hypothesisLabel: '假設',
     hypothesis: '以 1 萬元預算，測試新的受眾輪廓與素材組合是否值得繼續放大。',
     signalLabel: '實際訊號',
-    signal: '從 Meta 後台讀取 CPI、CPM、CTR、CVR、IR；成效訊號未達預期，也沒有達到預設續投門檻。',
+    signal: '從 Meta 後台讀取 CPI、CPM、CTR、CVR、IR；實際成效未達預期。',
     decisionLabel: '決定',
     decision: '即時停止投放，把預算留給下一個更有證據的方向。',
   },
@@ -169,9 +169,9 @@ const en = {
   summary: 'I independently planned, published, and managed replies across Facebook, Instagram, and Threads, turning character stories, seasonal moments, interaction mechanics, and game information into repeatable content pillars.',
   hero: {
     src: assets.thirtyK,
-    title: 'The 30k milestone',
-    alt: 'Key visual from the Cat Café 30k-follower celebration, with the cat character centered in a bright palace.',
-    note: 'The milestone became a shared community event players could join, celebrate, and pass along—not a one-way announcement.',
+    title: 'The 30k milestone series',
+    alt: 'Key visual from part one of the Cat Café 30k-follower series, with the cat character centered in a bright palace.',
+    note: 'The visual is the locally preserved part-one asset; the metrics below belong to “30k followers — 2” in the performance sheet. This image will be replaced when that exact final asset is added.',
   },
   metrics: [
     { id: 'impressions', value: '51,173', label: 'Impressions' },
@@ -197,7 +197,7 @@ const en = {
       title: 'Player resonance and interaction',
       description: 'Content designed to be sent to a friend—or kept to use again.',
       items: [
-        { id: 'meal-spinner', src: assets.mealSpinner, title: 'What should I eat? spinner', alt: 'Poster for the Cat Café interactive meal-spinner short video.', format: 'video-poster', formatLabel: 'Interactive short video', proof: '121 shares and 42 saves turned an everyday choice into a small, reusable player tool.' },
+        { id: 'meal-spinner', src: assets.mealSpinner, title: 'What should I eat? spinner', alt: 'Poster for the Cat Café interactive meal-spinner short video.', format: 'video-poster', formatLabel: 'Interactive video poster', proof: '121 shares and 42 saves turned an everyday choice into a small, reusable player tool.' },
         { id: 'ufo-day', src: assets.ufoDay, title: 'World UFO Day', alt: 'Static Cat Café post for World UFO Day.', format: 'static', formatLabel: 'Static seasonal post', proof: '198 shares and 684 interactions connected a seasonal joke with the game’s character voice.' },
       ],
     },
@@ -230,7 +230,7 @@ const en = {
     hypothesisLabel: 'Hypothesis',
     hypothesis: 'Use a NT$10,000 budget to test whether a new audience profile and creative mix deserved more spend.',
     signalLabel: 'Observed signal',
-    signal: 'I read CPI, CPM, CTR, CVR, and IR in Meta Ads Manager; the signal did not reach the threshold set for continued spend.',
+    signal: 'I read CPI, CPM, CTR, CVR, and IR in Meta Ads Manager; actual performance fell short of expectations.',
     decisionLabel: 'Decision',
     decision: 'I stopped the campaign in time and kept the remaining budget for a direction with stronger evidence.',
   },
