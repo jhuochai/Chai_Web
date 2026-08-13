@@ -21,6 +21,7 @@ describe('CircularGallery', () => {
     );
 
     expect(screen.getByRole('region', { name: '作品案例環形觀景窗' })).toBeInTheDocument();
+    expect(document.querySelector('.circular-gallery__canvas')).toHaveAttribute('tabindex', '-1');
     expect(screen.getAllByRole('button')).toHaveLength(2);
     expect(screen.getByRole('button', { name: '開啟案例：貓咪造咖' })).toHaveAttribute('aria-current', 'true');
     fireEvent.click(screen.getByRole('button', { name: '開啟案例：暗棋' }));

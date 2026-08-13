@@ -1,3 +1,4 @@
+import { StrictMode, useState } from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { vi } from 'vitest';
 import CaseStack from './CaseStack';
@@ -16,6 +17,21 @@ const items = [
 ];
 
 describe('CaseStack', () => {
+  it('keeps threshold drag working under React StrictMode', () => {
+    function Harness() {
+      const [index, setIndex] = useState(0);
+      return <CaseStack items={items} index={index} onIndexChange={setIndex} copy={copy} />;
+    }
+
+    const { container } = render(<StrictMode><Harness /></StrictMode>);
+    const stack = container.querySelector('.case-stack__cards');
+    fireEvent.pointerDown(stack, { pointerId: 31, clientX: 20, clientY: 20 });
+    fireEvent.pointerMove(stack, { pointerId: 31, clientX: 151, clientY: 20 });
+    fireEvent.pointerUp(stack, { pointerId: 31, clientX: 151, clientY: 20 });
+
+    expect(screen.getByText('2 / 3')).toBeInTheDocument();
+  });
+
   it('is controlled, deterministic, announced, and supports explicit controls', () => {
     const onIndexChange = vi.fn();
     const { container, rerender } = render(
@@ -109,5 +125,20 @@ describe('CaseStack', () => {
     expect(pause).toHaveBeenCalled();
     unmount();
     expect(pause).toHaveBeenCalled();
+  });
+
+  it('does not start a stack drag from interactive video controls or the play button', () => {
+    const onIndexChange = vi.fn();
+    const { container } = render(<CaseStack items={items} index={1} onIndexChange={onIndexChange} copy={copy} />);
+    const video = screen.getByTestId('case-stack-video');
+    const playButton = screen.getByRole('button', { name: '播放影片' });
+
+    for (const target of [video, playButton]) {
+      fireEvent.pointerDown(target, { pointerId: 41, clientX: 20, clientY: 20 });
+      fireEvent.pointerMove(container.querySelector('.case-stack__cards'), { pointerId: 41, clientX: 180, clientY: 20 });
+      fireEvent.pointerUp(container.querySelector('.case-stack__cards'), { pointerId: 41, clientX: 180, clientY: 20 });
+    }
+
+    expect(onIndexChange).not.toHaveBeenCalled();
   });
 });

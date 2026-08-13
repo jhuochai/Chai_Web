@@ -76,4 +76,18 @@
     min-height: 58px;
     padding: 9px 10px;
   }
+
+  .circular-gallery__selectors strong {
+    overflow: visible;
+    line-height: 1.25;
+    text-overflow: clip;
+    white-space: normal;
+  }
+}
+
+@media (max-width: 430px) {
+  .circular-gallery__selectors {
+    grid-template-columns: 1fr;
+    inset-inline: 12%;
+  }
 }

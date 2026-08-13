@@ -496,7 +496,7 @@ export default function CircularGallery({
 
   return (
     <div className="circular-gallery" role="region" aria-label={ariaLabel}>
-      <div className="circular-gallery__canvas" ref={containerRef} tabIndex={0} aria-hidden="true" />
+      <div className="circular-gallery__canvas" ref={containerRef} tabIndex={-1} aria-hidden="true" />
       <div className="circular-gallery__selectors">
         {items.map((item, itemIndex) => (
           <button

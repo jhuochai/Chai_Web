@@ -20,6 +20,25 @@ describe('portfolioCases', () => {
     expect(serialized).not.toMatch(/ROG Phone 9/i);
   });
 
+  it('keeps the hero image/metrics disclosure and marks every unsupported learning as pending', () => {
+    const zhHero = portfolioCases.zh.cases[0].items.find((item) => item.id === 'thirty-k-hero');
+    const enHero = portfolioCases.en.cases[0].items.find((item) => item.id === 'thirty-k-hero');
+
+    expect(zhHero.proof.join(' ')).toContain('畫面為本機保存的三萬粉系列第一篇');
+    expect(zhHero.proof.join(' ')).toContain('三萬粉－2');
+    expect(zhHero.proof.join(' ')).toContain('替換');
+    expect(enHero.proof.join(' ')).toContain('part-one asset');
+    expect(enHero.proof.join(' ')).toContain('30k followers — 2');
+    expect(enHero.proof.join(' ')).toContain('replaced');
+
+    for (const item of portfolioCases.zh.cases.flatMap((caseData) => caseData.items)) {
+      expect(item.learning).toBe('待補：這段學習會由我在確認專案回顧後補上。');
+    }
+    for (const item of portfolioCases.en.cases.flatMap((caseData) => caseData.items)) {
+      expect(item.learning).toBe('Pending: I will add this reflection after reviewing the project record.');
+    }
+  });
+
   it('uses only supported item types and bullet-ready evidence arrays', () => {
     for (const lang of ['zh', 'en']) {
       for (const caseData of portfolioCases[lang].cases) {

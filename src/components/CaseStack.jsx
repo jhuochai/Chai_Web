@@ -125,6 +125,7 @@ export default function CaseStack({ items, index, onIndexChange, copy }) {
   };
 
   useEffect(() => {
+    mountedRef.current = true;
     const handleBlur = () => {
       releaseGestureCapture();
       gestureRef.current = null;
@@ -156,6 +157,7 @@ export default function CaseStack({ items, index, onIndexChange, copy }) {
   const handlePointerDown = (event) => {
     if (!mountedRef.current) return;
     if (event.button !== undefined && event.button !== 0) return;
+    if (event.target.closest?.('button, video, input, select, textarea, a[href], [contenteditable="true"], [role="button"]')) return;
     gestureRef.current = {
       pointerId: event.pointerId,
       startX: event.clientX,

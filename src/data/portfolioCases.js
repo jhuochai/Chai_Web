@@ -50,31 +50,11 @@ const purposeById = {
   },
 };
 
-const learningById = {
-  zh: {
-    'watermelon-cat': '角色內容除了娛樂，也能靠保存價值延長壽命。',
-    'outfit-guide': '直接回應玩家問題的資訊型內容，能自然帶出留言與交流。',
-    'meal-spinner': '可重複使用的互動，比單次笑點更容易同時帶來分享與收藏。',
-    'ufo-day': '節慶題材要先找到角色可以合理參與的切角。',
-    'mother-day': '清楚的情緒入口能同時推動擴散與追蹤轉換。',
-    'ocean-day': '分享數能檢驗題材是否真的適合被玩家帶到自己的社交圈。',
-    donation: '信任資訊不必犧牲品牌語氣，重點是把事實說清楚。',
-    'version-120': '功能資訊若保留提問空間，更容易從公告變成討論。',
-  },
-  en: {
-    'watermelon-cat': 'Character content can last longer when it gives players a reason to save it.',
-    'outfit-guide': 'Answering a real player question can naturally open conversation.',
-    'meal-spinner': 'A reusable interaction can earn both sharing and saving beyond a one-off joke.',
-    'ufo-day': 'A seasonal post works when the character has a credible reason to be in it.',
-    'mother-day': 'A clear emotional entry point can support both distribution and follow conversion.',
-    'ocean-day': 'Shares help reveal whether an idea belongs in players’ own social circles.',
-    donation: 'Trust information can keep the brand voice when the facts stay clear.',
-    'version-120': 'Leaving room for response can turn an update into a discussion.',
-  },
-};
-
 function makeCatItems(lang) {
   const source = catCafeCase[lang];
+  const pendingLearning = lang === 'zh'
+    ? '待補：這段學習會由我在確認專案回顧後補上。'
+    : 'Pending: I will add this reflection after reviewing the project record.';
   const role = lang === 'zh'
     ? '社群內容企劃、發佈與社群回覆。'
     : 'Social content planning, publishing, and community replies.';
@@ -88,10 +68,8 @@ function makeCatItems(lang) {
       ? '把三萬粉里程碑從單向公告，轉成玩家共同參與與擴散的社群事件。'
       : 'Turn the 30k milestone from a one-way announcement into a shared community event.',
     role,
-    proof: source.metrics.map((metric) => `${metric.label} ${metric.value}`),
-    learning: lang === 'zh'
-      ? '里程碑內容在讓玩家參與慶祝時，能同時承接成長敘事與擴散。'
-      : 'Milestones can carry both a growth story and distribution when players help celebrate.',
+    proof: [source.hero.note, ...source.metrics.map((metric) => `${metric.label} ${metric.value}`)],
+    learning: pendingLearning,
   };
 
   const evidence = source.pillars.flatMap((pillar) => pillar.items).map((item) => ({
@@ -103,7 +81,7 @@ function makeCatItems(lang) {
     purpose: purposeById[lang][item.id],
     role,
     proof: [item.proof],
-    learning: learningById[lang][item.id],
+    learning: pendingLearning,
   }));
 
   const processRole = lang === 'zh'
@@ -125,9 +103,7 @@ function makeCatItems(lang) {
     proof: [lang === 'zh'
       ? `4 張正式對稿素材中的第 ${index + 1} 張；此處作為創作流程證據，不沿用舊貼文成效。`
       : `Final review card ${index + 1} of 4; shown as process evidence without reusing older post metrics.`],
-    learning: lang === 'zh'
-      ? '多張攻略需要每一張都能獨立讀懂，同時保留下一張的閱讀動機。'
-      : 'Each guide card must stand on its own while preserving a reason to continue.',
+    learning: pendingLearning,
   }));
 
   const videoItem = {
@@ -144,7 +120,7 @@ function makeCatItems(lang) {
     proof: [lang === 'zh'
       ? '實際 1000×1000 MP4 成品；此處只證明互動形式與完成度，不套用其他年份素材的成效數字。'
       : 'Actual 1000×1000 MP4 final; presented as format and completion evidence without borrowing metrics from another asset.'],
-    learning: learningById[lang]['meal-spinner'],
+    learning: pendingLearning,
   };
 
   return [hero, ...evidence, ...processItems, videoItem];
@@ -153,6 +129,9 @@ function makeCatItems(lang) {
 function makePortfolio(lang) {
   const cat = catCafeCase[lang];
   const isZh = lang === 'zh';
+  const pendingLearning = isZh
+    ? '待補：這段學習會由我在確認專案回顧後補上。'
+    : 'Pending: I will add this reflection after reviewing the project record.';
   return {
     pageTitle: isZh ? '影像分析艙' : 'Analysis Bay',
     pageIntro: isZh
@@ -202,9 +181,7 @@ function makePortfolio(lang) {
               ? '在 Meta Ads Manager 讀取 CPI、CPM、CTR、CVR 與 IR，依訊號判斷是否繼續投放。'
               : 'Read CPI, CPM, CTR, CVR, and IR in Meta Ads Manager to decide whether to continue.',
             proof: [cat.darkChess.signal, cat.darkChess.decision],
-            learning: isZh
-              ? '測試的價值不只在找到成功方向，也在訊號不足時及早停止，保留預算。'
-              : 'A test is also valuable when weak signals support stopping early and preserving budget.',
+            learning: pendingLearning,
           },
         ],
       },
