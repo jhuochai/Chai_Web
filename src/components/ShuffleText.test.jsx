@@ -47,4 +47,19 @@ describe('ShuffleText', () => {
     expect(screen.getByText('Analysis Bay', { selector: '.shuffle-text__accessible' })).toBeInTheDocument();
     expect(onComplete).toHaveBeenCalledOnce();
   });
+
+  it('does not complete again when its text or motion preference changes after the active run completed', () => {
+    const onComplete = vi.fn();
+    const { rerender } = render(<ShuffleText text="Cockpit" active onComplete={onComplete} />);
+
+    act(() => vi.advanceTimersByTime(600));
+    expect(onComplete).toHaveBeenCalledOnce();
+
+    rerender(<ShuffleText text="Captain's Office" active onComplete={onComplete} />);
+    motionState.reduced = true;
+    rerender(<ShuffleText text="Captain's Office" active onComplete={onComplete} />);
+
+    expect(onComplete).toHaveBeenCalledOnce();
+    expect(screen.getByText("Captain's Office", { selector: '.shuffle-text__accessible' })).toBeInTheDocument();
+  });
 });

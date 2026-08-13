@@ -60,7 +60,7 @@ describe('App station routes', () => {
     fireEvent.click(screen.getByRole('button', { name: "Captain's Office" }));
 
     expect(window.location.pathname).toBe('/');
-    act(() => vi.advanceTimersByTime(558));
+    act(() => vi.advanceTimersByTime(450));
     expect(window.location.pathname).toBe('/profile');
     expect(container.querySelector('section#scene-2')).toBeInTheDocument();
     expect(container.querySelectorAll('main > section')).toHaveLength(1);

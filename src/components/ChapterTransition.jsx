@@ -11,7 +11,7 @@ import ShuffleText from './ShuffleText';
 import './ChapterTransition.css';
 
 const TRANSITION_DURATION = 900;
-const TRAVEL_DELAY = Math.round(TRANSITION_DURATION * 0.62);
+const TRAVEL_DELAY = Math.round(TRANSITION_DURATION * 0.5);
 const REDUCED_DURATION = 180;
 const WALK_FRAMES = [walkFrame0, walkFrame1, walkFrame2, walkFrame3];
 

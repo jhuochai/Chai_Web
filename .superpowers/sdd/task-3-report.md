@@ -25,3 +25,10 @@
 
 - 舊的 `playChapterTransition` 暫時保留為不動作相容出口，避免本任務提前改動 Hero/舊場景內容；Task 4 會將那些呼叫端改為正式 pathname。
 - 目前已不再把場景 hash 導入新的站點轉場流程。
+
+## Review follow-up
+
+- 導航時間修正為 900ms 轉場的真正中點 450ms，並更新 ChapterTransition 與 App 整合測試。
+- `ShuffleText` 新增 activation-level completion guard；完成後即使 text 或 reduced-motion 偏好更新，也不會重複呼叫 `onComplete`。進行中的 text 更新仍會取消舊 run，僅讓最新內容完成一次。
+- RED：450ms 中點、App 450ms 導航，以及完成後更新 text/reduced-motion 的回歸測試皆先失敗。
+- GREEN：focused + integration 7 個檔案、44 個測試通過；production build 與 `git diff --check` 通過。

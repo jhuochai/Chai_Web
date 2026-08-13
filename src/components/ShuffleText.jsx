@@ -17,14 +17,32 @@ export default function ShuffleText({ text, active, onComplete, className = '' }
   const reduce = useReducedMotion();
   const [display, setDisplay] = useState('');
   const timerRef = useRef(null);
+  const completedRef = useRef(false);
   const onCompleteRef = useRef(onComplete);
   onCompleteRef.current = onComplete;
 
   useEffect(() => {
     window.clearTimeout(timerRef.current);
-    if (!active || reduce) {
+    if (!active) {
+      completedRef.current = false;
       setDisplay(text);
-      if (active) onCompleteRef.current?.();
+      return undefined;
+    }
+
+    const complete = () => {
+      if (completedRef.current) return;
+      completedRef.current = true;
+      onCompleteRef.current?.();
+    };
+
+    if (completedRef.current) {
+      setDisplay(text);
+      return undefined;
+    }
+
+    if (reduce) {
+      setDisplay(text);
+      complete();
       return undefined;
     }
 
@@ -33,7 +51,7 @@ export default function ShuffleText({ text, active, onComplete, className = '' }
       step += 1;
       if (step * STEP_MS >= RUN_MS) {
         setDisplay(text);
-        onCompleteRef.current?.();
+        complete();
         return;
       }
       setDisplay(shuffledText(text, step));

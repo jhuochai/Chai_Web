@@ -42,19 +42,19 @@ describe('ChapterTransition', () => {
     expect(container.querySelector('.chapter-transition__frame')).not.toBeNull();
   });
 
-  it('travels exactly once at 62 percent and clears the transition at 900ms', () => {
+  it('travels exactly once at the 50 percent midpoint and clears the transition at 900ms', () => {
     const onTravel = vi.fn();
     const { container } = renderTransition(onTravel);
 
     act(() => playStationTransition('/portfolio'));
-    act(() => vi.advanceTimersByTime(557));
+    act(() => vi.advanceTimersByTime(449));
     expect(onTravel).not.toHaveBeenCalled();
 
     act(() => vi.advanceTimersByTime(1));
     expect(onTravel).toHaveBeenCalledOnce();
     expect(onTravel).toHaveBeenCalledWith('/portfolio', { immediate: false });
 
-    act(() => vi.advanceTimersByTime(342));
+    act(() => vi.advanceTimersByTime(450));
     expect(onTravel).toHaveBeenCalledOnce();
     expect(container.querySelector('.chapter-transition')).toBeNull();
   });
@@ -64,7 +64,7 @@ describe('ChapterTransition', () => {
     const { container } = renderTransition(onTravel);
 
     act(() => playStationTransition('/career-tree'));
-    act(() => vi.advanceTimersByTime(558));
+    act(() => vi.advanceTimersByTime(450));
 
     expect(onTravel).toHaveBeenCalledOnce();
     expect(container.querySelector('.chapter-transition__arrival')).toHaveTextContent('Route Tree Station');
