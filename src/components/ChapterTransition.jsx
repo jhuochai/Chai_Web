@@ -4,22 +4,19 @@ import walkFrame0 from '../assets/scenes/character-walk-aligned-0.webp';
 import walkFrame1 from '../assets/scenes/character-walk-aligned-1.webp';
 import walkFrame2 from '../assets/scenes/character-walk-aligned-2.webp';
 import walkFrame3 from '../assets/scenes/character-walk-aligned-3.webp';
-import { CHAPTER_TRANSITION_EVENT, isSafeChapterSelector } from '../lib/chapterTransition';
+import { getStationByRoute } from '../data/stations';
+import { useLanguage } from '../i18n/LanguageContext';
+import { STATION_TRANSITION_EVENT, isSafeStationPathname } from '../lib/chapterTransition';
+import ShuffleText from './ShuffleText';
 import './ChapterTransition.css';
 
 const TRANSITION_DURATION = 900;
 const TRAVEL_DELAY = Math.round(TRANSITION_DURATION * 0.62);
 const REDUCED_DURATION = 180;
 const WALK_FRAMES = [walkFrame0, walkFrame1, walkFrame2, walkFrame3];
-function focusChapterDestination(targetSelector) {
-  const destination = document.querySelector(targetSelector);
-  const focusTarget = destination?.querySelector('h1, h2, h3') ?? destination;
-  if (!focusTarget) return;
-  if (!focusTarget.hasAttribute('tabindex')) focusTarget.setAttribute('tabindex', '-1');
-  focusTarget.focus({ preventScroll: true });
-}
 
 export default function ChapterTransition({ onTravel }) {
+  const { lang } = useLanguage();
   const reduce = useReducedMotion();
   const [active, setActive] = useState(null);
   const activeRef = useRef(false);
@@ -36,7 +33,6 @@ export default function ChapterTransition({ onTravel }) {
       for (const timer of timersRef.current) window.clearTimeout(timer);
       timersRef.current.clear();
     };
-
     const schedule = (callback, delay) => {
       const timer = window.setTimeout(() => {
         timersRef.current.delete(timer);
@@ -44,41 +40,33 @@ export default function ChapterTransition({ onTravel }) {
       }, delay);
       timersRef.current.add(timer);
     };
-
     const onStart = (event) => {
-      const targetSelector = event.detail;
-      if (!isSafeChapterSelector(targetSelector) || activeRef.current) return;
-
+      const pathname = event.detail;
+      if (!isSafeStationPathname(pathname) || activeRef.current) return;
       const reduced = reduceRef.current;
       activeRef.current = true;
       travelledRef.current = false;
-      setActive({ targetSelector, reduced });
-
+      setActive({ pathname, reduced });
       const travel = () => {
         if (!activeRef.current || travelledRef.current) return;
         travelledRef.current = true;
-        onTravelRef.current?.(targetSelector, { immediate: reduced });
-        focusChapterDestination(targetSelector);
+        onTravelRef.current?.(pathname, { immediate: reduced });
       };
-
       const finish = () => {
         activeRef.current = false;
         setActive(null);
       };
-
       if (reduced) {
         travel();
         schedule(finish, REDUCED_DURATION);
         return;
       }
-
       schedule(travel, TRAVEL_DELAY);
       schedule(finish, TRANSITION_DURATION);
     };
-
-    window.addEventListener(CHAPTER_TRANSITION_EVENT, onStart);
+    window.addEventListener(STATION_TRANSITION_EVENT, onStart);
     return () => {
-      window.removeEventListener(CHAPTER_TRANSITION_EVENT, onStart);
+      window.removeEventListener(STATION_TRANSITION_EVENT, onStart);
       clearTimers();
       activeRef.current = false;
       travelledRef.current = false;
@@ -86,28 +74,22 @@ export default function ChapterTransition({ onTravel }) {
   }, []);
 
   if (!active) return null;
+  const station = getStationByRoute(active.pathname);
+  const destinationName = station?.[lang] ?? station?.en;
 
   return (
-    <div
-      className={`chapter-transition${active.reduced ? ' chapter-transition--reduced' : ''}`}
-      aria-hidden="true"
-      data-target={active.targetSelector}
-    >
+    <div className={`chapter-transition${active.reduced ? ' chapter-transition--reduced' : ''}`} aria-hidden="true" data-target={active.pathname}>
       <div className="chapter-transition__backdrop" />
+      <div className="chapter-transition__frame" />
       {!active.reduced && (
         <div className="chapter-transition__walker">
+          <div className="chapter-transition__walker-shadow" />
           {WALK_FRAMES.map((source, index) => (
-            <img
-              key={source}
-              src={source}
-              alt=""
-              className="chapter-transition__walker-frame"
-              draggable="false"
-              style={{ animationDelay: `${index * 80}ms` }}
-            />
+            <img key={source} src={source} alt="" className="chapter-transition__walker-frame" draggable="false" style={{ animationDelay: `${index * 80}ms` }} />
           ))}
         </div>
       )}
+      <p className="chapter-transition__arrival"><ShuffleText text={destinationName} active={!active.reduced} /></p>
     </div>
   );
 }

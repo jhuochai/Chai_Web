@@ -1,7 +1,8 @@
 import { act, fireEvent, render } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { LanguageProvider } from '../i18n/LanguageContext';
 import ChapterTransition from './ChapterTransition';
-import { playChapterTransition } from '../lib/chapterTransition';
+import { playStationTransition } from '../lib/chapterTransition';
 
 const motionState = vi.hoisted(() => ({ reduced: false }));
 
@@ -9,6 +10,10 @@ vi.mock('motion/react', async (importOriginal) => ({
   ...(await importOriginal()),
   useReducedMotion: () => motionState.reduced,
 }));
+
+function renderTransition(onTravel) {
+  return render(<LanguageProvider><ChapterTransition onTravel={onTravel} /></LanguageProvider>);
+}
 
 describe('ChapterTransition', () => {
   beforeEach(() => {
@@ -22,76 +27,73 @@ describe('ChapterTransition', () => {
   });
 
   it('renders no overlay or walker until a valid navigation request starts', () => {
-    const { container } = render(<ChapterTransition onTravel={() => {}} />);
+    const { container } = renderTransition(() => {});
 
     expect(container.querySelector('.chapter-transition')).toBeNull();
     expect(container.querySelector('.chapter-transition__walker')).toBeNull();
 
-    act(() => playChapterTransition('not a selector'));
+    act(() => playStationTransition('/making-of'));
     expect(container.querySelector('.chapter-transition')).toBeNull();
 
-    act(() => playChapterTransition('#scene-3'));
+    act(() => playStationTransition('/career-tree'));
     expect(container.querySelector('.chapter-transition')).not.toBeNull();
     expect(container.querySelector('.chapter-transition__walker')).not.toBeNull();
     expect(container.querySelectorAll('.chapter-transition__walker-frame')).toHaveLength(4);
+    expect(container.querySelector('.chapter-transition__frame')).not.toBeNull();
   });
 
   it('travels exactly once at 62 percent and clears the transition at 900ms', () => {
     const onTravel = vi.fn();
-    const { container } = render(<ChapterTransition onTravel={onTravel} />);
+    const { container } = renderTransition(onTravel);
 
-    act(() => playChapterTransition('#scene-5'));
+    act(() => playStationTransition('/portfolio'));
     act(() => vi.advanceTimersByTime(557));
     expect(onTravel).not.toHaveBeenCalled();
 
     act(() => vi.advanceTimersByTime(1));
     expect(onTravel).toHaveBeenCalledOnce();
-    expect(onTravel).toHaveBeenCalledWith('#scene-5', { immediate: false });
+    expect(onTravel).toHaveBeenCalledWith('/portfolio', { immediate: false });
 
     act(() => vi.advanceTimersByTime(342));
     expect(onTravel).toHaveBeenCalledOnce();
     expect(container.querySelector('.chapter-transition')).toBeNull();
   });
 
-  it('moves keyboard focus into the destination without triggering a second scroll', () => {
+  it('keeps a localized one-language arrival indicator at the midpoint', () => {
     const onTravel = vi.fn();
-    render(
-      <>
-        <section id="scene-3"><h2>Career Tree</h2></section>
-        <ChapterTransition onTravel={onTravel} />
-      </>
-    );
+    const { container } = renderTransition(onTravel);
 
-    act(() => playChapterTransition('#scene-3'));
+    act(() => playStationTransition('/career-tree'));
     act(() => vi.advanceTimersByTime(558));
 
     expect(onTravel).toHaveBeenCalledOnce();
-    expect(document.activeElement).toBe(document.querySelector('#scene-3 h2'));
+    expect(container.querySelector('.chapter-transition__arrival')).toHaveTextContent('Route Tree Station');
+    expect(container.querySelector('.chapter-transition__arrival')).not.toHaveTextContent('職涯路線樹站');
   });
 
   it('ignores repeated travel requests while one transition owns the screen', () => {
     const onTravel = vi.fn();
-    render(<ChapterTransition onTravel={onTravel} />);
+    renderTransition(onTravel);
 
     act(() => {
-      playChapterTransition('#scene-3');
-      playChapterTransition('#scene-7');
+      playStationTransition('/career-tree');
+      playStationTransition('/portfolio');
       vi.advanceTimersByTime(900);
     });
 
     expect(onTravel).toHaveBeenCalledOnce();
-    expect(onTravel).toHaveBeenCalledWith('#scene-3', { immediate: false });
+    expect(onTravel).toHaveBeenCalledWith('/career-tree', { immediate: false });
   });
 
   it('travels immediately with only a short crossfade under reduced motion', () => {
     motionState.reduced = true;
     const onTravel = vi.fn();
-    const { container } = render(<ChapterTransition onTravel={onTravel} />);
+    const { container } = renderTransition(onTravel);
 
-    act(() => playChapterTransition('#scene-2'));
+    act(() => playStationTransition('/profile'));
 
     expect(onTravel).toHaveBeenCalledOnce();
-    expect(onTravel).toHaveBeenCalledWith('#scene-2', { immediate: true });
+    expect(onTravel).toHaveBeenCalledWith('/profile', { immediate: true });
     expect(container.querySelector('.chapter-transition--reduced')).not.toBeNull();
     expect(container.querySelector('.chapter-transition__walker')).toBeNull();
 
@@ -101,13 +103,13 @@ describe('ChapterTransition', () => {
 
   it('clears pending travel work and the global listener when unmounted', () => {
     const onTravel = vi.fn();
-    const { unmount } = render(<ChapterTransition onTravel={onTravel} />);
+    const { unmount } = renderTransition(onTravel);
 
-    act(() => playChapterTransition('#scene-3'));
+    act(() => playStationTransition('/career-tree'));
     unmount();
     act(() => {
       vi.advanceTimersByTime(900);
-      playChapterTransition('#scene-5');
+      playStationTransition('/portfolio');
       vi.advanceTimersByTime(900);
     });
 
@@ -116,9 +118,9 @@ describe('ChapterTransition', () => {
 
   it('never starts an idle interval', () => {
     const intervalSpy = vi.spyOn(window, 'setInterval');
-    render(<ChapterTransition onTravel={() => {}} />);
+    renderTransition(() => {});
 
-    fireEvent(window, new CustomEvent('chapter-transition:start', { detail: '#scene-3' }));
+    fireEvent(window, new CustomEvent('station-transition:start', { detail: '/career-tree' }));
 
     expect(intervalSpy).not.toHaveBeenCalled();
   });

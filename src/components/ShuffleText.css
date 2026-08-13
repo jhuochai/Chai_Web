@@ -1,0 +1,23 @@
+.shuffle-text {
+  position: relative;
+  display: inline-grid;
+}
+
+.shuffle-text__accessible,
+.shuffle-text__visual {
+  grid-area: 1 / 1;
+}
+
+.shuffle-text__accessible {
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+.shuffle-text__visual {
+  font: inherit;
+}

@@ -1,13 +1,18 @@
-export const CHAPTER_TRANSITION_EVENT = 'chapter-transition:start';
+export const STATION_TRANSITION_EVENT = 'station-transition:start';
 
-const SAFE_CHAPTER_SELECTOR = /^#scene-\d+$/;
+const SAFE_STATION_PATHNAMES = new Set(['/', '/profile', '/career-tree', '/portfolio']);
 
-export function isSafeChapterSelector(targetSelector) {
-  return typeof targetSelector === 'string' && SAFE_CHAPTER_SELECTOR.test(targetSelector);
+export function isSafeStationPathname(pathname) {
+  return typeof pathname === 'string' && SAFE_STATION_PATHNAMES.has(pathname);
 }
 
-export function playChapterTransition(targetSelector) {
-  if (!isSafeChapterSelector(targetSelector) || typeof window === 'undefined') return false;
-  window.dispatchEvent(new CustomEvent(CHAPTER_TRANSITION_EVENT, { detail: targetSelector }));
+export function playStationTransition(pathname) {
+  if (!isSafeStationPathname(pathname) || typeof window === 'undefined') return false;
+  window.dispatchEvent(new CustomEvent(STATION_TRANSITION_EVENT, { detail: pathname }));
   return true;
 }
+
+// Retained briefly for the next station-content task, where old scene links are replaced.
+export const CHAPTER_TRANSITION_EVENT = STATION_TRANSITION_EVENT;
+export const isSafeChapterSelector = () => false;
+export const playChapterTransition = () => false;

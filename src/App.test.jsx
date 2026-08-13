@@ -53,13 +53,21 @@ describe('App station routes', () => {
 
   it('navigates through the route map without rendering another station', () => {
     const { container } = render(<App />);
+    vi.useFakeTimers();
+    const scrollTo = vi.spyOn(window, 'scrollTo').mockImplementation(() => {});
 
     fireEvent.click(screen.getByRole('button', { name: 'Open route map' }));
     fireEvent.click(screen.getByRole('button', { name: "Captain's Office" }));
 
+    expect(window.location.pathname).toBe('/');
+    act(() => vi.advanceTimersByTime(558));
     expect(window.location.pathname).toBe('/profile');
     expect(container.querySelector('section#scene-2')).toBeInTheDocument();
     expect(container.querySelectorAll('main > section')).toHaveLength(1);
+    expect(scrollTo).toHaveBeenCalledWith({ top: 0, left: 0, behavior: 'auto' });
+    act(() => vi.advanceTimersByTime(1));
+    expect(document.activeElement).toBe(container.querySelector('#scene-2 h2'));
+    vi.useRealTimers();
   });
 
   it('pauses the shared scroll engine while the loading overlay is active', () => {
