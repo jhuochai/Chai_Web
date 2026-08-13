@@ -35,11 +35,11 @@ describe('App', () => {
     window.history.replaceState({}, '', '/making-of');
     render(<App />);
 
-    expect(screen.getByRole('heading', { name: /網站製作幕後/i })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /網站製作幕後|drafts behind this site/i })).toBeInTheDocument();
     window.history.replaceState({}, '', '/');
     fireEvent.popState(window);
 
-    expect(screen.queryByRole('heading', { name: /網站製作幕後/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: /網站製作幕後|drafts behind this site/i })).not.toBeInTheDocument();
   });
 
   it('wraps every chapter in one continuous atmospheric scene flow', () => {

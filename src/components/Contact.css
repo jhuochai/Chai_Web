@@ -38,8 +38,10 @@
   color: var(--parchment);
 }
 
-.closing__panel {
-  padding: clamp(20px, 3vw, 32px) clamp(28px, 4vw, 48px);
+.closing__links-wrap {
+  width: min(100%, 920px);
+  padding-block: 24px;
+  border-block: 1px solid var(--hairline-soft);
 }
 
 .closing__links {

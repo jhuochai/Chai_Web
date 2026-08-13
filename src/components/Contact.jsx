@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { EnvelopeSimple, LinkedinLogo, FileArrowDown, ChatCircleText } from '@phosphor-icons/react';
-import FramedPanel from './FramedPanel';
 import RevealSection from './RevealSection';
 import MessageDialog from './MessageDialog';
 import { useLanguage } from '../i18n/LanguageContext';
@@ -19,9 +18,8 @@ export default function Contact() {
           <h2 className="closing__statement">{closingStatement}</h2>
         </RevealSection>
 
-        <RevealSection as="div" delay={0.1}>
-          <FramedPanel variant="deco" className="closing__panel">
-            <ul className="closing__links">
+        <RevealSection as="div" delay={0.1} className="closing__links-wrap">
+            <ul className="closing__links" aria-label={t.nav?.contact ?? 'Contact'}>
               <li>
                 <a href={`mailto:${contact.email}`}>
                   <EnvelopeSimple size={20} weight="light" />
@@ -30,7 +28,7 @@ export default function Contact() {
               </li>
               <li>
                 {contact.linkedin ? (
-                  <a href={contact.linkedin}>
+                  <a href={contact.linkedin} target="_blank" rel="noreferrer">
                     <LinkedinLogo size={20} weight="light" />
                     <span>LinkedIn</span>
                   </a>
@@ -48,7 +46,6 @@ export default function Contact() {
                 </a>
               </li>
             </ul>
-          </FramedPanel>
         </RevealSection>
 
         <RevealSection as="div" delay={0.15}>
