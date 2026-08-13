@@ -52,8 +52,11 @@ describe('createCareerCameraController', () => {
   it('supports upward touch and focused ArrowUp alternatives, then cleans listeners', () => {
     const stage = makeStage();
     const controller = createCareerCameraController({ stage });
-    stage.dispatchEvent(pointer('pointerdown', { pointerId: 3, clientY: 220 }));
-    const move = pointer('pointermove', { pointerId: 3, clientY: 100 });
+    stage.dispatchEvent(pointer('pointerdown', { pointerId: 3, pointerType: 'touch', clientY: 220 }));
+    const belowThreshold = pointer('pointermove', { pointerId: 3, pointerType: 'touch', clientY: 208 });
+    stage.dispatchEvent(belowThreshold);
+    expect(belowThreshold.defaultPrevented).toBe(false);
+    const move = pointer('pointermove', { pointerId: 3, pointerType: 'touch', clientY: 100 });
     stage.dispatchEvent(move);
     stage.dispatchEvent(pointer('pointerup', { pointerId: 3, clientY: 100 }));
     expect(controller.getProgress()).toBeGreaterThan(0);
@@ -93,6 +96,21 @@ describe('createCareerCameraController', () => {
     window.dispatchEvent(new Event('blur'));
     controller.destroy();
     expect(stage.releasePointerCapture).toHaveBeenCalled();
+    stage.remove();
+  });
+
+  it('releases a touch gesture at a boundary so normal page panning can resume', () => {
+    const stage = makeStage();
+    stage.setPointerCapture = vi.fn();
+    stage.hasPointerCapture = vi.fn(() => true);
+    stage.releasePointerCapture = vi.fn();
+    const controller = createCareerCameraController({ stage, initialProgress: 1 });
+    stage.dispatchEvent(pointer('pointerdown', { pointerId: 18, pointerType: 'touch', clientY: 240 }));
+    const atBoundary = pointer('pointermove', { pointerId: 18, pointerType: 'touch', clientY: 140 });
+    stage.dispatchEvent(atBoundary);
+    expect(atBoundary.defaultPrevented).toBe(false);
+    expect(stage.releasePointerCapture).toHaveBeenCalledWith(18);
+    controller.destroy();
     stage.remove();
   });
 });

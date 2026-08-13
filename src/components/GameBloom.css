@@ -28,17 +28,27 @@
   transform: translateY(5px);
 }
 
+.game-bloom__mask {
+  position: absolute;
+  z-index: 0;
+  inset: -14px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(7, 12, 22, 0.9) 0%, rgba(8, 13, 22, 0.7) 52%, transparent 77%);
+  filter: blur(5px);
+  pointer-events: none;
+}
+
 .game-bloom__stem {
   position: absolute;
-  z-index: -1;
+  z-index: 1;
   left: 50%;
-  top: 55%;
+  top: 54%;
   width: clamp(4px, 0.5vw, 7px);
-  height: clamp(28px, 4.2vw, 52px);
+  height: var(--stem-length, 32px);
   border-radius: 999px 999px 46% 46%;
   background: linear-gradient(90deg, #3a3222, #bd9653 52%, #514127);
   box-shadow: 0 0 8px rgba(209, 164, 86, 0.24);
-  transform: translateX(-50%) rotate(9deg);
+  transform: translateX(-50%) rotate(var(--stem-angle, 9deg));
   transform-origin: top center;
 }
 
@@ -53,17 +63,18 @@
   width: var(--bloom-visual);
   height: var(--bloom-visual);
   object-fit: contain;
-  transform: translate(-50%, -50%);
+  z-index: 2;
+  transform: translate(-50%, -50%) rotate(var(--bloom-rotation, 0deg));
   pointer-events: none;
   user-select: none;
-  filter: sepia(0.42) saturate(0.82) hue-rotate(164deg) brightness(1.08) drop-shadow(0 10px 9px rgba(1, 7, 18, 0.72)) drop-shadow(0 0 8px rgba(138, 158, 255, 0.3));
+  filter: sepia(0.42) saturate(0.82) hue-rotate(calc(164deg + var(--bloom-hue, 0deg))) brightness(1.08) drop-shadow(0 10px 9px rgba(1, 7, 18, 0.72)) drop-shadow(0 0 8px rgba(138, 158, 255, 0.3));
   transition: filter 0.24s ease, transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .game-bloom:hover > img,
 .game-bloom:focus-visible > img {
-  transform: translate(-50%, -54%) scale(1.08);
-  filter: drop-shadow(0 14px 11px rgba(1, 7, 18, 0.78)) drop-shadow(0 0 12px rgba(181, 197, 255, 0.42));
+  transform: translate(-50%, -54%) rotate(var(--bloom-rotation, 0deg)) scale(1.08);
+  filter: sepia(0.42) saturate(0.82) hue-rotate(calc(164deg + var(--bloom-hue, 0deg))) brightness(1.14) drop-shadow(0 14px 11px rgba(1, 7, 18, 0.78)) drop-shadow(0 0 12px rgba(181, 197, 255, 0.42));
 }
 
 .game-bloom__name {

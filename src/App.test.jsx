@@ -32,6 +32,14 @@ describe('App station routes', () => {
     expect(container.querySelectorAll('.station-controls')).toHaveLength(1);
   });
 
+  it('embeds career station controls inside the route-tree stage instead of below it', () => {
+    window.history.replaceState({}, '', '/career-tree');
+    const { container } = render(<App />);
+    const stage = container.querySelector('.career-tree__stage');
+    expect(stage.querySelector('.station-controls')).toBeInTheDocument();
+    expect(container.querySelector('main > .station-controls')).toBeNull();
+  });
+
   it('renders the making-of archive without the formal station navigation', () => {
     window.history.replaceState({}, '', '/making-of');
     const { container } = render(<App />);

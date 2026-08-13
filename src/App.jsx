@@ -16,17 +16,18 @@ import { getSiteRoute, navigateToRoute } from './lib/siteRoute';
 import { playStationTransition } from './lib/chapterTransition';
 
 function StationScene({ route, onTravel }) {
+  const controls = <StationControls currentRoute={route} onTravel={onTravel} />;
   const station = {
     cockpit: <Hero />,
     profile: <Intro />,
-    'career-tree': <CareerTree />,
+    'career-tree': <CareerTree controls={controls} />,
     portfolio: <Portfolio />,
   }[route] ?? <Hero />;
 
   return (
     <main className="scene-flow">
       {station}
-      <StationControls currentRoute={route} onTravel={onTravel} />
+      {route !== 'career-tree' && controls}
     </main>
   );
 }

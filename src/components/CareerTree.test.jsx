@@ -129,6 +129,7 @@ describe('CareerTree', () => {
     expect(new Set(assets).size).toBe(1);
     expect(container.querySelectorAll('[data-ribbon-family="route-gold"]').length).toBe(4);
     expect(container.querySelectorAll('[data-branch-anchor]').length).toBe(4);
+    expect(container.querySelectorAll('[data-testid="career-ribbon-mask"]')).toHaveLength(4);
     expect(
       Array.from(container.querySelectorAll('[data-ribbon-id]')).map((node) =>
         node.getAttribute('data-ribbon-id')
@@ -165,6 +166,9 @@ describe('CareerTree', () => {
     expect(blooms).toHaveLength(11);
     expect(blooms.every((node) => node.dataset.family === 'lumen-forge-bloom')).toBe(true);
     expect(blooms.every((node) => node.dataset.branchAnchor)).toBeTruthy();
+    expect(new Set(blooms.map((node) => node.dataset.asset)).size).toBe(1);
+    expect(blooms.every((node) => node.dataset.stemEndpoint)).toBeTruthy();
+    expect(screen.getAllByTestId('game-bloom-mask')).toHaveLength(11);
     expect(screen.queryByText(/Bookshelf|書架上還有/i)).not.toBeInTheDocument();
   });
 

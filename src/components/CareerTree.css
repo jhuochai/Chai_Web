@@ -10,6 +10,7 @@
   position: relative;
   min-height: 100dvh;
   overflow: hidden;
+  touch-action: pan-y;
   background: var(--void-raised);
 }
 
@@ -101,7 +102,7 @@
 
 .career-tree__station-label {
   position: absolute;
-  top: clamp(22px, 5vh, 54px);
+  top: max(calc(var(--nav-h) + env(safe-area-inset-top) + 14px), 74px);
   left: 50%;
   z-index: 2;
   margin: 0;
@@ -141,6 +142,25 @@
 .career-tree__camera-controls button:last-child { border-right: 0; }
 .career-tree__camera-controls button:hover,
 .career-tree__camera-controls button:focus-visible { background: rgba(201, 162, 75, 0.2); color: var(--gold-bright); }
+
+.career-tree__station-controls {
+  position: absolute;
+  z-index: 4;
+  right: clamp(14px, 3vw, 36px);
+  bottom: max(12px, env(safe-area-inset-bottom));
+  width: min(520px, calc(100% - 28px));
+}
+
+.career-tree__station-controls .station-controls {
+  width: 100%;
+  padding: 0;
+}
+
+.career-tree__station-controls .station-controls__console {
+  width: 100%;
+  background: linear-gradient(110deg, rgba(18, 22, 24, 0.88), rgba(52, 45, 25, 0.76));
+  backdrop-filter: blur(8px);
+}
 
 /* --- hotspots: glow halos over the ribbons/flowers painted in the
    background art itself (no duplicate sprite on top) --- */
@@ -203,21 +223,21 @@
   animation: none;
   cursor: grab;
   touch-action: none;
+  isolation: isolate;
 }
 
-.career-tree__spot--ribbon::before {
-  content: '';
+.career-tree__ribbon-mask {
   position: absolute;
-  inset: -14px -18px;
-  z-index: -1;
+  inset: -18px -24px;
+  z-index: 0;
   border-radius: 46%;
   background: radial-gradient(
     ellipse at center,
-    rgba(20, 29, 28, 0.7) 0%,
-    rgba(27, 35, 32, 0.44) 48%,
+    rgba(11, 15, 17, 0.9) 0%,
+    rgba(13, 17, 19, 0.74) 48%,
     transparent 76%
   );
-  filter: blur(4px);
+  filter: blur(7px);
   pointer-events: none;
 }
 
@@ -239,21 +259,25 @@
   transform: translateY(var(--ribbon-pull, 0px));
   transform-origin: 50% 0;
   transition: transform 0.44s var(--ease-reveal), filter 0.28s ease;
-  filter: sepia(0.9) saturate(0.72) hue-rotate(350deg) brightness(1.12) drop-shadow(0 10px 12px rgba(0, 0, 0, 0.46)) drop-shadow(0 0 7px rgba(215, 177, 91, 0.22));
+  position: relative;
+  z-index: 1;
+  --ribbon-gold: sepia(0.96) saturate(1.42) hue-rotate(348deg) brightness(1.25) contrast(1.06);
+  filter: var(--ribbon-gold) drop-shadow(0 10px 12px rgba(0, 0, 0, 0.46)) drop-shadow(0 0 7px rgba(226, 184, 86, 0.34));
   pointer-events: none;
   user-select: none;
 }
 
 .career-tree__spot--ribbon.is-pulling img {
   transition: filter 0.28s ease;
-  filter: drop-shadow(0 18px 18px rgba(0, 0, 0, 0.56));
+  filter: var(--ribbon-gold) drop-shadow(0 18px 18px rgba(0, 0, 0, 0.56)) drop-shadow(0 0 11px rgba(238, 198, 98, 0.42));
 }
 
 .career-tree__spot--ribbon:hover img,
 .career-tree__spot--ribbon:focus-visible img {
   filter:
+    var(--ribbon-gold)
     drop-shadow(0 12px 14px rgba(0, 0, 0, 0.5))
-    drop-shadow(0 0 8px rgba(204, 180, 126, 0.18));
+    drop-shadow(0 0 10px rgba(238, 198, 98, 0.48));
 }
 
 @keyframes spot-pulse {
@@ -330,6 +354,9 @@
 
   .career-tree__toggle { bottom: max(88px, calc(env(safe-area-inset-bottom) + 66px)); }
   .career-tree__camera-controls { bottom: max(72px, calc(env(safe-area-inset-bottom) + 54px)); }
+
+  .career-tree__station-controls { right: 14px; bottom: max(10px, env(safe-area-inset-bottom)); }
+  .career-tree__station-controls .station-controls__console { flex-direction: row; }
 
   .career-tree__hint {
     max-width: calc(100vw - 32px);

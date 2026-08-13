@@ -9,16 +9,6 @@ import { useLanguage } from '../i18n/LanguageContext';
 import treeDay from '../assets/scenes/career-tree-day-factory-v2.webp';
 import treeNight from '../assets/scenes/career-tree-night-factory.webp';
 import bloom01 from '../assets/scenes/blooms/bloom-01.webp';
-import bloom02 from '../assets/scenes/blooms/bloom-02.webp';
-import bloom03 from '../assets/scenes/blooms/bloom-03.webp';
-import bloom04 from '../assets/scenes/blooms/bloom-04.webp';
-import bloom05 from '../assets/scenes/blooms/bloom-05.webp';
-import bloom06 from '../assets/scenes/blooms/bloom-06.webp';
-import bloom07 from '../assets/scenes/blooms/bloom-07.webp';
-import bloom08 from '../assets/scenes/blooms/bloom-08.webp';
-import bloom09 from '../assets/scenes/blooms/bloom-09.webp';
-import bloom10 from '../assets/scenes/blooms/bloom-10.webp';
-import bloom11 from '../assets/scenes/blooms/bloom-11.webp';
 import ribbonSmoke from '../assets/scenes/ribbons/ribbon-smoke.webp';
 import { createCareerCameraController, INTERACTIVE_PROGRESS } from './careerCamera';
 import './CareerTree.css';
@@ -39,32 +29,20 @@ const RIBBON_SPOTS = {
 const RIBBON_ASSET = ribbonSmoke;
 
 const GAME_BLOOM_LAYOUT = {
-  'wild-rift': { left: '40.8%', top: '61.3%', mobileLeft: '18%', mobileTop: '62%', size: 'lg', branch: 'lower-left' },
-  'identity-v': { left: '34.8%', top: '48.2%', mobileLeft: '50%', mobileTop: '48%', size: 'md', branch: 'crown-left' },
-  stardew: { left: '44.5%', top: '26.4%', mobileLeft: '50%', mobileTop: '24%', size: 'sm', branch: 'crown-center' },
-  lol: { left: '58.2%', top: '30.1%', mobileLeft: '82%', mobileTop: '27%', size: 'lg', branch: 'crown-right' },
-  valorant: { left: '34.7%', top: '36.4%', mobileLeft: '18%', mobileTop: '32%', size: 'sm', branch: 'crown-left' },
-  r6: { left: '64.4%', top: '42.6%', mobileLeft: '82%', mobileTop: '42%', size: 'md', branch: 'crown-right' },
-  gta5: { left: '53.4%', top: '44.7%', mobileLeft: '50%', mobileTop: '37%', size: 'sm', branch: 'crown-center' },
-  minecraft: { left: '63.1%', top: '54.7%', mobileLeft: '82%', mobileTop: '58%', size: 'md', branch: 'lower-right' },
-  palworld: { left: '60.1%', top: '65.5%', mobileLeft: '72%', mobileTop: '72%', size: 'lg', branch: 'lower-right' },
-  'dont-starve': { left: '47.5%', top: '51.2%', mobileLeft: '18%', mobileTop: '48%', size: 'md', branch: 'crown-left' },
-  raft: { left: '52.4%', top: '59.2%', mobileLeft: '36%', mobileTop: '72%', size: 'sm', branch: 'lower-left' },
+  'wild-rift': { left: '40.8%', top: '61.3%', mobileLeft: '18%', mobileTop: '62%', size: 'lg', branch: 'lower-left', stemAngle: '-28deg', stemLength: '36px', rotation: '-12deg', hue: '4deg' },
+  'identity-v': { left: '34.8%', top: '48.2%', mobileLeft: '50%', mobileTop: '48%', size: 'md', branch: 'crown-left', stemAngle: '18deg', stemLength: '32px', rotation: '9deg', hue: '-8deg' },
+  stardew: { left: '44.5%', top: '26.4%', mobileLeft: '50%', mobileTop: '24%', size: 'sm', branch: 'crown-center', stemAngle: '-12deg', stemLength: '30px', rotation: '-5deg', hue: '8deg' },
+  lol: { left: '58.2%', top: '30.1%', mobileLeft: '82%', mobileTop: '27%', size: 'lg', branch: 'crown-right', stemAngle: '24deg', stemLength: '39px', rotation: '13deg', hue: '-4deg' },
+  valorant: { left: '34.7%', top: '36.4%', mobileLeft: '18%', mobileTop: '32%', size: 'sm', branch: 'crown-left', stemAngle: '-22deg', stemLength: '28px', rotation: '6deg', hue: '12deg' },
+  r6: { left: '64.4%', top: '42.6%', mobileLeft: '82%', mobileTop: '42%', size: 'md', branch: 'crown-right', stemAngle: '30deg', stemLength: '34px', rotation: '-10deg', hue: '-10deg' },
+  gta5: { left: '53.4%', top: '44.7%', mobileLeft: '50%', mobileTop: '37%', size: 'sm', branch: 'crown-center', stemAngle: '-8deg', stemLength: '30px', rotation: '11deg', hue: '6deg' },
+  minecraft: { left: '63.1%', top: '54.7%', mobileLeft: '82%', mobileTop: '58%', size: 'md', branch: 'lower-right', stemAngle: '16deg', stemLength: '36px', rotation: '-8deg', hue: '2deg' },
+  palworld: { left: '60.1%', top: '65.5%', mobileLeft: '72%', mobileTop: '72%', size: 'lg', branch: 'lower-right', stemAngle: '-20deg', stemLength: '40px', rotation: '7deg', hue: '-6deg' },
+  'dont-starve': { left: '47.5%', top: '51.2%', mobileLeft: '18%', mobileTop: '48%', size: 'md', branch: 'crown-left', stemAngle: '12deg', stemLength: '32px', rotation: '-13deg', hue: '10deg' },
+  raft: { left: '52.4%', top: '59.2%', mobileLeft: '36%', mobileTop: '72%', size: 'sm', branch: 'lower-left', stemAngle: '-18deg', stemLength: '29px', rotation: '4deg', hue: '-2deg' },
 };
 
-const GAME_BLOOM_ASSETS = [
-  bloom01,
-  bloom02,
-  bloom03,
-  bloom04,
-  bloom05,
-  bloom06,
-  bloom07,
-  bloom08,
-  bloom09,
-  bloom10,
-  bloom11,
-];
+const GAME_BLOOM_ASSET = bloom01;
 
 const LEAF_COLORS = ['rgba(201,162,75,0.75)', 'rgba(224,188,106,0.6)', 'rgba(110,139,61,0.65)'];
 
@@ -150,7 +128,7 @@ function LeafCanvas({ dense }) {
  * sun/moon toggle crossfades the sky; clicking a hotspot opens its
  * chapter in a framed card while the leaves pick up.
  */
-export default function CareerTree() {
+export default function CareerTree({ controls }) {
   const { t, lang } = useLanguage();
   const reduce = useReducedMotion();
   const tree = t.careerTree;
@@ -165,7 +143,7 @@ export default function CareerTree() {
   const controllerRef = useRef(null);
   const ribbonTriggerRefs = useRef(new Map());
 
-  const nightItems = tree.flowers.slice(0, GAME_BLOOM_ASSETS.length);
+  const nightItems = tree.flowers;
   const items = night ? nightItems : tree.ribbons;
   const spots = RIBBON_SPOTS;
   const activeItem = activeId
@@ -254,7 +232,7 @@ export default function CareerTree() {
               draggable="false"
             />
             {night
-              ? items.map((item, index) => {
+              ? items.map((item) => {
                   const position = GAME_BLOOM_LAYOUT[item.id];
                   return (
                     <GameBloom
@@ -262,7 +240,7 @@ export default function CareerTree() {
                       game={item}
                       position={position}
                       size={position.size}
-                      asset={GAME_BLOOM_ASSETS[index]}
+                      asset={GAME_BLOOM_ASSET}
                       active={activeId === item.id}
                       disabled={!interactive}
                       onOpen={setActiveId}
@@ -292,6 +270,7 @@ export default function CareerTree() {
                         aria-expanded={activeId === item.id}
                         disabled={!interactive}
                       >
+                        <span className="career-tree__ribbon-mask" data-testid="career-ribbon-mask" aria-hidden="true" />
                         <img
                           src={RIBBON_ASSET}
                           alt=""
@@ -340,6 +319,8 @@ export default function CareerTree() {
         <p className="career-tree__hint" aria-live="polite">
           {hint}
         </p>
+
+        {controls && <div className="career-tree__station-controls">{controls}</div>}
 
       </div>
 
