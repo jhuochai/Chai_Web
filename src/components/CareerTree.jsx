@@ -31,8 +31,8 @@ const RIBBON_ASSET = ribbonSmoke;
 const GAME_BLOOM_LAYOUT = {
   'wild-rift': { left: '40.8%', top: '61.3%', mobileLeft: '18%', mobileTop: '62%', size: 'lg', branch: 'lower-left', stemAngle: '-28deg', stemLength: '36px', rotation: '-12deg', hue: '4deg' },
   'identity-v': { left: '34.8%', top: '48.2%', mobileLeft: '50%', mobileTop: '48%', size: 'md', branch: 'crown-left', stemAngle: '18deg', stemLength: '32px', rotation: '9deg', hue: '-8deg' },
-  stardew: { left: '44.5%', top: '26.4%', mobileLeft: '50%', mobileTop: '24%', size: 'sm', branch: 'crown-center', stemAngle: '-12deg', stemLength: '30px', rotation: '-5deg', hue: '8deg' },
-  lol: { left: '58.2%', top: '30.1%', mobileLeft: '82%', mobileTop: '27%', size: 'lg', branch: 'crown-right', stemAngle: '24deg', stemLength: '39px', rotation: '13deg', hue: '-4deg' },
+  stardew: { left: '44.5%', top: '32.2%', mobileLeft: '50%', mobileTop: '30%', size: 'sm', branch: 'crown-center', stemAngle: '-12deg', stemLength: '30px', rotation: '-5deg', hue: '8deg' },
+  lol: { left: '58.2%', top: '34.4%', mobileLeft: '82%', mobileTop: '31%', size: 'lg', branch: 'crown-right', stemAngle: '24deg', stemLength: '39px', rotation: '13deg', hue: '-4deg' },
   valorant: { left: '34.7%', top: '36.4%', mobileLeft: '18%', mobileTop: '32%', size: 'sm', branch: 'crown-left', stemAngle: '-22deg', stemLength: '28px', rotation: '6deg', hue: '12deg' },
   r6: { left: '64.4%', top: '42.6%', mobileLeft: '82%', mobileTop: '42%', size: 'md', branch: 'crown-right', stemAngle: '30deg', stemLength: '34px', rotation: '-10deg', hue: '-10deg' },
   gta5: { left: '53.4%', top: '44.7%', mobileLeft: '50%', mobileTop: '37%', size: 'sm', branch: 'crown-center', stemAngle: '-8deg', stemLength: '30px', rotation: '11deg', hue: '6deg' },

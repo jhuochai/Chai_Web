@@ -10,7 +10,7 @@
   position: relative;
   min-height: 100dvh;
   overflow: hidden;
-  touch-action: pan-y;
+  touch-action: none;
   background: var(--void-raised);
 }
 
@@ -74,7 +74,7 @@
 .career-tree__toggle {
   position: absolute;
   top: auto;
-  bottom: max(clamp(82px, 12vh, 118px), calc(env(safe-area-inset-bottom) + 72px));
+  bottom: max(186px, calc(env(safe-area-inset-bottom) + 174px));
   right: clamp(16px, 3vw, 40px);
   z-index: 3;
   display: inline-flex;
@@ -89,7 +89,7 @@
 .career-tree__hint {
   position: absolute;
   left: 50%;
-  bottom: max(clamp(18px, 3.5vh, 40px), env(safe-area-inset-bottom));
+  bottom: max(132px, calc(env(safe-area-inset-bottom) + 120px));
   transform: translateX(-50%);
   z-index: 2;
   font-family: var(--mono);
@@ -118,7 +118,7 @@
 .career-tree__camera-controls {
   position: absolute;
   left: clamp(16px, 3vw, 40px);
-  bottom: max(clamp(72px, 10vh, 104px), calc(env(safe-area-inset-bottom) + 62px));
+  bottom: max(186px, calc(env(safe-area-inset-bottom) + 174px));
   z-index: 4;
   display: inline-flex;
   overflow: hidden;
@@ -228,7 +228,7 @@
 
 .career-tree__ribbon-mask {
   position: absolute;
-  inset: -18px -24px;
+  inset: -24px -30px;
   z-index: 0;
   border-radius: 46%;
   background: radial-gradient(
@@ -352,10 +352,10 @@
     padding: 10px 14px;
   }
 
-  .career-tree__toggle { bottom: max(88px, calc(env(safe-area-inset-bottom) + 66px)); }
-  .career-tree__camera-controls { bottom: max(72px, calc(env(safe-area-inset-bottom) + 54px)); }
+  .career-tree__toggle { bottom: max(176px, calc(env(safe-area-inset-bottom) + 164px)); }
+  .career-tree__camera-controls { bottom: max(176px, calc(env(safe-area-inset-bottom) + 164px)); }
 
-  .career-tree__station-controls { right: 14px; bottom: max(10px, env(safe-area-inset-bottom)); }
+  .career-tree__station-controls { right: 14px; bottom: max(12px, env(safe-area-inset-bottom)); }
   .career-tree__station-controls .station-controls__console { flex-direction: row; }
 
   .career-tree__hint {

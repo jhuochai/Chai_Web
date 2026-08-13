@@ -1,5 +1,6 @@
 import { act, render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
+import { readFileSync } from 'node:fs';
 import CareerTree from './CareerTree';
 import { LanguageProvider } from '../i18n/LanguageContext';
 import { content } from '../data/content';
@@ -13,6 +14,37 @@ function renderTree() {
 }
 
 describe('CareerTree', () => {
+  const careerStyles = readFileSync('src/components/CareerTree.css', 'utf8');
+  const bloomStyles = readFileSync('src/components/GameBloom.css', 'utf8');
+
+  it('fully owns stage touch input and reserves separate mobile lanes for controls, hint, and mode', () => {
+    expect(careerStyles).toMatch(/\.career-tree__stage\s*\{[^}]*touch-action:\s*none;/s);
+    expect(careerStyles).toMatch(/\.career-tree__hint\s*\{[^}]*bottom:\s*max\(132px/s);
+    expect(careerStyles).toMatch(/\.career-tree__camera-controls\s*\{[^}]*bottom:\s*max\(186px/s);
+    expect(careerStyles).toMatch(/\.career-tree__toggle\s*\{[^}]*bottom:\s*max\(186px/s);
+    expect(careerStyles).toMatch(/@media \(max-width: 600px\)[\s\S]*?\.career-tree__station-controls \.station-controls__console \{ flex-direction: row; \}/);
+  });
+
+  it.each([
+    { width: 360, height: 800 },
+    { width: 390, height: 844 },
+  ])('keeps the mobile control lanes separate at $width?$height', ({ height }) => {
+    // The embedded station console is 64px tall: two 44px controls plus 10px vertical padding.
+    const stationControls = { top: height - 76, bottom: height - 12 };
+    const hint = { top: height - 172, bottom: height - 132 };
+    const cameraAndMode = { top: height - 220, bottom: height - 176 };
+    const overlaps = (a, b) => a.top < b.bottom && a.bottom > b.top;
+
+    expect(overlaps(stationControls, hint)).toBe(false);
+    expect(overlaps(hint, cameraAndMode)).toBe(false);
+    expect(careerStyles).toMatch(/\.career-tree__station-controls \{ right: 14px; bottom: max\(12px, env\(safe-area-inset-bottom\)\); \}/);
+    expect(careerStyles).toMatch(/\.career-tree__camera-controls \{ bottom: max\(176px, calc\(env\(safe-area-inset-bottom\) \+ 164px\)\); \}/);
+  });
+
+  it('uses oversized local masks to conceal baked attachments', () => {
+    expect(careerStyles).toMatch(/\.career-tree__ribbon-mask\s*\{[^}]*inset:\s*-24px -30px;/s);
+    expect(bloomStyles).toMatch(/\.game-bloom__mask\s*\{[^}]*inset:\s*-20px;/s);
+  });
   it('does not render the retired ScrollTrigger camera pathway', () => {
     const { container } = renderTree();
     expect(container.querySelector('[data-scroll-trigger]')).toBeNull();
@@ -188,6 +220,18 @@ describe('CareerTree', () => {
       return counts;
     }, {});
     expect(Math.max(...Object.values(branchCounts))).toBeLessThanOrEqual(3);
+  });
+
+  it('keeps the top canopy flowers below the fixed navigation zone', () => {
+    renderTree();
+    fireEvent(window, new CustomEvent('career-tree:test-progress', { detail: 0.8 }));
+    fireEvent.click(screen.getByRole('button', { name: 'Switch to night' }));
+    const stardew = screen.getByRole('button', { name: content.en.careerTree.flowers[2].name });
+    const lol = screen.getByRole('button', { name: content.en.careerTree.flowers[3].name });
+    expect(Number.parseFloat(stardew.style.top)).toBeGreaterThanOrEqual(32);
+    expect(Number.parseFloat(lol.style.top)).toBeGreaterThanOrEqual(34);
+    expect(Number.parseFloat(stardew.style.getPropertyValue('--bloom-mobile-top'))).toBeGreaterThanOrEqual(30);
+    expect(Number.parseFloat(lol.style.getPropertyValue('--bloom-mobile-top'))).toBeGreaterThanOrEqual(31);
   });
 
   it.each([

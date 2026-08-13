@@ -24,8 +24,8 @@ export function createCareerCameraController({ stage, onProgress = () => {}, red
   const change = (amount) => setProgress(progress + amount);
   const onWheel = (event) => {
     if (!event.deltaY) return;
-    const changed = change(-event.deltaY / 850);
-    if (changed) event.preventDefault();
+    change(-event.deltaY / 850);
+    event.preventDefault();
   };
   const releasePointer = (pointerId) => {
     if (pointerId == null || !stage.hasPointerCapture?.(pointerId)) return;
@@ -50,9 +50,8 @@ export function createCareerCameraController({ stage, onProgress = () => {}, red
     const delta = pointer.lastY - event.clientY;
     pointer.lastY = event.clientY;
     if (!delta) return;
-    const changed = change(delta / 180);
-    if (changed) event.preventDefault();
-    else resetPointer();
+    change(delta / 180);
+    event.preventDefault();
   };
   const onKeyDown = (event) => {
     if (event.key === 'ArrowUp') {

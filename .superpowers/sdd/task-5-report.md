@@ -1,41 +1,29 @@
-# Task 5 完成報告：航跡樹靠近鏡頭與附著物統一
+# Task 5 — 航跡樹
 
-## 範圍
+## 實作摘要
 
-- 新增不依賴頁面捲動的 `createCareerCameraController`：負值滾輪／上滑／ArrowUp 靠近，正值／下滑／ArrowDown 退回；0 與 1 邊界會釋放頁面控制。
-- 以 `pointermove` 的 18px 閾值接管手勢，並完整清理 pointer capture、取消、遺失 capture、視窗失焦與卸載。
-- 移除 CareerTree 已渲染的 ScrollTrigger 鏡頭；近景門檻為 0.75，reduced motion 直接進入 progress 1。
-- 移除舞台外長標題，改為舞台內單語短標籤：Career/Games 或 航跡/遊戲；加入可見的靠近／退回替代控制。
-- 四條絲帶共用同一金色視覺家族與枝條 anchor 資料；11 朵花加入一致的 `lumen-forge-bloom` family、枝條資料與 stem。
-- 維持既有 RibbonSheet、GameBloom 的對話框、焦點、取消、媒體行為。
+- 以 `createCareerCameraController` 取代舊有 ScrollTrigger 鏡頭；向上／負 `deltaY` 接近樹、向下／正 `deltaY` 拉遠。鍵盤、觸控與 reduced motion 均有等效操作。
+- Pointer 在移動超過 18px 後接管，包含 capture、lostcapture、pointercancel 與 blur 的完整清理；reduced motion 預設進入可立即使用的近景（progress 1）。
+- 移除外部大標題，畫內標示依語系僅顯示「航跡／Career」與「遊戲／Games」；四條絲帶為同一金黃色系並附著枝條。
+- 夜景 11 朵花採同一 bloom 基底、獨立短花梗與枝條錨點，遠近狀態及既有詳細資訊對話框均保留。
+- Career route 的 StationControls 以 slot 方式嵌入 stage 底部，而非作為 route 外的 sibling。
 
-## TDD 證據
+## 首輪複審修正
 
-- RED：`npm.cmd test -- src/components/careerCamera.test.js src/components/CareerTree.test.jsx` 在新增 controller 前失敗，原因為 `careerCamera` 模組不存在，並列出長標題、反向滾輪、替代控制與視覺 family 的預期失敗。
-- GREEN：上述新測試及既有 CareerTree、GameBloom、RibbonSheet 測試均已通過。
+- 每朵花與每條絲帶加入局部遮罩，壓暗背景中已烘焙的舊花／藍粉絲帶，避免雙重視覺。
+- 絲帶 idle、hover、focus 與 pulling 狀態一律保留 gold filter。
+- 導覽標籤下移至 fixed nav 與 safe-area 下方；以 `impact-qa=1` 保留檢視入口。
+
+## 第二輪複審修正
+
+- 航跡樹 stage 改為 `touch-action: none`，指標輸入自進場到邊界均由 camera controller 接管；只有 pointerup、pointercancel、lost pointer capture 與 blur 會釋放手勢狀態。
+- 行動版站點控制列固定在 safe-area 上方 12px，提示保留於 132px，鏡頭控制與日夜切換放於 176px 的同一高度、左右分置；360×800 與 390×844 的幾何契約測試確認三列不重疊，且兩個站點按鈕維持單列。
+- Stardew Valley 與 League of Legends 的花朵位置降至桌面版 32.2%／34.4%、行動版 30%／31%，避開固定導覽列。
+- 絲帶與花朵遮罩各擴大至 `-24px -30px` 與 `-20px`，並以 source-style 契約測試鎖定，持續壓住背景內建的重複附件。
 
 ## 驗證
 
-- 聚焦與整合測試：7 files、71 tests passed。
-- `npm.cmd run lint`：無錯誤；保留既有 `LanguageContext` 與 `SmoothScroll` 兩項警告。
-- `npm.cmd run build`：通過；保留既有 bundle 大小警告。
-- `git diff --check`：通過。
-- Browser QA：1280×720、795×698、644×698、390×844、360×800 都確認近景可互動、四絲帶存在、日夜切換可用；實測向上滾動靠近、向下滾動退回；夜間只掛載 11 朵花、日間絲帶未掛載，範例花朵對話框可正常開啟，console 無 error/warning。
-
-## 整合提醒
-
-## 審查修正（follow-up）
-
-- 11 朵花現在共用一個既有透明 bloom 基礎素材；尺寸、旋轉、微色差、枝端 stem angle/length 由資料驅動，並以局部深色 radial mask 壓暗背景既有花朵。
-- 絲帶的金色 filter 統一為 CSS 變數，idle、hover、focus、pulling 都保留金黃材質與暖光；每個 attachment 加入局部遮罩壓住背景藍粉絲帶。
-- Career route 的 `StationControls` 現由 `CareerTree` slot 置於舞台底緣；其他 station 保持原本版面。
-- 加入 touch pointerType、閾值前不接管、邊界釋放 capture 的控制器測試；stage 使用 `touch-action: pan-y` 以保留頁面平移。
-- station label 下移到固定 Nav 與 safe-area 後方；`impact-qa` 維持 0.75 近景啟用。
-
-## Follow-up 驗證
-
-- 相關測試：5 files、54 tests passed。
-- Lint：無錯誤，保留既有 LanguageContext／SmoothScroll warnings。
-- Build、diff-check：通過；LoadingScreen、loadingFire、ClickSpark 本次無差異。
-- Browser runtime 本回合無可用連線，五尺寸實畫面 QA 無法重新執行；已記錄為限制，不以此替代自動測試。
-- 全套測試另有 Portfolio／CircularGallery 並行未完成工作造成 5 個失敗與 OGL WebGL rejection；與本次檔案無關，未納入提交。
+- `npm.cmd test -- src/components/careerCamera.test.js src/components/CareerTree.test.jsx src/App.test.jsx src/components/GameBloom.test.jsx src/components/CareerRibbonSheet.test.jsx`：57 tests passed。
+- `npm.cmd run lint`：通過；僅保留既有 SmoothScroll、LanguageContext 警告。
+- `npm.cmd run build`、`git diff --check`：通過。
+- 本輪瀏覽器 runtime 不可用，未宣稱完成瀏覽器 QA；pointer、source-style 與 360/390 幾何契約均以自動測試覆蓋。

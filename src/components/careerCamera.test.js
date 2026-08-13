@@ -32,19 +32,19 @@ describe('createCareerCameraController', () => {
     stage.remove();
   });
 
-  it('clamps progress and releases the page at either boundary', () => {
+  it('clamps progress and keeps the route stage in control at either boundary', () => {
     const stage = makeStage();
     const controller = createCareerCameraController({ stage, initialProgress: 1 });
     const forward = new WheelEvent('wheel', { deltaY: -80, cancelable: true });
     stage.dispatchEvent(forward);
     expect(controller.getProgress()).toBe(1);
-    expect(forward.defaultPrevented).toBe(false);
+    expect(forward.defaultPrevented).toBe(true);
 
     controller.setProgress(0);
     const retreat = new WheelEvent('wheel', { deltaY: 80, cancelable: true });
     stage.dispatchEvent(retreat);
     expect(controller.getProgress()).toBe(0);
-    expect(retreat.defaultPrevented).toBe(false);
+    expect(retreat.defaultPrevented).toBe(true);
     controller.destroy();
     stage.remove();
   });
@@ -80,7 +80,7 @@ describe('createCareerCameraController', () => {
     stage.remove();
   });
 
-  it('captures and releases a consumed pointer at boundaries, cancellation, blur, and destroy', () => {
+  it('releases a captured pointer on pointerup, cancellation, blur, and destroy', () => {
     const stage = makeStage();
     stage.setPointerCapture = vi.fn();
     stage.hasPointerCapture = vi.fn(() => true);
@@ -89,6 +89,8 @@ describe('createCareerCameraController', () => {
     stage.dispatchEvent(pointer('pointerdown', { pointerId: 9, clientY: 220 }));
     stage.dispatchEvent(pointer('pointermove', { pointerId: 9, clientY: 100 }));
     expect(stage.setPointerCapture).toHaveBeenCalledWith(9);
+    expect(stage.releasePointerCapture).not.toHaveBeenCalled();
+    stage.dispatchEvent(pointer('pointerup', { pointerId: 9, clientY: 100 }));
     expect(stage.releasePointerCapture).toHaveBeenCalledWith(9);
 
     stage.dispatchEvent(pointer('pointerdown', { pointerId: 10, clientY: 220 }));
@@ -99,7 +101,7 @@ describe('createCareerCameraController', () => {
     stage.remove();
   });
 
-  it('releases a touch gesture at a boundary so normal page panning can resume', () => {
+  it('keeps a touch capture at a boundary so the route stage remains reliable', () => {
     const stage = makeStage();
     stage.setPointerCapture = vi.fn();
     stage.hasPointerCapture = vi.fn(() => true);
@@ -108,8 +110,8 @@ describe('createCareerCameraController', () => {
     stage.dispatchEvent(pointer('pointerdown', { pointerId: 18, pointerType: 'touch', clientY: 240 }));
     const atBoundary = pointer('pointermove', { pointerId: 18, pointerType: 'touch', clientY: 140 });
     stage.dispatchEvent(atBoundary);
-    expect(atBoundary.defaultPrevented).toBe(false);
-    expect(stage.releasePointerCapture).toHaveBeenCalledWith(18);
+    expect(atBoundary.defaultPrevented).toBe(true);
+    expect(stage.releasePointerCapture).not.toHaveBeenCalled();
     controller.destroy();
     stage.remove();
   });
