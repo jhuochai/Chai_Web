@@ -7,7 +7,10 @@ const routeMocks = vi.hoisted(() => ({ navigateToRoute: vi.fn() }));
 vi.mock('../lib/siteRoute', () => routeMocks);
 
 describe('MakingOf', () => {
-  beforeEach(() => routeMocks.navigateToRoute.mockClear());
+  beforeEach(() => {
+    routeMocks.navigateToRoute.mockClear();
+    vi.spyOn(window, 'scrollTo').mockImplementation(() => {});
+  });
 
   it('renders a five-stage making-of archive from localized content', () => {
     const { container } = render(
@@ -31,5 +34,16 @@ describe('MakingOf', () => {
 
     fireEvent.click(screen.getByRole('button', { name: /觀景台|observatory/i }));
     expect(routeMocks.navigateToRoute).toHaveBeenCalledWith('/');
+    expect(window.scrollTo).toHaveBeenCalledWith({ top: 0, behavior: 'auto' });
+  });
+
+  it('renders the Traditional Chinese archive when Chinese is selected', () => {
+    window.localStorage.setItem('site-lang', 'zh');
+    render(
+      <LanguageProvider>
+        <MakingOf />
+      </LanguageProvider>
+    );
+    expect(screen.getByRole('heading', { name: '這個網站走過的草稿' })).toBeInTheDocument();
   });
 });

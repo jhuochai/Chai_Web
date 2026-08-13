@@ -55,6 +55,8 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  min-height: 44px;
+  padding-block: 10px;
   text-decoration: none;
   color: var(--parchment-dim);
   font-family: var(--mono);
@@ -66,16 +68,6 @@
 .closing__links a:hover,
 .closing__links a:focus-visible {
   color: var(--gold-bright);
-}
-
-.closing__links-pending {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: var(--parchment-faint);
-  font-family: var(--mono);
-  font-size: 13.5px;
-  letter-spacing: 0.02em;
 }
 
 .closing__message-btn {

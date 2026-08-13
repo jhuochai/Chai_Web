@@ -9,11 +9,15 @@ export default function MakingOf() {
   const labels = lang === 'zh'
     ? { archive: '廢案檔案室', back: '回到觀景台', note: '這裡保留的不只是成品，而是一路做決定的痕跡。' }
     : { archive: 'Discarded Draft Archive', back: 'Return to the observatory', note: 'Not just the outcome, but the decisions that shaped it.' };
+  const returnToObservatory = () => {
+    window.scrollTo({ top: 0, behavior: 'auto' });
+    navigateToRoute('/');
+  };
 
   return (
     <main className="making-of">
       <header className="making-of__masthead container">
-        <button className="making-of__back" type="button" onClick={() => navigateToRoute('/')}>
+        <button className="making-of__back" type="button" onClick={returnToObservatory}>
           <ArrowLeft aria-hidden="true" size={18} />
           {labels.back}
         </button>
