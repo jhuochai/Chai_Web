@@ -31,6 +31,7 @@ const interfaceCopy = {
 };
 
 const clampApproach = (value) => Math.max(0, Math.min(1, value));
+const POINTER_GESTURE_THRESHOLD = 36;
 
 export default function Hero({ onTravel = playStationTransition }) {
   const reduce = useReducedMotion();
@@ -40,6 +41,7 @@ export default function Hero({ onTravel = playStationTransition }) {
   const [approach, setApproach] = useState(reduce ? 1 : 0);
   const cockpitRef = useRef(null);
   const approachRef = useRef(approach);
+  const pointerGestureRef = useRef(null);
 
   useEffect(() => {
     const next = reduce ? 1 : 0;
@@ -62,8 +64,53 @@ export default function Hero({ onTravel = playStationTransition }) {
       setApproach(next);
     };
 
+    const clearPointerGesture = () => {
+      pointerGestureRef.current = null;
+    };
+
+    const completePointerGesture = (event) => {
+      const gesture = pointerGestureRef.current;
+      if (!gesture || gesture.pointerId !== event.pointerId) return;
+      clearPointerGesture();
+      const distance = event.clientY - gesture.startY;
+      if (Math.abs(distance) < POINTER_GESTURE_THRESHOLD) return;
+      const next = clampApproach(approachRef.current + (distance < 0 ? 1 : -1));
+      if (next === approachRef.current) return;
+      event.preventDefault();
+      approachRef.current = next;
+      setApproach(next);
+    };
+
+    const onPointerDown = (event) => {
+      if (event.isPrimary === false && event.pointerType) return;
+      pointerGestureRef.current = { pointerId: event.pointerId, startY: event.clientY };
+      cockpit.setPointerCapture?.(event.pointerId);
+    };
+
+    const onPointerUp = (event) => {
+      completePointerGesture(event);
+      if (cockpit.hasPointerCapture?.(event.pointerId)) cockpit.releasePointerCapture?.(event.pointerId);
+    };
+
+    const onLostPointerCapture = (event) => {
+      if (pointerGestureRef.current?.pointerId === event.pointerId) clearPointerGesture();
+    };
+
     cockpit.addEventListener('wheel', onWheel, { passive: false });
-    return () => cockpit.removeEventListener('wheel', onWheel);
+    cockpit.addEventListener('pointerdown', onPointerDown);
+    cockpit.addEventListener('pointerup', onPointerUp, { passive: false });
+    cockpit.addEventListener('pointercancel', clearPointerGesture);
+    cockpit.addEventListener('lostpointercapture', onLostPointerCapture);
+    window.addEventListener('blur', clearPointerGesture);
+    return () => {
+      cockpit.removeEventListener('wheel', onWheel);
+      cockpit.removeEventListener('pointerdown', onPointerDown);
+      cockpit.removeEventListener('pointerup', onPointerUp);
+      cockpit.removeEventListener('pointercancel', clearPointerGesture);
+      cockpit.removeEventListener('lostpointercapture', onLostPointerCapture);
+      window.removeEventListener('blur', clearPointerGesture);
+      clearPointerGesture();
+    };
   }, [reduce]);
 
   const setCockpitApproach = (next) => {

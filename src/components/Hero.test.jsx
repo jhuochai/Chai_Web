@@ -3,6 +3,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import Hero from './Hero';
 import { LanguageProvider } from '../i18n/LanguageContext';
 import { content } from '../data/content';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 
 const routeMocks = vi.hoisted(() => ({ navigateToRoute: vi.fn() }));
 vi.mock('../lib/siteRoute', () => routeMocks);
@@ -13,9 +15,20 @@ vi.mock('motion/react', async (importOriginal) => ({
   useReducedMotion: () => motionState.reduced,
 }));
 
+const heroStyles = readFileSync(join(process.cwd(), 'src', 'components', 'Hero.css'), 'utf8');
+
 function renderHero(props = {}) {
   window.localStorage.setItem('site-lang', 'en');
   return render(<LanguageProvider><Hero {...props} /></LanguageProvider>);
+}
+
+function pointerEvent(type, pointerId, clientY) {
+  const event = new Event(type, { bubbles: true, cancelable: true });
+  Object.defineProperties(event, {
+    pointerId: { value: pointerId },
+    clientY: { value: clientY },
+  });
+  return event;
 }
 
 describe('Hero cockpit', () => {
@@ -73,6 +86,56 @@ describe('Hero cockpit', () => {
     expect(container.querySelector('.hero__captain--initial')).toBeInTheDocument();
   });
 
+  it('maps a deliberate upward pointer gesture forward and a downward gesture back', () => {
+    const { container } = renderHero();
+    const cockpit = container.querySelector('.hero__cockpit');
+
+    fireEvent.pointerDown(cockpit, { pointerId: 7, clientY: 420 });
+    fireEvent.pointerUp(cockpit, { pointerId: 7, clientY: 356 });
+    expect(cockpit).toHaveAttribute('data-approach', '1');
+
+    fireEvent.pointerDown(cockpit, { pointerId: 8, clientY: 356 });
+    fireEvent.pointerUp(cockpit, { pointerId: 8, clientY: 432 });
+    expect(cockpit).toHaveAttribute('data-approach', '0');
+  });
+
+  it('ignores taps and clears an interrupted pointer gesture without changing approach', () => {
+    const { container } = renderHero();
+    const cockpit = container.querySelector('.hero__cockpit');
+
+    fireEvent.pointerDown(cockpit, { pointerId: 11, clientY: 300 });
+    fireEvent.pointerUp(cockpit, { pointerId: 11, clientY: 282 });
+    expect(cockpit).toHaveAttribute('data-approach', '0');
+
+    fireEvent.pointerDown(cockpit, { pointerId: 12, clientY: 300 });
+    fireEvent.pointerCancel(cockpit, { pointerId: 12 });
+    fireEvent.pointerUp(cockpit, { pointerId: 12, clientY: 220 });
+    expect(cockpit).toHaveAttribute('data-approach', '0');
+
+    fireEvent.pointerDown(cockpit, { pointerId: 13, clientY: 300 });
+    fireEvent(window, new Event('blur'));
+    fireEvent.pointerUp(cockpit, { pointerId: 13, clientY: 220 });
+    expect(cockpit).toHaveAttribute('data-approach', '0');
+
+    fireEvent.pointerDown(cockpit, { pointerId: 14, clientY: 300 });
+    fireEvent.lostPointerCapture(cockpit, { pointerId: 14 });
+    fireEvent.pointerUp(cockpit, { pointerId: 14, clientY: 220 });
+    expect(cockpit).toHaveAttribute('data-approach', '0');
+  });
+
+  it('does not prevent a pointer gesture that tries to move past an approach boundary', () => {
+    const { container } = renderHero();
+    const cockpit = container.querySelector('.hero__cockpit');
+    const down = pointerEvent('pointerdown', 15, 300);
+    const up = pointerEvent('pointerup', 15, 390);
+
+    cockpit.dispatchEvent(down);
+    cockpit.dispatchEvent(up);
+
+    expect(cockpit).toHaveAttribute('data-approach', '0');
+    expect(up.defaultPrevented).toBe(false);
+  });
+
   it('does not bind cockpit wheel motion when reduced motion is requested', () => {
     motionState.reduced = true;
     const { container, unmount } = renderHero();
@@ -80,6 +143,9 @@ describe('Hero cockpit', () => {
 
     expect(cockpit).toHaveAttribute('data-approach', '1');
     fireEvent.wheel(cockpit, { deltaY: 800 });
+    expect(cockpit).toHaveAttribute('data-approach', '1');
+    fireEvent.pointerDown(cockpit, { pointerId: 21, clientY: 250 });
+    fireEvent.pointerUp(cockpit, { pointerId: 21, clientY: 340 });
     expect(cockpit).toHaveAttribute('data-approach', '1');
     unmount();
   });
@@ -89,5 +155,15 @@ describe('Hero cockpit', () => {
     const { unmount } = renderHero();
     unmount();
     expect(removeListener.mock.calls.some(([event]) => event === 'wheel')).toBe(true);
+    expect(removeListener.mock.calls.some(([event]) => event === 'pointerdown')).toBe(true);
+  });
+
+  it('keeps a readable archive hint visible in the compact mobile rule', () => {
+    expect(heroStyles).toMatch(
+      /@media\s*\(max-width:700px\)[\s\S]*?\.hero__trash-hint\{[^}]*display:(?:block|inline-block)[^}]*white-space:normal/s
+    );
+    expect(heroStyles).not.toMatch(
+      /@media\s*\(max-width:700px\)[\s\S]*?\.hero__trash-hint\{[^}]*display:\s*none/s
+    );
   });
 });

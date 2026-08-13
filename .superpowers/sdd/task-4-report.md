@@ -24,3 +24,11 @@
 - Production build: successful. Vite continues to report the existing advisory that the combined client chunk exceeds 500 kB after minification.
 - `git diff --check`: clean.
 - Browser QA: checked 1280×720, 644×698, and 390×844. All cockpit controls and archive bin remained reachable, no horizontal overflow was observed, and the preview console contained no errors. The 390px Captain's Office dossier also fit without horizontal overflow.
+
+## Review follow-up
+
+- Added vertical pointer/touch approach handling with a 36px threshold: upward gestures advance toward the controls and downward gestures retreat. A tap does not count as a gesture.
+- Pointer handling only prevents the gesture when approach progress can change. At either boundary it leaves default behavior untouched. Reduced motion still skips both wheel and pointer gesture handling.
+- Incomplete gestures are cleared by `pointercancel`, `lostpointercapture`, window blur, and unmount cleanup.
+- The compact breakpoint now retains a short, wrapping archive hint below the trash bin instead of hiding the only making-of label.
+- Regression coverage includes gesture direction, tap threshold, boundary behavior, interruption cleanup, reduced motion, unmount listener cleanup, and the mobile visible-hint CSS contract.
