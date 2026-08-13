@@ -68,27 +68,33 @@ export default function Hero({ onTravel = playStationTransition }) {
       pointerGestureRef.current = null;
     };
 
-    const completePointerGesture = (event) => {
+    const consumePointerGesture = (event) => {
       const gesture = pointerGestureRef.current;
       if (!gesture || gesture.pointerId !== event.pointerId) return;
-      clearPointerGesture();
+      if (gesture.consumed) {
+        event.preventDefault();
+        return;
+      }
       const distance = event.clientY - gesture.startY;
       if (Math.abs(distance) < POINTER_GESTURE_THRESHOLD) return;
       const next = clampApproach(approachRef.current + (distance < 0 ? 1 : -1));
       if (next === approachRef.current) return;
       event.preventDefault();
+      gesture.consumed = true;
       approachRef.current = next;
       setApproach(next);
     };
 
     const onPointerDown = (event) => {
       if (event.isPrimary === false && event.pointerType) return;
-      pointerGestureRef.current = { pointerId: event.pointerId, startY: event.clientY };
+      pointerGestureRef.current = { pointerId: event.pointerId, startY: event.clientY, consumed: false };
       cockpit.setPointerCapture?.(event.pointerId);
     };
 
+    const onPointerMove = (event) => consumePointerGesture(event);
+
     const onPointerUp = (event) => {
-      completePointerGesture(event);
+      if (pointerGestureRef.current?.pointerId === event.pointerId) clearPointerGesture();
       if (cockpit.hasPointerCapture?.(event.pointerId)) cockpit.releasePointerCapture?.(event.pointerId);
     };
 
@@ -98,13 +104,15 @@ export default function Hero({ onTravel = playStationTransition }) {
 
     cockpit.addEventListener('wheel', onWheel, { passive: false });
     cockpit.addEventListener('pointerdown', onPointerDown);
-    cockpit.addEventListener('pointerup', onPointerUp, { passive: false });
+    cockpit.addEventListener('pointermove', onPointerMove, { passive: false });
+    cockpit.addEventListener('pointerup', onPointerUp);
     cockpit.addEventListener('pointercancel', clearPointerGesture);
     cockpit.addEventListener('lostpointercapture', onLostPointerCapture);
     window.addEventListener('blur', clearPointerGesture);
     return () => {
       cockpit.removeEventListener('wheel', onWheel);
       cockpit.removeEventListener('pointerdown', onPointerDown);
+      cockpit.removeEventListener('pointermove', onPointerMove);
       cockpit.removeEventListener('pointerup', onPointerUp);
       cockpit.removeEventListener('pointercancel', clearPointerGesture);
       cockpit.removeEventListener('lostpointercapture', onLostPointerCapture);

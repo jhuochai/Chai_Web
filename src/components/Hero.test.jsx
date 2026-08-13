@@ -86,17 +86,27 @@ describe('Hero cockpit', () => {
     expect(container.querySelector('.hero__captain--initial')).toBeInTheDocument();
   });
 
-  it('maps a deliberate upward pointer gesture forward and a downward gesture back', () => {
+  it('consumes one deliberate pointer move immediately and does not replay it on pointerup', () => {
     const { container } = renderHero();
     const cockpit = container.querySelector('.hero__cockpit');
+    const forwardMove = pointerEvent('pointermove', 7, 356);
 
     fireEvent.pointerDown(cockpit, { pointerId: 7, clientY: 420 });
-    fireEvent.pointerUp(cockpit, { pointerId: 7, clientY: 356 });
+    fireEvent(cockpit, forwardMove);
     expect(cockpit).toHaveAttribute('data-approach', '1');
+    expect(forwardMove.defaultPrevented).toBe(true);
+
+    const repeatMove = pointerEvent('pointermove', 7, 320);
+    fireEvent(cockpit, repeatMove);
+    fireEvent.pointerUp(cockpit, { pointerId: 7, clientY: 320 });
+    expect(cockpit).toHaveAttribute('data-approach', '1');
+    expect(repeatMove.defaultPrevented).toBe(true);
 
     fireEvent.pointerDown(cockpit, { pointerId: 8, clientY: 356 });
-    fireEvent.pointerUp(cockpit, { pointerId: 8, clientY: 432 });
+    const backwardMove = pointerEvent('pointermove', 8, 432);
+    fireEvent(cockpit, backwardMove);
     expect(cockpit).toHaveAttribute('data-approach', '0');
+    expect(backwardMove.defaultPrevented).toBe(true);
   });
 
   it('ignores taps and clears an interrupted pointer gesture without changing approach', () => {
@@ -104,22 +114,23 @@ describe('Hero cockpit', () => {
     const cockpit = container.querySelector('.hero__cockpit');
 
     fireEvent.pointerDown(cockpit, { pointerId: 11, clientY: 300 });
+    fireEvent.pointerMove(cockpit, { pointerId: 11, clientY: 282 });
     fireEvent.pointerUp(cockpit, { pointerId: 11, clientY: 282 });
     expect(cockpit).toHaveAttribute('data-approach', '0');
 
     fireEvent.pointerDown(cockpit, { pointerId: 12, clientY: 300 });
     fireEvent.pointerCancel(cockpit, { pointerId: 12 });
-    fireEvent.pointerUp(cockpit, { pointerId: 12, clientY: 220 });
+    fireEvent.pointerMove(cockpit, { pointerId: 12, clientY: 220 });
     expect(cockpit).toHaveAttribute('data-approach', '0');
 
     fireEvent.pointerDown(cockpit, { pointerId: 13, clientY: 300 });
     fireEvent(window, new Event('blur'));
-    fireEvent.pointerUp(cockpit, { pointerId: 13, clientY: 220 });
+    fireEvent.pointerMove(cockpit, { pointerId: 13, clientY: 220 });
     expect(cockpit).toHaveAttribute('data-approach', '0');
 
     fireEvent.pointerDown(cockpit, { pointerId: 14, clientY: 300 });
     fireEvent.lostPointerCapture(cockpit, { pointerId: 14 });
-    fireEvent.pointerUp(cockpit, { pointerId: 14, clientY: 220 });
+    fireEvent.pointerMove(cockpit, { pointerId: 14, clientY: 220 });
     expect(cockpit).toHaveAttribute('data-approach', '0');
   });
 
@@ -127,13 +138,13 @@ describe('Hero cockpit', () => {
     const { container } = renderHero();
     const cockpit = container.querySelector('.hero__cockpit');
     const down = pointerEvent('pointerdown', 15, 300);
-    const up = pointerEvent('pointerup', 15, 390);
+    const move = pointerEvent('pointermove', 15, 390);
 
-    cockpit.dispatchEvent(down);
-    cockpit.dispatchEvent(up);
+    fireEvent(cockpit, down);
+    fireEvent(cockpit, move);
 
     expect(cockpit).toHaveAttribute('data-approach', '0');
-    expect(up.defaultPrevented).toBe(false);
+    expect(move.defaultPrevented).toBe(false);
   });
 
   it('does not bind cockpit wheel motion when reduced motion is requested', () => {
@@ -145,7 +156,7 @@ describe('Hero cockpit', () => {
     fireEvent.wheel(cockpit, { deltaY: 800 });
     expect(cockpit).toHaveAttribute('data-approach', '1');
     fireEvent.pointerDown(cockpit, { pointerId: 21, clientY: 250 });
-    fireEvent.pointerUp(cockpit, { pointerId: 21, clientY: 340 });
+    fireEvent.pointerMove(cockpit, { pointerId: 21, clientY: 340 });
     expect(cockpit).toHaveAttribute('data-approach', '1');
     unmount();
   });
@@ -156,6 +167,7 @@ describe('Hero cockpit', () => {
     unmount();
     expect(removeListener.mock.calls.some(([event]) => event === 'wheel')).toBe(true);
     expect(removeListener.mock.calls.some(([event]) => event === 'pointerdown')).toBe(true);
+    expect(removeListener.mock.calls.some(([event]) => event === 'pointermove')).toBe(true);
   });
 
   it('keeps a readable archive hint visible in the compact mobile rule', () => {

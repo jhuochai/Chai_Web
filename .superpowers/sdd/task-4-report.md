@@ -32,3 +32,8 @@
 - Incomplete gestures are cleared by `pointercancel`, `lostpointercapture`, window blur, and unmount cleanup.
 - The compact breakpoint now retains a short, wrapping archive hint below the trash bin instead of hiding the only making-of label.
 - Regression coverage includes gesture direction, tap threshold, boundary behavior, interruption cleanup, reduced motion, unmount listener cleanup, and the mobile visible-hint CSS contract.
+
+## Second review follow-up
+
+- Moved pointer gesture consumption from `pointerup` to a non-passive `pointermove` listener. The first threshold-crossing move that can change approach calls `preventDefault()` and commits exactly once; later moves in that consumed gesture remain consumed, while `pointerup` only clears state.
+- Pointer moves aimed beyond the current 0/1 boundary are not prevented, so ordinary page scrolling remains available at the boundary. Tests now cover immediate move prevention, one-time state change, cancellation cleanup, boundary release, and listener teardown.
