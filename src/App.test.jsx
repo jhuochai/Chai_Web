@@ -97,4 +97,28 @@ describe('App station routes', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Close communications console' }));
     await waitFor(() => expect(routeMapButton).toHaveFocus());
   });
+
+  it('keeps scrolling locked when loading finishes behind comms and restores it after close', async () => {
+    vi.useFakeTimers();
+    render(<App />);
+
+    fireEvent.pointerDown(screen.getByRole('button', { name: /enter the site/i }), {
+      clientX: 100,
+      clientY: 100,
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'Open route map' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Comms' }));
+    expect(document.body.style.overflow).toBe('hidden');
+
+    act(() => vi.advanceTimersByTime(430));
+    act(() => vi.advanceTimersByTime(950));
+    act(() => vi.advanceTimersByTime(550));
+    expect(screen.getByRole('dialog', { name: 'Ship communications console' })).toBeInTheDocument();
+    expect(document.body.style.overflow).toBe('hidden');
+
+    fireEvent.click(screen.getByRole('button', { name: 'Close communications console' }));
+    act(() => vi.runOnlyPendingTimers());
+    expect(document.body.style.overflow).toBe('');
+    vi.useRealTimers();
+  });
 });

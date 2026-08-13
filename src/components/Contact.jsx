@@ -11,6 +11,7 @@ import {
 import MessageDialog from './MessageDialog';
 import { useLanguage } from '../i18n/LanguageContext';
 import { buildContactLinkData } from '../lib/contactLinks';
+import { acquireBodyScrollLock } from '../lib/bodyScrollLock';
 import './Contact.css';
 
 const copy = {
@@ -79,7 +80,7 @@ export default function Contact({ open = false, onClose = () => {}, returnFocusT
   useEffect(() => {
     if (!open) return undefined;
 
-    const previousOverflow = document.body.style.overflow;
+    const releaseBodyLock = acquireBodyScrollLock();
     const backgroundNodes = Array.from(document.body.children).filter(
       (node) => !node.classList.contains('comms-panel')
     );
@@ -89,7 +90,6 @@ export default function Contact({ open = false, onClose = () => {}, returnFocusT
       ariaHidden: node.getAttribute('aria-hidden'),
     }));
 
-    document.body.style.overflow = 'hidden';
     backgroundNodes.forEach((node) => {
       node.setAttribute('inert', '');
       node.setAttribute('aria-hidden', 'true');
@@ -133,7 +133,7 @@ export default function Contact({ open = false, onClose = () => {}, returnFocusT
     document.addEventListener('keydown', onKeyDown);
     return () => {
       document.removeEventListener('keydown', onKeyDown);
-      document.body.style.overflow = previousOverflow;
+      releaseBodyLock();
       previousBackgroundState.forEach(({ node, inert, ariaHidden }) => {
         if (!inert) node.removeAttribute('inert');
         if (ariaHidden === null) node.removeAttribute('aria-hidden');
@@ -169,14 +169,19 @@ export default function Contact({ open = false, onClose = () => {}, returnFocusT
         ref={panelRef}
         className="comms-panel__console"
         role="dialog"
-        aria-modal="true"
+        aria-modal={dialogOpen ? undefined : 'true'}
         aria-label={labels.label}
         tabIndex="-1"
       >
-        <div className="comms-panel__hardware" aria-hidden="true">
-          <span /><span /><span /><span />
-        </div>
-        <header className="comms-panel__head">
+        <div
+          className="comms-panel__surface"
+          inert={dialogOpen ? true : undefined}
+          aria-hidden={dialogOpen ? 'true' : undefined}
+        >
+          <div className="comms-panel__hardware" aria-hidden="true">
+            <span /><span /><span /><span />
+          </div>
+          <header className="comms-panel__head">
           <div className="comms-panel__signal" aria-hidden="true">
             <Broadcast size={28} weight="light" />
             <span /><span /><span />
@@ -194,11 +199,11 @@ export default function Contact({ open = false, onClose = () => {}, returnFocusT
           >
             <X aria-hidden="true" size={20} />
           </button>
-        </header>
+          </header>
 
-        <p className="comms-panel__status"><span aria-hidden="true" />{labels.status}</p>
+          <p className="comms-panel__status"><span aria-hidden="true" />{labels.status}</p>
 
-        <ul className="comms-panel__links" aria-label={labels.links}>
+          <ul className="comms-panel__links" aria-label={labels.links}>
           {contactLinks.map((link) => (
             <li key={link.id}>
               <a
@@ -213,9 +218,9 @@ export default function Contact({ open = false, onClose = () => {}, returnFocusT
               </a>
             </li>
           ))}
-        </ul>
+          </ul>
 
-        <button
+          <button
           ref={messageTriggerRef}
           type="button"
           className="comms-panel__message"
@@ -226,7 +231,8 @@ export default function Contact({ open = false, onClose = () => {}, returnFocusT
         >
           <ChatCircleText aria-hidden="true" size={21} weight="light" />
           {messageForm.triggerLabel}
-        </button>
+          </button>
+        </div>
 
         <MessageDialog open={dialogOpen} onClose={closeMessage} />
       </section>

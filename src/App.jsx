@@ -15,6 +15,7 @@ import SmoothScroll from './components/SmoothScroll';
 import { LanguageProvider } from './i18n/LanguageContext';
 import { getSiteRoute, navigateToRoute } from './lib/siteRoute';
 import { playStationTransition } from './lib/chapterTransition';
+import { acquireBodyScrollLock } from './lib/bodyScrollLock';
 
 function StationScene({ route, onTravel }) {
   const controls = <StationControls currentRoute={route} onTravel={onTravel} />;
@@ -40,10 +41,8 @@ function App() {
   const focusTimerRef = useRef(null);
 
   useEffect(() => {
-    document.body.style.overflow = loading ? 'hidden' : '';
-    return () => {
-      document.body.style.overflow = '';
-    };
+    if (!loading) return undefined;
+    return acquireBodyScrollLock();
   }, [loading]);
 
   useEffect(() => {

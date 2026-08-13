@@ -111,10 +111,18 @@ describe('Contact', () => {
     expect(screen.queryByRole('dialog', { name: /Send a message/i })).toBeNull();
     fireEvent.click(trigger);
     expect(screen.getByRole('dialog', { name: /Send a message/i })).toBeInTheDocument();
+    const outerDialog = document.querySelector('.comms-panel__console');
+    const outerSurface = document.querySelector('.comms-panel__surface');
+    expect(outerDialog).not.toHaveAttribute('aria-modal');
+    expect(outerSurface).toHaveAttribute('inert');
+    expect(outerSurface).toHaveAttribute('aria-hidden', 'true');
 
     fireEvent.keyDown(document, { key: 'Escape' });
     expect(screen.queryByRole('dialog', { name: /Send a message/i })).toBeNull();
     expect(screen.getByRole('dialog', { name: 'Ship communications console' })).toBeInTheDocument();
+    expect(outerDialog).toHaveAttribute('aria-modal', 'true');
+    expect(outerSurface).not.toHaveAttribute('inert');
+    expect(outerSurface).not.toHaveAttribute('aria-hidden');
     await waitFor(() => expect(trigger).toHaveFocus());
   });
 
