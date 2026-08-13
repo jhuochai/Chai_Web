@@ -30,8 +30,12 @@ describe('chaptered portfolio content', () => {
     expect(content.en.hero.entries.map((entry) => entry.id)).toEqual(expectedIds);
     expect(content.zh.hero.entries.map((entry) => entry.id)).toEqual(expectedIds);
     expect(content.zh.hero.entries.map((entry) => entry.label)).toEqual([
-      '自我介紹', '生涯大樹', '精選作品', 'AI 實驗室',
+      '艦長辦公室', '航線樹站', '精選作品', 'AI 實驗室',
     ]);
+    expect(content.en.hero.entries.slice(0, 3).map((entry) => entry.target)).toEqual([
+      '/profile', '/career-tree', '/portfolio',
+    ]);
+    expect(content.en.hero.entries.every((entry) => !entry.target?.startsWith('#'))).toBe(true);
   });
 
   it('defines natural bilingual labels for the intro landmarks', () => {

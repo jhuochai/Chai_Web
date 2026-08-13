@@ -15,9 +15,9 @@ const en = {
     tagline: 'Aim on instinct. Hit with execution.',
     switcherLabel: 'Explore the story',
     entries: [
-      { id: 'intro', label: 'Introduction', target: '#scene-2' },
-      { id: 'career', label: 'Career Tree', target: '#scene-3' },
-      { id: 'portfolio', label: 'Selected Work', target: '#scene-5' },
+      { id: 'intro', label: "Captain's Office", target: '/profile' },
+      { id: 'career', label: 'Route Tree Station', target: '/career-tree' },
+      { id: 'portfolio', label: 'Selected Work', target: '/portfolio' },
       { id: 'ai-lab', label: 'AI Lab', status: 'coming-soon' },
     ],
     scenes: [
@@ -402,9 +402,9 @@ const zh = {
     tagline: '靠直覺瞄準，用效率命中。',
     switcherLabel: '探索故事',
     entries: [
-      { id: 'intro', label: '自我介紹', target: '#scene-2' },
-      { id: 'career', label: '生涯大樹', target: '#scene-3' },
-      { id: 'portfolio', label: '精選作品', target: '#scene-5' },
+      { id: 'intro', label: '艦長辦公室', target: '/profile' },
+      { id: 'career', label: '航線樹站', target: '/career-tree' },
+      { id: 'portfolio', label: '精選作品', target: '/portfolio' },
       { id: 'ai-lab', label: 'AI 實驗室', status: 'coming-soon' },
     ],
     scenes: [

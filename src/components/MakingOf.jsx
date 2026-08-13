@@ -1,6 +1,7 @@
 import { navigateToRoute } from '../lib/siteRoute';
 import { ArrowLeft, Archive, Sparkle } from '@phosphor-icons/react';
 import { useLanguage } from '../i18n/LanguageContext';
+import CollaboratorSeats from './CollaboratorSeats';
 import './MakingOf.css';
 
 export default function MakingOf() {
@@ -32,6 +33,7 @@ export default function MakingOf() {
       </header>
 
       <section className="making-of__archive container" aria-labelledby="making-of-heading">
+        <CollaboratorSeats />
         <ol className="making-of__timeline">
           {makingOf.timeline.map((entry, index) => (
             <li key={entry.id} className="making-of__entry">

@@ -4,98 +4,90 @@ import Hero from './Hero';
 import { LanguageProvider } from '../i18n/LanguageContext';
 import { content } from '../data/content';
 
-const scrollMocks = vi.hoisted(() => ({ scrollToScene: vi.fn() }));
 const routeMocks = vi.hoisted(() => ({ navigateToRoute: vi.fn() }));
-const transitionMocks = vi.hoisted(() => ({ playChapterTransition: vi.fn() }));
-
-vi.mock('../lib/scrollToScene', () => scrollMocks);
 vi.mock('../lib/siteRoute', () => routeMocks);
-vi.mock('../lib/chapterTransition', () => transitionMocks);
 
-function renderHero() {
+const motionState = vi.hoisted(() => ({ reduced: false }));
+vi.mock('motion/react', async (importOriginal) => ({
+  ...(await importOriginal()),
+  useReducedMotion: () => motionState.reduced,
+}));
+
+function renderHero(props = {}) {
   window.localStorage.setItem('site-lang', 'en');
-  return render(
-    <LanguageProvider>
-      <Hero />
-    </LanguageProvider>
-  );
+  return render(<LanguageProvider><Hero {...props} /></LanguageProvider>);
 }
 
-describe('Hero', () => {
+describe('Hero cockpit', () => {
   beforeEach(() => {
-    scrollMocks.scrollToScene.mockReset();
     routeMocks.navigateToRoute.mockReset();
-    transitionMocks.playChapterTransition.mockReset();
+    motionState.reduced = false;
   });
 
-  afterEach(() => {
-    vi.restoreAllMocks();
-  });
+  afterEach(() => vi.restoreAllMocks());
 
-  it('renders one industrial observatory with four chapter controls and a back-facing character', () => {
+  it('uses tactile cockpit controls instead of a vertical entry list or hash targets', () => {
     const { container } = renderHero();
 
-    expect(container.querySelector('section')).toHaveAttribute('id', 'scene-1');
-    expect(container.querySelector('.hero__observatory')).not.toBeNull();
-    expect(screen.getByRole('navigation', { name: content.en.hero.switcherLabel })).toBeInTheDocument();
-
-    for (const entry of content.en.hero.entries) {
-      expect(screen.getByRole('button', { name: entry.label })).toBeInTheDocument();
-    }
-
-    expect(container.querySelectorAll('.hero__scene')).toHaveLength(1);
-    expect(container.querySelector('.hero__character--hanging')).toBeNull();
-    expect(container.querySelector('.hero__character--back')).not.toBeNull();
+    expect(container.querySelector('.hero__cockpit')).toBeInTheDocument();
+    expect(container.querySelector('.hero__control-desk')).toBeInTheDocument();
+    expect(container.querySelector('.hero__entries')).toBeNull();
+    expect(content.en.hero.entries.every((entry) => !entry.target?.startsWith('#'))).toBe(true);
   });
 
-  it('travels to each available chapter from the console', () => {
-    renderHero();
+  it('sends the three formal controls through pathname travel and keeps AI non-navigable', () => {
+    const onTravel = vi.fn();
+    renderHero({ onTravel });
 
     for (const entry of content.en.hero.entries.slice(0, 3)) {
       fireEvent.click(screen.getByRole('button', { name: entry.label }));
-      expect(transitionMocks.playChapterTransition).toHaveBeenLastCalledWith(entry.target);
+      expect(onTravel).toHaveBeenLastCalledWith(entry.target);
     }
 
-    expect(transitionMocks.playChapterTransition).toHaveBeenCalledTimes(3);
-    expect(scrollMocks.scrollToScene).not.toHaveBeenCalled();
-  });
-
-  it('cancels a queued parallax frame when the pointer leaves the observatory', () => {
-    const requestFrame = vi.spyOn(window, 'requestAnimationFrame').mockReturnValue(42);
-    const cancelFrame = vi.spyOn(window, 'cancelAnimationFrame');
-    const { container } = renderHero();
-    const section = container.querySelector('.hero');
-
-    fireEvent.pointerMove(section, { clientX: 120, clientY: 180 });
-    fireEvent.pointerLeave(section);
-
-    expect(requestFrame).toHaveBeenCalledOnce();
-    expect(cancelFrame).toHaveBeenLastCalledWith(42);
-  });
-
-  it('announces that the AI lab is being prepared', () => {
-    renderHero();
-
-    expect(screen.queryByRole('status')).not.toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: content.en.hero.entries[3].label }));
-
-    expect(screen.getByRole('status')).toHaveTextContent(/lab is being prepared/i);
-    expect(scrollMocks.scrollToScene).not.toHaveBeenCalled();
+    expect(onTravel).toHaveBeenCalledTimes(3);
+    expect(screen.getByRole('status')).toHaveTextContent(/prepared/i);
   });
 
-  it('opens the making-of route from the discarded-drafts bin', () => {
-    renderHero();
+  it('renders a discoverable metal archive bin with original monkey graffiti', () => {
+    const { container } = renderHero();
 
+    expect(container.querySelector('.hero__trash-bin')).toBeInTheDocument();
+    expect(container.querySelector('.hero__trash-graffiti')).toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: /discarded drafts archive/i }));
-
     expect(routeMocks.navigateToRoute).toHaveBeenCalledWith('/making-of');
   });
 
-  it('keeps the bookshelf decorative and outside the tab order', () => {
+  it('maps forward wheel approach to a nearer cockpit and reverse wheel back to captain', () => {
     const { container } = renderHero();
-    const bookshelf = container.querySelector('.hero__bookshelf');
+    const cockpit = container.querySelector('.hero__cockpit');
 
-    expect(bookshelf).toHaveAttribute('aria-hidden', 'true');
-    expect(bookshelf).not.toHaveAttribute('tabindex');
+    expect(cockpit).toHaveAttribute('data-approach', '0');
+    fireEvent.wheel(cockpit, { deltaY: -800 });
+    expect(cockpit).toHaveAttribute('data-approach', '1');
+    expect(container.querySelector('.hero__captain--near')).toBeInTheDocument();
+    expect(container.querySelector('.hero__contact-shadow')).toBeInTheDocument();
+
+    fireEvent.wheel(cockpit, { deltaY: 800 });
+    expect(cockpit).toHaveAttribute('data-approach', '0');
+    expect(container.querySelector('.hero__captain--initial')).toBeInTheDocument();
+  });
+
+  it('does not bind cockpit wheel motion when reduced motion is requested', () => {
+    motionState.reduced = true;
+    const { container, unmount } = renderHero();
+    const cockpit = container.querySelector('.hero__cockpit');
+
+    expect(cockpit).toHaveAttribute('data-approach', '1');
+    fireEvent.wheel(cockpit, { deltaY: 800 });
+    expect(cockpit).toHaveAttribute('data-approach', '1');
+    unmount();
+  });
+
+  it('unbinds the native approach listener when the cockpit unmounts', () => {
+    const removeListener = vi.spyOn(HTMLElement.prototype, 'removeEventListener');
+    const { unmount } = renderHero();
+    unmount();
+    expect(removeListener.mock.calls.some(([event]) => event === 'wheel')).toBe(true);
   });
 });
