@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import Nav from './components/Nav';
+import StationControls from './components/StationControls';
 import Hero from './components/Hero';
 import Intro from './components/Intro';
 import CareerTree from './components/CareerTree';
@@ -11,10 +12,10 @@ import ClickSpark from './components/ClickSpark';
 import LoadingScreen from './components/LoadingScreen';
 import SmoothScroll from './components/SmoothScroll';
 import { LanguageProvider } from './i18n/LanguageContext';
-import { getSiteRoute } from './lib/siteRoute';
+import { getSiteRoute, navigateToRoute } from './lib/siteRoute';
 import { scrollToScene } from './lib/scrollToScene';
 
-function StationScene({ route }) {
+function StationScene({ route, onTravel }) {
   const station = {
     cockpit: <Hero />,
     profile: <Intro />,
@@ -25,6 +26,7 @@ function StationScene({ route }) {
   return (
     <main className="scene-flow">
       {station}
+      <StationControls currentRoute={route} onTravel={onTravel} />
     </main>
   );
 }
@@ -56,8 +58,8 @@ function App() {
           <MakingOf />
         ) : (
           <>
-            <Nav />
-            <StationScene route={route} />
+            <Nav currentRoute={route} onTravel={navigateToRoute} onOpenContact={() => {}} />
+            <StationScene route={route} onTravel={navigateToRoute} />
             <ChapterTransition onTravel={scrollToScene} />
           </>
         )}

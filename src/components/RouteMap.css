@@ -1,0 +1,121 @@
+.route-map {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: flex;
+  justify-content: flex-end;
+  background: rgba(8, 10, 15, 0.56);
+  backdrop-filter: blur(3px);
+}
+
+.route-map__panel {
+  width: min(100%, 420px);
+  min-height: 100%;
+  padding: max(24px, env(safe-area-inset-top)) clamp(20px, 5vw, 40px) max(24px, env(safe-area-inset-bottom));
+  border-inline-start: 1px solid var(--hairline);
+  background:
+    linear-gradient(145deg, rgba(39, 35, 30, 0.98), rgba(15, 19, 27, 0.98)),
+    var(--void-raised);
+  box-shadow: -24px 0 72px rgba(0, 0, 0, 0.38), inset 1px 0 rgba(224, 188, 106, 0.09);
+}
+
+.route-map__head,
+.route-map__station,
+.route-map__comms {
+  font-family: var(--mono);
+  letter-spacing: 0.05em;
+}
+
+.route-map__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--hairline);
+  color: var(--gold-bright);
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.route-map__close,
+.route-map__station,
+.route-map__comms {
+  min-width: 44px;
+  min-height: 44px;
+  border: 1px solid transparent;
+  color: var(--parchment);
+  background: transparent;
+}
+
+.route-map__close {
+  display: inline-grid;
+  place-items: center;
+  border-color: var(--hairline-soft);
+}
+
+.route-map__stations {
+  display: grid;
+  gap: 8px;
+  margin: 24px 0;
+}
+
+.route-map__station {
+  display: grid;
+  grid-template-columns: 32px 1fr auto;
+  align-items: center;
+  width: 100%;
+  padding: 10px 12px;
+  text-align: start;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.route-map__station:hover,
+.route-map__station:focus-visible,
+.route-map__station--current {
+  border-color: var(--gold-dim);
+  background: rgba(201, 162, 75, 0.1);
+}
+
+.route-map__station--current {
+  color: var(--gold-bright);
+}
+
+.route-map__station--pending {
+  color: var(--parchment-faint);
+  cursor: not-allowed;
+}
+
+.route-map__index,
+.route-map__status {
+  color: var(--gold-dim);
+  font-size: 11px;
+}
+
+.route-map__status {
+  text-transform: uppercase;
+}
+
+.route-map__comms {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  border-color: var(--hairline);
+  color: var(--gold-bright);
+}
+
+.route-map__comms:hover,
+.route-map__comms:focus-visible,
+.route-map__close:hover,
+.route-map__close:focus-visible {
+  border-color: var(--gold-dim);
+  background: rgba(201, 162, 75, 0.12);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .route-map__station {
+    transition: none;
+  }
+}

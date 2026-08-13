@@ -1,4 +1,4 @@
-import { act, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import App from './App';
 
@@ -29,6 +29,7 @@ describe('App station routes', () => {
     expect(container.querySelectorAll('main > section')).toHaveLength(1);
     expect(container.querySelector('header.nav')).toBeInTheDocument();
     expect(container.querySelector('.chapter-exit')).toBeNull();
+    expect(container.querySelectorAll('.station-controls')).toHaveLength(1);
   });
 
   it('renders the making-of archive without the formal station navigation', () => {
@@ -38,6 +39,7 @@ describe('App station routes', () => {
     expect(container.querySelector('main.making-of')).toBeInTheDocument();
     expect(container.querySelector('header.nav')).toBeNull();
     expect(container.querySelectorAll('main > section')).toHaveLength(1);
+    expect(container.querySelector('.station-controls')).toBeNull();
   });
 
   it('updates the rendered station after browser history changes', () => {
@@ -46,6 +48,17 @@ describe('App station routes', () => {
     act(() => window.dispatchEvent(new PopStateEvent('popstate')));
 
     expect(container.querySelector('section#scene-5')).toBeInTheDocument();
+    expect(container.querySelectorAll('main > section')).toHaveLength(1);
+  });
+
+  it('navigates through the route map without rendering another station', () => {
+    const { container } = render(<App />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Open route map' }));
+    fireEvent.click(screen.getByRole('button', { name: "Captain's Office" }));
+
+    expect(window.location.pathname).toBe('/profile');
+    expect(container.querySelector('section#scene-2')).toBeInTheDocument();
     expect(container.querySelectorAll('main > section')).toHaveLength(1);
   });
 

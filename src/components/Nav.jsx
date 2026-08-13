@@ -1,72 +1,26 @@
-import { useCallback, useEffect, useState } from 'react';
-import { useScroll, useMotionValueEvent } from 'motion/react';
-import { Globe, List, X } from '@phosphor-icons/react';
+import { useState } from 'react';
+import { Globe, MapTrifold } from '@phosphor-icons/react';
 import { useLanguage } from '../i18n/LanguageContext';
-import MobileMenu from './MobileMenu';
 import MusicToggle from './MusicToggle';
+import RouteMap from './RouteMap';
 import './Nav.css';
 
-export default function Nav() {
-  const [scrolled, setScrolled] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
-  // Hidden by default so nothing floats over the hero; slides in when
-  // the pointer travels to the top edge, and stays while the mobile
-  // menu is open or keyboard focus is inside.
-  const [revealed, setRevealed] = useState(false);
-  const [focusInside, setFocusInside] = useState(false);
-  // Stable identity: MobileMenu's focus/scroll-lock effect depends on
-  // onClose, so a fresh closure per render would re-arm it (and re-steal
-  // focus) on every Nav re-render while the menu is open.
-  const closeMenu = useCallback(() => setMenuOpen(false), []);
-  const { scrollY } = useScroll();
+const labels = {
+  en: { open: 'Open route map' },
+  zh: { open: '開啟航線圖' },
+};
+
+export default function Nav({ currentRoute = '/', onTravel = () => {}, onOpenContact = () => {} }) {
+  const [mapOpen, setMapOpen] = useState(false);
   const { lang, toggleLang, t } = useLanguage();
 
-  useMotionValueEvent(scrollY, 'change', (latest) => {
-    setScrolled((prev) => {
-      const next = latest > 48;
-      return prev === next ? prev : next;
-    });
-  });
-
-  useEffect(() => {
-    const onPointerMove = (event) => {
-      setRevealed((prev) => {
-        const next = event.clientY <= 90;
-        return prev === next ? prev : next;
-      });
-    };
-    window.addEventListener('pointermove', onPointerMove);
-    return () => window.removeEventListener('pointermove', onPointerMove);
-  }, []);
-
-  const shown = revealed || menuOpen || focusInside;
-
-  const links = [
-    { href: '#scene-1', label: t.nav.home },
-    { href: '#scene-3', label: t.nav.story },
-    { href: '#scene-5', label: t.nav.work },
-  ];
-
   return (
-    <header
-      className={`nav ${scrolled ? 'nav--solid' : ''} ${shown ? '' : 'nav--hidden'}`}
-      onFocus={() => setFocusInside(true)}
-      onBlur={(event) => {
-        if (!event.currentTarget.contains(event.relatedTarget)) setFocusInside(false);
-      }}
-    >
+    <header className="nav">
       <div className="nav__inner container">
-        <a href="#scene-1" className="nav__mark">
+        <div className="nav__mark" aria-label={t.name.display}>
           {t.name.display}
           <span className="nav__mark-sub">{t.name.sub}</span>
-        </a>
-        <nav className="nav__links" aria-label={lang === 'zh' ? '主要導覽' : 'Primary'}>
-          {links.map((link) => (
-            <a key={link.href} href={link.href}>
-              {link.label}
-            </a>
-          ))}
-        </nav>
+        </div>
         <div className="nav__actions">
           <MusicToggle />
           <button
@@ -78,24 +32,25 @@ export default function Nav() {
             <Globe size={15} weight="light" />
             <span>{lang === 'en' ? 'EN' : '中'}</span>
           </button>
-          <a href="#scene-7" className="nav__cta btn-glass">
-            {t.nav.cta}
-          </a>
           <button
             type="button"
-            className="nav__hamburger btn-glass btn-glass--ghost"
-            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-            aria-expanded={menuOpen}
-            onClick={() => setMenuOpen((prev) => !prev)}
+            className="nav__route-map"
+            aria-label={labels[lang].open}
+            aria-expanded={mapOpen}
+            aria-controls="ship-route-map"
+            onClick={() => setMapOpen(true)}
           >
-            <span className={`nav__hamburger-icon ${menuOpen ? 'nav__hamburger-icon--open' : ''}`}>
-              <List size={20} weight="light" className="nav__hamburger-menu-glyph" />
-              <X size={20} weight="light" className="nav__hamburger-close-glyph" />
-            </span>
+            <MapTrifold aria-hidden="true" size={20} weight="light" />
           </button>
         </div>
       </div>
-      <MobileMenu open={menuOpen} links={links} onClose={closeMenu} />
+      <RouteMap
+        open={mapOpen}
+        currentRoute={currentRoute}
+        onClose={() => setMapOpen(false)}
+        onTravel={onTravel}
+        onOpenContact={onOpenContact}
+      />
     </header>
   );
 }
