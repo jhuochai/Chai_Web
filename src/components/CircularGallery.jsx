@@ -462,6 +462,9 @@ class App {
 
 export default function CircularGallery({
   items,
+  activeId,
+  onSelect,
+  selectLabel = (item) => item.text,
   bend = 3,
   textColor = '#ffffff',
   borderRadius = 0.05,
@@ -474,6 +477,7 @@ export default function CircularGallery({
 
   useEffect(() => {
     if (!containerRef.current) return;
+    if (!window.WebGLRenderingContext && !window.WebGL2RenderingContext) return;
     let app;
     let cancelled = false;
 
@@ -491,12 +495,22 @@ export default function CircularGallery({
   }, [items, bend, textColor, borderRadius, font, scrollSpeed, scrollEase]);
 
   return (
-    <div
-      className="circular-gallery"
-      ref={containerRef}
-      tabIndex={0}
-      role="region"
-      aria-label={ariaLabel}
-    />
+    <div className="circular-gallery" role="region" aria-label={ariaLabel}>
+      <div className="circular-gallery__canvas" ref={containerRef} tabIndex={0} aria-hidden="true" />
+      <div className="circular-gallery__selectors">
+        {items.map((item, itemIndex) => (
+          <button
+            key={item.id ?? itemIndex}
+            type="button"
+            aria-label={selectLabel(item)}
+            aria-current={activeId === item.id ? 'true' : undefined}
+            onClick={() => onSelect?.(item)}
+          >
+            <span aria-hidden="true">0{itemIndex + 1}</span>
+            <strong>{item.text}</strong>
+          </button>
+        ))}
+      </div>
+    </div>
   );
 }
