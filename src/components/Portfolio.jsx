@@ -1,86 +1,197 @@
-import { useMemo } from 'react';
-import { GameController } from '@phosphor-icons/react';
-import CircularGallery from './CircularGallery';
-import FramedPanel from './FramedPanel';
+import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
+import { ArrowUpRight, Play, X } from '@phosphor-icons/react';
 import RevealSection from './RevealSection';
+import { catCafeCase } from '../data/catCafeCase';
 import { useLanguage } from '../i18n/LanguageContext';
 import './Portfolio.css';
 
-export default function Portfolio() {
-  const { lang, t } = useLanguage();
-  const { heading, intro, cases, player } = t.portfolio;
-  const { ui } = t;
-
-  const galleryItems = useMemo(
-    () =>
-      cases.map((c) => ({
-        image: `https://picsum.photos/seed/${c.imageSeed}/900/700?grayscale`,
-        text: c.title,
-      })),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [lang]
+function EvidenceFigure({ item, copy, onOpen }) {
+  return (
+    <figure className="portfolio-evidence" data-evidence-id={item.id}>
+      <button
+        type="button"
+        className="portfolio-evidence__open"
+        aria-label={`${copy.openPrefix}${item.title}`}
+        onClick={(event) => onOpen(item, event.currentTarget)}
+      >
+        <span className="portfolio-evidence__image-wrap">
+          <img src={item.src} alt={item.alt} loading="lazy" decoding="async" />
+          <span className="portfolio-evidence__action" aria-hidden="true">
+            {item.format === 'video-poster' ? <Play size={18} weight="fill" /> : <ArrowUpRight size={18} />}
+          </span>
+        </span>
+      </button>
+      <figcaption>
+        <span className="portfolio-evidence__format">{item.formatLabel}</span>
+        <h4>{item.title}</h4>
+        <p>{item.proof}</p>
+      </figcaption>
+    </figure>
   );
+}
+
+function EvidenceLightbox({ item, copy, onClose }) {
+  const closeRef = useRef(null);
+
+  useEffect(() => {
+    const previousOverflow = document.body.style.overflow;
+    const backgroundNodes = Array.from(document.body.children).filter(
+      (node) => !node.classList.contains('portfolio-lightbox')
+    );
+    const previousBackgroundState = backgroundNodes.map((node) => ({
+      node,
+      inert: node.hasAttribute('inert'),
+      ariaHidden: node.getAttribute('aria-hidden'),
+    }));
+
+    document.body.style.overflow = 'hidden';
+    backgroundNodes.forEach((node) => {
+      node.setAttribute('inert', '');
+      node.setAttribute('aria-hidden', 'true');
+    });
+    closeRef.current?.focus();
+
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') onClose();
+      if (event.key === 'Tab') {
+        event.preventDefault();
+        closeRef.current?.focus();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = previousOverflow;
+      previousBackgroundState.forEach(({ node, inert, ariaHidden }) => {
+        if (!inert) node.removeAttribute('inert');
+        if (ariaHidden === null) node.removeAttribute('aria-hidden');
+        else node.setAttribute('aria-hidden', ariaHidden);
+      });
+    };
+  }, [onClose]);
+
+  return createPortal(
+    <div
+      className="portfolio-lightbox"
+      data-testid="portfolio-lightbox-backdrop"
+      onMouseDown={(event) => {
+        if (event.target === event.currentTarget) onClose();
+      }}
+    >
+      <div className="portfolio-lightbox__dialog" role="dialog" aria-modal="true" aria-labelledby="portfolio-lightbox-title">
+        <button ref={closeRef} type="button" className="portfolio-lightbox__close" aria-label={copy.close} onClick={onClose}>
+          <X size={24} />
+        </button>
+        <img src={item.src} alt={item.alt} />
+        <div className="portfolio-lightbox__caption">
+          <span>{item.formatLabel}</span>
+          <h3 id="portfolio-lightbox-title">{item.title}</h3>
+          <p>{item.proof}</p>
+        </div>
+      </div>
+    </div>,
+    document.body
+  );
+}
+
+export default function Portfolio() {
+  const { lang } = useLanguage();
+  const work = catCafeCase[lang];
+  const [activeItem, setActiveItem] = useState(null);
+  const openerRef = useRef(null);
+
+  const openLightbox = (item, opener) => {
+    openerRef.current = opener;
+    setActiveItem(item);
+  };
+
+  const closeLightbox = () => {
+    setActiveItem(null);
+    window.requestAnimationFrame(() => openerRef.current?.focus());
+  };
 
   return (
-    <section id="scene-5" className="portfolio">
+    <section id="scene-5" className="portfolio" inert={activeItem || undefined}>
       <div className="container">
-        <RevealSection as="div" className="portfolio__head">
-          <h2>{heading}</h2>
-          <p>{intro}</p>
+        <RevealSection as="header" className="portfolio__head">
+          <p className="portfolio__section-name">{work.pageTitle}</p>
+          <h2>{work.title}</h2>
+          <p className="portfolio__subtitle">{work.subtitle}</p>
+          <p className="portfolio__intro">{work.pageIntro}</p>
         </RevealSection>
-      </div>
 
-      <RevealSection as="div" delay={0.05} className="portfolio__gallery-wrap">
-        <CircularGallery
-          items={galleryItems}
-          bend={2}
-          textColor="#ede3d0"
-          borderRadius={0.04}
-          scrollEase={0.02}
-          ariaLabel={lang === 'zh' ? '精選項目輪播，可用左右鍵瀏覽' : 'Selected work carousel, use left and right arrow keys to browse'}
-        />
-      </RevealSection>
+        <RevealSection as="article" delay={0.05} className="portfolio-hero">
+          <div className="portfolio-hero__visual">
+            <img src={work.hero.src} alt={work.hero.alt} decoding="async" />
+            <span className="portfolio-hero__stamp">18k → 30k</span>
+          </div>
+          <div className="portfolio-hero__story">
+            <p className="portfolio-hero__growth">{work.growth}</p>
+            <h3>{work.hero.title}</h3>
+            <p>{work.summary}</p>
+            <p className="portfolio-hero__note">{work.hero.note}</p>
+            <dl className="portfolio-metrics">
+              {work.metrics.map((metric) => (
+                <div key={metric.id}>
+                  <dt>{metric.label}</dt>
+                  <dd>{metric.value}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </RevealSection>
 
-      <div className="container">
-        <div className="portfolio__cases">
-          {cases.map((c, i) => (
-            <RevealSection as="div" delay={0.08 + i * 0.04} key={c.id}>
-              <FramedPanel variant="corners" className="case-panel">
-                <span className="case-panel__tag">{c.tag}</span>
-                <h3 className="case-panel__title">{c.title}</h3>
-                <p className="case-panel__scenario">{c.scenario}</p>
-                <div className="case-panel__row">
-                  <span className="case-panel__row-label">{ui.workLabel}</span>
-                  <p>{c.approach}</p>
-                </div>
-                <div className="case-panel__row">
-                  <span className="case-panel__row-label">{ui.resultLabel}</span>
-                  <p className="case-panel__result">{c.result}</p>
-                </div>
-              </FramedPanel>
+        <RevealSection as="header" delay={0.06} className="portfolio__evidence-head">
+          <h2>{work.evidenceHeading}</h2>
+          <p>{work.evidenceIntro}</p>
+        </RevealSection>
+
+        <div className="portfolio-pillars">
+          {work.pillars.map((pillar, pillarIndex) => (
+            <RevealSection
+              as="section"
+              delay={0.04 + pillarIndex * 0.03}
+              className={`portfolio-pillar portfolio-pillar--${pillarIndex % 2 === 0 ? 'left' : 'right'}`}
+              key={pillar.id}
+            >
+              <header className="portfolio-pillar__head">
+                <h3>{pillar.title}</h3>
+                <p>{pillar.description}</p>
+              </header>
+              <div className="portfolio-pillar__works">
+                {pillar.items.map((item) => (
+                  <EvidenceFigure key={item.id} item={item} copy={work.lightbox} onOpen={openLightbox} />
+                ))}
+              </div>
             </RevealSection>
           ))}
         </div>
 
-        <RevealSection as="div" delay={0.1} className="portfolio__player">
-          <div className="portfolio__player-icon">
-            <GameController size={32} weight="light" />
+        <RevealSection as="aside" delay={0.08} className="dark-chess-note" aria-labelledby="dark-chess-title">
+          <div className="dark-chess-note__intro">
+            <h2 id="dark-chess-title">{work.darkChess.title}</h2>
+            <p>{work.darkChess.intro}</p>
           </div>
-          <div>
-            <h3>{player.heading}</h3>
-            <p>{player.desc}</p>
-            <p className="portfolio__player-genres">{player.genresNote}</p>
-            <ul className="portfolio__player-games">
-              {player.games.map((g) => (
-                <li key={g.name}>
-                  <span>{g.name}</span>
-                  {g.note ? <em>{g.note}</em> : null}
-                </li>
-              ))}
-            </ul>
-          </div>
+          <dl>
+            <div>
+              <dt>{work.darkChess.hypothesisLabel}</dt>
+              <dd>{work.darkChess.hypothesis}</dd>
+            </div>
+            <div>
+              <dt>{work.darkChess.signalLabel}</dt>
+              <dd>{work.darkChess.signal}</dd>
+            </div>
+            <div>
+              <dt>{work.darkChess.decisionLabel}</dt>
+              <dd>{work.darkChess.decision}</dd>
+            </div>
+          </dl>
         </RevealSection>
       </div>
+
+      {activeItem ? <EvidenceLightbox item={activeItem} copy={work.lightbox} onClose={closeLightbox} /> : null}
     </section>
   );
 }
