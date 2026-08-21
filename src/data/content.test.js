@@ -13,7 +13,7 @@ describe('chaptered portfolio content', () => {
 
   it('keeps the chapter order stable', () => {
     expect(STATIONS.filter((station) => station.next).map((station) => station.id)).toEqual([
-      'cockpit', 'profile', 'career-tree', 'portfolio',
+      'cockpit', 'profile', 'career-tree', 'portfolio', 'ai-lab',
     ]);
   });
 
@@ -35,7 +35,19 @@ describe('chaptered portfolio content', () => {
     expect(content.en.hero.entries.slice(0, 3).map((entry) => entry.target)).toEqual([
       '/profile', '/career-tree', '/portfolio',
     ]);
+    expect(content.en.hero.entries.at(-1)).toMatchObject({ id: 'ai-lab', target: '/ai-lab' });
+    expect(content.zh.hero.entries.at(-1)).toMatchObject({ id: 'ai-lab', target: '/ai-lab' });
     expect(content.en.hero.entries.every((entry) => !entry.target?.startsWith('#'))).toBe(true);
+  });
+
+  it('defines aligned AI lab copy in both languages', () => {
+    const keys = [
+      'title', 'incubationTitle', 'incubationStatus', 'petTitle', 'petBody',
+      'skillsTitle', 'openPet', 'openSkills', 'returnCockpit',
+    ];
+    expect(Object.keys(content.en.aiLab).sort()).toEqual(keys.sort());
+    expect(Object.keys(content.zh.aiLab).sort()).toEqual(keys.sort());
+    expect(content.zh.aiLab.incubationStatus).toContain('培育中');
   });
 
   it('does not keep retired hash-route scenes or public proposal placeholders in active hero data', () => {

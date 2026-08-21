@@ -6,7 +6,6 @@ import { useLanguage } from '../i18n/LanguageContext';
 import './RouteMap.css';
 
 const comingSoonStations = [
-  { id: 'ai-lab', zh: 'AI 實驗艙', en: 'AI Lab' },
   { id: 'private-archive', zh: '私人典藏艙', en: 'Private Archive' },
 ];
 

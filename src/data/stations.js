@@ -3,6 +3,7 @@ export const STATIONS = [
   { id: 'profile', route: '/profile', zh: '艦長辦公室', en: "Captain's Office", next: 'career-tree' },
   { id: 'career-tree', route: '/career-tree', zh: '航跡樹站', en: 'Route Tree Station', next: 'portfolio' },
   { id: 'portfolio', route: '/portfolio', zh: '影像分析艙', en: 'Analysis Bay', next: 'cockpit' },
+  { id: 'ai-lab', route: '/ai-lab', zh: 'AI 實驗艙', en: 'AI Lab', next: 'cockpit' },
   { id: 'making-of', route: '/making-of', zh: '網站製作檔案', en: 'Making-of Archive' },
 ];
 

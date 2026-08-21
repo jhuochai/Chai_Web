@@ -4,6 +4,7 @@ export function getSiteRoute(pathname = window.location.pathname) {
     '/profile': 'profile',
     '/career-tree': 'career-tree',
     '/portfolio': 'portfolio',
+    '/ai-lab': 'ai-lab',
     '/making-of': 'making-of',
   };
 

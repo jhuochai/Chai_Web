@@ -3,12 +3,13 @@ import { getRecommendedNext, getStationByRoute, STATIONS } from '../data/station
 import { getSiteRoute, navigateToRoute } from './siteRoute';
 
 describe('station data', () => {
-  it('defines the five real ship stations with their paths and labels', () => {
+  it('defines the six real ship stations with their paths and labels', () => {
     expect(STATIONS).toEqual(expect.arrayContaining([
       expect.objectContaining({ id: 'cockpit', route: '/', zh: '駕駛艙', en: 'Cockpit', next: 'profile' }),
       expect.objectContaining({ id: 'profile', route: '/profile', zh: '艦長辦公室', en: "Captain's Office", next: 'career-tree' }),
       expect.objectContaining({ id: 'career-tree', route: '/career-tree', zh: '航跡樹站', en: 'Route Tree Station', next: 'portfolio' }),
       expect.objectContaining({ id: 'portfolio', route: '/portfolio', zh: '影像分析艙', en: 'Analysis Bay', next: 'cockpit' }),
+      expect.objectContaining({ id: 'ai-lab', route: '/ai-lab', zh: 'AI 實驗艙', en: 'AI Lab', next: 'cockpit' }),
       expect.objectContaining({ id: 'making-of', route: '/making-of', zh: '網站製作檔案', en: 'Making-of Archive' }),
     ]));
   });
@@ -30,6 +31,7 @@ describe('getSiteRoute', () => {
     ['/profile', 'profile'],
     ['/career-tree', 'career-tree'],
     ['/portfolio', 'portfolio'],
+    ['/ai-lab', 'ai-lab'],
     ['/making-of', 'making-of'],
   ])('maps %s to the %s station', (pathname, station) => {
     expect(getSiteRoute(pathname)).toBe(station);

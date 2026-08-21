@@ -17,7 +17,7 @@ const en = {
       { id: 'intro', label: "Captain's Office", target: '/profile' },
       { id: 'career', label: 'Route Tree Station', target: '/career-tree' },
       { id: 'portfolio', label: 'Selected Work', target: '/portfolio' },
-      { id: 'ai-lab', label: 'AI Lab', status: 'coming-soon' },
+      { id: 'ai-lab', label: 'AI Lab', target: '/ai-lab' },
     ],
   },
   positioning: {
@@ -50,6 +50,17 @@ const en = {
     claim: 'Aim on instinct. Hit with execution.',
     strengthsLabel: 'Core strengths',
     playerViewTitle: 'A player’s eye is where my marketing starts',
+  },
+  aiLab: {
+    title: 'AI Lab',
+    incubationTitle: 'AI Mini-App Incubator',
+    incubationStatus: 'Incubating. The first public experiment will unlock here when it is ready.',
+    petTitle: 'Stapu',
+    petBody: "A-Juo’s Codex pet and the little assistant roaming this lab.",
+    skillsTitle: 'Skills Cabinet',
+    openPet: 'Inspect Stapu',
+    openSkills: 'Open Skills cabinet',
+    returnCockpit: 'Return to Cockpit',
   },
   careerTree: {
     eyebrow: 'The Career Tree',
@@ -375,7 +386,7 @@ const zh = {
       { id: 'intro', label: '艦長辦公室', target: '/profile' },
       { id: 'career', label: '航跡樹站', target: '/career-tree' },
       { id: 'portfolio', label: '影像分析艙', target: '/portfolio' },
-      { id: 'ai-lab', label: 'AI 實驗艙', status: 'coming-soon' },
+      { id: 'ai-lab', label: 'AI 實驗艙', target: '/ai-lab' },
     ],
   },
   positioning: {
@@ -407,6 +418,17 @@ const zh = {
     claim: '靠直覺瞄準，用效率命中。',
     strengthsLabel: '核心能力',
     playerViewTitle: '玩家視角，是我做行銷的起點',
+  },
+  aiLab: {
+    title: 'AI 實驗艙',
+    incubationTitle: 'AI 小程式孵化槽',
+    incubationStatus: '培育中；第一個可公開實驗完成後會在這裡解鎖。',
+    petTitle: '史達普 Stapu',
+    petBody: '阿居的 Codex 寵物，也是這艘實驗艙裡四處巡看的小助手。',
+    skillsTitle: 'Skills 工具櫃',
+    openPet: '查看史達普資料',
+    openSkills: '拉開 Skills 工具櫃',
+    returnCockpit: '返回駕駛艙',
   },
   careerTree: {
     eyebrow: '生涯大樹',

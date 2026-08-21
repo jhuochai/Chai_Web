@@ -33,12 +33,13 @@ describe('RouteMap', () => {
     expect(screen.getByRole('button', { name: "Captain's Office" })).toHaveAttribute('aria-current', 'page');
     expect(screen.getByRole('button', { name: 'Route Tree Station' })).toBeEnabled();
     expect(screen.getByRole('button', { name: 'Analysis Bay' })).toBeEnabled();
+    expect(screen.getByRole('button', { name: 'AI Lab' })).toBeEnabled();
   });
 
   it('identifies coming-soon stations as disabled without navigable links', () => {
     renderRouteMap();
 
-    for (const label of ['AI Lab', 'Private Archive']) {
+    for (const label of ['Private Archive']) {
       const station = screen.getByRole('button', { name: new RegExp(label) });
       expect(station).toBeDisabled();
       expect(station).not.toHaveAttribute('href');
@@ -50,7 +51,7 @@ describe('RouteMap', () => {
     window.localStorage.setItem('site-lang', 'zh');
     renderRouteMap();
 
-    expect(screen.getByRole('button', { name: 'AI 實驗艙建置中' })).toBeDisabled();
+    expect(screen.getByRole('button', { name: 'AI 實驗艙' })).toBeEnabled();
     expect(screen.getByRole('button', { name: '私人典藏艙建置中' })).toBeDisabled();
     expect(screen.getByRole('button', { name: '通訊台' })).toBeEnabled();
   });
@@ -65,6 +66,17 @@ describe('RouteMap', () => {
     expect(onTravel).toHaveBeenCalledTimes(1);
     expect(onTravel).toHaveBeenCalledWith('/profile');
     expect(onClose).toHaveBeenCalledTimes(1);
+  });
+
+  it('travels to the AI lab as a real station', () => {
+    const onTravel = vi.fn();
+    const onClose = vi.fn();
+    renderRouteMap({ currentRoute: '/profile', onTravel, onClose });
+
+    fireEvent.click(screen.getByRole('button', { name: 'AI Lab' }));
+
+    expect(onTravel).toHaveBeenCalledWith('/ai-lab');
+    expect(onClose).toHaveBeenCalledOnce();
   });
 
   it('does not retravel when its current station is selected', () => {
