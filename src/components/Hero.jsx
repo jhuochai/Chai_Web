@@ -74,6 +74,7 @@ export default function Hero({ onTravel = playStationTransition }) {
     const clearPointerGesture = () => { pointerGestureRef.current = null; };
     const onPointerDown = (event) => {
       if (event.isPrimary === false && event.pointerType) return;
+      if (event.target instanceof Element && event.target.closest('button, a, input, select, textarea, [role="button"]')) return;
       pointerGestureRef.current = { pointerId: event.pointerId, startY: event.clientY, consumed: false };
       cockpit.setPointerCapture?.(event.pointerId);
     };

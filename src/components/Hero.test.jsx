@@ -117,11 +117,24 @@ describe('Hero 2.5D cockpit', () => {
     expect(move.defaultPrevented).toBe(true);
   });
 
+  it('does not capture a pointer gesture that starts on a destination control', () => {
+    const { container } = renderHero();
+    const cockpit = container.querySelector('.hero__cockpit');
+    const control = screen.getByRole('button', { name: "Captain's Office" });
+    cockpit.setPointerCapture = vi.fn();
+
+    control.dispatchEvent(pointerEvent('pointerdown', 11, 420));
+
+    expect(cockpit.setPointerCapture).not.toHaveBeenCalled();
+  });
+
   it('places each mechanical control independently and provides reduced-motion fallbacks', () => {
-    expect(heroStyles).toMatch(/\.hero__control--portfolio\s*\{[^}]*left:\s*12\.9%/s);
-    expect(heroStyles).toMatch(/\.hero__control--career\s*\{[^}]*left:\s*40%/s);
-    expect(heroStyles).toMatch(/\.hero__control--intro\s*\{[^}]*left:\s*66\.7%/s);
-    expect(heroStyles).toMatch(/\.hero__control--ai-lab\s*\{[^}]*left:\s*90\.1%/s);
+    expect(heroStyles).toMatch(/\.hero__control--portfolio\s*\{[^}]*left:\s*12\.9%[^}]*bottom:\s*11%/s);
+    expect(heroStyles).toMatch(/\.hero__control--career\s*\{[^}]*left:\s*40%[^}]*bottom:\s*11%/s);
+    expect(heroStyles).toMatch(/\.hero__control--intro\s*\{[^}]*left:\s*66\.7%[^}]*bottom:\s*11%/s);
+    expect(heroStyles).toMatch(/\.hero__control--ai-lab\s*\{[^}]*left:\s*90\.1%[^}]*bottom:\s*11%/s);
+    expect(heroStyles).toMatch(/\.hero__control--career\s+\.hero-control__well\s*\{[^}]*rotate\(-3deg\)/s);
+    expect(heroStyles).toMatch(/\.hero__control--intro\s+\.hero-control__well\s*\{[^}]*rotate\(-20deg\)/s);
     expect(heroStyles).toMatch(/\.hero__trash-bin\s*\{[^}]*right:\s*5%[^}]*bottom:\s*13%/s);
     expect(heroStyles).toMatch(/@keyframes\s+hero-city-lights/s);
     expect(heroStyles).toMatch(/@keyframes\s+hero-atmosphere/s);
