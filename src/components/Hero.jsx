@@ -1,33 +1,38 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useReducedMotion } from 'motion/react';
 import { useLanguage } from '../i18n/LanguageContext';
 import { navigateToRoute } from '../lib/siteRoute';
 import { playStationTransition } from '../lib/chapterTransition';
-import observatoryScene from '../assets/scenes/hero-observatory.webp';
+import cockpitScene from '../assets/scenes/hero-cockpit-space.webp';
 import characterBack from '../assets/scenes/hero-character-back.webp';
+import handleImage from '../assets/props/hero-handle.webp';
+import joystickImage from '../assets/props/hero-joystick.webp';
+import knobImage from '../assets/props/hero-knob.webp';
+import coreImage from '../assets/props/hero-ai-core.webp';
+import trashImage from '../assets/props/hero-trash.webp';
+import HeroDestinationControl from './hero/HeroDestinationControl';
+import HeroHologram from './hero/HeroHologram';
+import { getDestinationAction, getInitialHeroApproach, rememberHeroApproach } from './hero/heroState';
 import './Hero.css';
 
 const interfaceCopy = {
   en: {
     title: 'Chai Yi Chen captain cockpit',
-    consoleLabel: 'Flight controls · choose a station',
-    approachLabel: 'Cockpit approach',
-    approachNear: 'Move closer to the controls',
-    approachBack: 'Step back to the captain',
-    labStatus: 'The AI lab is being prepared. New experiments will appear here soon.',
     binLabel: 'Discarded drafts archive',
-    binHint: 'Open the making-of archive',
+    binHint: 'Making-of archive',
   },
   zh: {
     title: '柴怡辰艦長駕駛艙',
-    consoleLabel: '航行操作台 · 選擇站點',
-    approachLabel: '駕駛艙距離',
-    approachNear: '靠近操作台',
-    approachBack: '退回艦長身後',
-    labStatus: 'AI 實驗艙正在整備中；新的探索很快會在這裡出現。',
     binLabel: '廢棄草稿檔案桶',
-    binHint: '開啟製作過程檔案',
+    binHint: '網站製作檔案',
   },
+};
+
+const controlImages = {
+  intro: handleImage,
+  career: joystickImage,
+  portfolio: knobImage,
+  'ai-lab': coreImage,
 };
 
 const clampApproach = (value) => Math.max(0, Math.min(1, value));
@@ -37,17 +42,24 @@ export default function Hero({ onTravel = playStationTransition }) {
   const reduce = useReducedMotion();
   const { lang, t } = useLanguage();
   const copy = interfaceCopy[lang];
-  const [showLabStatus, setShowLabStatus] = useState(false);
-  const [approach, setApproach] = useState(reduce ? 1 : 0);
+  const [approach, setApproach] = useState(() => getInitialHeroApproach({ reduce, storage: window.sessionStorage }));
+  const [hologramOpen, setHologramOpen] = useState(false);
   const cockpitRef = useRef(null);
   const approachRef = useRef(approach);
   const pointerGestureRef = useRef(null);
 
+  const updateApproach = useCallback((next) => {
+    const clamped = clampApproach(next);
+    if (clamped === approachRef.current) return false;
+    approachRef.current = clamped;
+    setApproach(clamped);
+    if (clamped === 1) rememberHeroApproach(window.sessionStorage);
+    return true;
+  }, []);
+
   useEffect(() => {
-    const next = reduce ? 1 : 0;
-    approachRef.current = next;
-    setApproach(next);
-  }, [reduce]);
+    if (reduce) updateApproach(1);
+  }, [reduce, updateApproach]);
 
   useEffect(() => {
     if (reduce) return undefined;
@@ -56,19 +68,16 @@ export default function Hero({ onTravel = playStationTransition }) {
 
     const onWheel = (event) => {
       if (!event.deltaY) return;
-      const direction = event.deltaY < 0 ? 1 : -1;
-      const next = clampApproach(approachRef.current + direction);
-      if (next === approachRef.current) return;
-      event.preventDefault();
-      approachRef.current = next;
-      setApproach(next);
+      const changed = updateApproach(approachRef.current + (event.deltaY < 0 ? 1 : -1));
+      if (changed) event.preventDefault();
     };
-
-    const clearPointerGesture = () => {
-      pointerGestureRef.current = null;
+    const clearPointerGesture = () => { pointerGestureRef.current = null; };
+    const onPointerDown = (event) => {
+      if (event.isPrimary === false && event.pointerType) return;
+      pointerGestureRef.current = { pointerId: event.pointerId, startY: event.clientY, consumed: false };
+      cockpit.setPointerCapture?.(event.pointerId);
     };
-
-    const consumePointerGesture = (event) => {
+    const onPointerMove = (event) => {
       const gesture = pointerGestureRef.current;
       if (!gesture || gesture.pointerId !== event.pointerId) return;
       if (gesture.consumed) {
@@ -77,27 +86,15 @@ export default function Hero({ onTravel = playStationTransition }) {
       }
       const distance = event.clientY - gesture.startY;
       if (Math.abs(distance) < POINTER_GESTURE_THRESHOLD) return;
-      const next = clampApproach(approachRef.current + (distance < 0 ? 1 : -1));
-      if (next === approachRef.current) return;
-      event.preventDefault();
+      const changed = updateApproach(approachRef.current + (distance < 0 ? 1 : -1));
+      if (!changed) return;
       gesture.consumed = true;
-      approachRef.current = next;
-      setApproach(next);
+      event.preventDefault();
     };
-
-    const onPointerDown = (event) => {
-      if (event.isPrimary === false && event.pointerType) return;
-      pointerGestureRef.current = { pointerId: event.pointerId, startY: event.clientY, consumed: false };
-      cockpit.setPointerCapture?.(event.pointerId);
-    };
-
-    const onPointerMove = (event) => consumePointerGesture(event);
-
     const onPointerUp = (event) => {
       if (pointerGestureRef.current?.pointerId === event.pointerId) clearPointerGesture();
       if (cockpit.hasPointerCapture?.(event.pointerId)) cockpit.releasePointerCapture?.(event.pointerId);
     };
-
     const onLostPointerCapture = (event) => {
       if (pointerGestureRef.current?.pointerId === event.pointerId) clearPointerGesture();
     };
@@ -117,39 +114,27 @@ export default function Hero({ onTravel = playStationTransition }) {
       cockpit.removeEventListener('pointercancel', clearPointerGesture);
       cockpit.removeEventListener('lostpointercapture', onLostPointerCapture);
       window.removeEventListener('blur', clearPointerGesture);
-      clearPointerGesture();
     };
-  }, [reduce]);
-
-  const setCockpitApproach = (next) => {
-    const clamped = clampApproach(next);
-    approachRef.current = clamped;
-    setApproach(clamped);
-  };
+  }, [reduce, updateApproach]);
 
   const activateEntry = (entry) => {
-    if (entry.status === 'coming-soon') {
-      setShowLabStatus(true);
-      return;
-    }
-    onTravel(entry.target);
+    const action = getDestinationAction(entry.id);
+    if (action.kind === 'preview') setHologramOpen(true);
+    else onTravel(action.target);
   };
 
   return (
     <section id="scene-1" className="hero" aria-labelledby="hero-title">
       <h1 id="hero-title" className="visually-hidden">{copy.title}</h1>
-      <div
-        ref={cockpitRef}
-        className="hero__cockpit"
-        data-approach={approach}
-        style={{ '--approach': approach }}
-      >
+      <div ref={cockpitRef} className="hero__cockpit" data-approach={approach} style={{ '--approach': approach }}>
         <div className="hero__window" aria-hidden="true">
-          <img className="hero__scene" src={observatoryScene} alt="" draggable="false" />
+          <img className="hero__scene" src={cockpitScene} alt="" draggable="false" />
+          <span className="hero__planet" />
           <span className="hero__glass-reflection" />
           <span className="hero__window-rivets" />
         </div>
         <div className="hero__window-frame" aria-hidden="true" />
+        <span className="hero__approach-light" aria-hidden="true" />
 
         <img
           className={`hero__captain hero__captain--${approach ? 'near' : 'initial'}`}
@@ -161,53 +146,40 @@ export default function Hero({ onTravel = playStationTransition }) {
         <div className="hero__contact-shadow" aria-hidden="true" />
 
         <nav className="hero__control-desk" aria-label={t.hero.switcherLabel}>
-          <div className="hero__desk-top" aria-hidden="true">
-            <span className="hero__lamp hero__lamp--cyan" />
-            <span className="hero__lamp hero__lamp--violet" />
-            <span className="hero__slot" />
+          <div className="hero__desk-bezel" aria-hidden="true"><i /><i /><i /></div>
+          <div className="hero__control-rail">
+            {t.hero.entries.map((entry) => {
+              const action = getDestinationAction(entry.id);
+              return (
+                <HeroDestinationControl
+                  key={entry.id}
+                  entry={entry}
+                  image={approach ? controlImages[entry.id] : undefined}
+                  motion={action.motion}
+                  enabled={approach === 1}
+                  onActivate={activateEntry}
+                />
+              );
+            })}
           </div>
-          <p className="hero__console-label">{copy.consoleLabel}</p>
-          <div className="hero__controls">
-            {t.hero.entries.map((entry) => (
-              <button
-                key={entry.id}
-                type="button"
-                className={`hero__destination hero__destination--${entry.id}`}
-                onClick={() => activateEntry(entry)}
-                aria-expanded={entry.status === 'coming-soon' ? showLabStatus : undefined}
-                aria-controls={entry.status === 'coming-soon' ? 'hero-lab-status' : undefined}
-              >
-                <span className="hero__control-shape" aria-hidden="true" />
-                <span>{entry.label}</span>
-              </button>
-            ))}
-          </div>
-          <div className="hero__approach-controls" role="group" aria-label={copy.approachLabel}>
-            <button type="button" onClick={() => setCockpitApproach(0)} disabled={approach === 0}>
-              {copy.approachBack}
-            </button>
-            <button type="button" onClick={() => setCockpitApproach(1)} disabled={approach === 1}>
-              {copy.approachNear}
-            </button>
-          </div>
-          {showLabStatus && <p id="hero-lab-status" className="hero__lab-status" role="status">{copy.labStatus}</p>}
         </nav>
 
         <button
           type="button"
           className="hero__trash-bin"
           aria-label={copy.binLabel}
+          disabled={approach === 0}
           onClick={() => navigateToRoute('/making-of')}
         >
-          <span className="hero__trash-lid" aria-hidden="true" />
-          <svg className="hero__trash-graffiti" viewBox="0 0 50 48" aria-hidden="true">
-            <path d="M11 27c0-11 8-18 15-18s14 7 14 18c0 9-6 15-14 15S11 36 11 27Z" />
-            <path d="M15 21 7 15m28 6 8-6M19 28h1m12 0h1M21 35c3 2 6 2 9 0" />
-            <circle cx="20" cy="28" r="2" /><circle cx="31" cy="28" r="2" />
-          </svg>
+          <img src={trashImage} alt="" draggable="false" aria-hidden="true" />
           <span className="hero__trash-hint">{copy.binHint}</span>
         </button>
       </div>
+      <HeroHologram
+        open={hologramOpen}
+        onClose={() => setHologramOpen(false)}
+        onEnter={() => onTravel('/ai-lab')}
+      />
     </section>
   );
 }
