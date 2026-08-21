@@ -2,11 +2,12 @@ import { useEffect, useRef, useState } from 'react';
 import { useReducedMotion } from 'motion/react';
 import './HeroControls.css';
 
-export default function HeroDestinationControl({ entry, image, motion, enabled, busy = false, onActivate }) {
+export default function HeroDestinationControl({ className = '', entry, image, motion, enabled, busy = false, onActivate }) {
   const reduce = useReducedMotion();
   const timerRef = useRef(null);
   const [activeMotion, setActiveMotion] = useState('');
   const [imageFailed, setImageFailed] = useState(false);
+  const isArticulated = motion === 'pull' || motion === 'push';
 
   useEffect(() => () => window.clearTimeout(timerRef.current), []);
 
@@ -26,7 +27,7 @@ export default function HeroDestinationControl({ entry, image, motion, enabled, 
   return (
     <button
       type="button"
-      className={`hero-control hero-control--${entry.id}`}
+      className={`hero-control hero-control--${entry.id} ${className}`.trim()}
       aria-label={entry.label}
       disabled={!enabled || busy}
       data-motion={activeMotion || undefined}
@@ -34,7 +35,12 @@ export default function HeroDestinationControl({ entry, image, motion, enabled, 
     >
       <span className="hero-control__well" aria-hidden="true">
         {image && !imageFailed ? (
-          <img src={image} alt="" draggable="false" onError={() => setImageFailed(true)} />
+          <>
+            <img className="hero-control__image hero-control__image--base" src={image} alt="" draggable="false" onError={() => setImageFailed(true)} />
+            {isArticulated && (
+              <img className="hero-control__image hero-control__image--moving" src={image} alt="" draggable="false" onError={() => setImageFailed(true)} />
+            )}
+          </>
         ) : (
           <span className="hero-control__fallback" />
         )}

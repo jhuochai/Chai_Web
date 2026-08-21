@@ -2,9 +2,9 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Produce two visually compatible Hero preview assets: an empty cockpit background and a solid steel control console with a transparent surrounding canvas.
+**Goal:** Produce and integrate a layered Hero with an empty cockpit background, a rising steel console, and four independently animated controls.
 
-**Architecture:** The Hero visual is split into a wide background layer and a foreground console layer. Both assets share the same centered camera, lighting, palette, and vanishing point so the website can animate them as one camera move.
+**Architecture:** The Hero visual is split into a wide background layer, a foreground console base without controls, and four independently positioned control assets. All layers share one camera progress value; the console and controls rise together while each control owns its hover and click motion.
 
 **Tech Stack:** Built-in ImageGen, local image inspection, React/Vite asset pipeline after approval.
 
@@ -15,7 +15,9 @@
 - Final state reserves approximately the upper two-thirds for the window and the lower one-third for the console.
 - Console body is opaque solid steel; only the image area around it is transparent.
 - No text, logo, watermark, floating cards, or four separate machinery blocks.
-- This plan produces preview assets only; website integration waits for user approval.
+- Hover uses subtle preview motion; click uses the full mechanical motion and immediately starts navigation.
+- The making-of trash bin is available only in the distant empty-cockpit state and exits when the console rises.
+- The skyline remains compositionally fixed while independent light, haze, and reflection layers animate subtly.
 
 ---
 
@@ -80,3 +82,32 @@
 - [ ] **Step 2: Record approval or one targeted revision**
 
   If either asset is rejected, change only the named mismatch and regenerate that asset. Do not integrate until both are approved.
+
+### Task 4: Integrate the Approved Layered Hero
+
+**Files:**
+- Modify: `src/components/Hero.jsx`
+- Modify: `src/components/Hero.css`
+- Modify: `src/components/hero/HeroControls.css`
+- Modify: `src/components/Hero.test.jsx`
+- Test: `src/components/hero/HeroDestinationControl.test.jsx`
+
+**Interfaces:**
+- Consumes: approved empty cockpit, console base, and four control assets.
+- Produces: one scroll-controlled Hero with immediately responsive destination controls.
+
+- [ ] **Step 1: Write failing component tests**
+
+  Assert that no captain image renders, the console base and four controls render as independent layers, far-state controls are not visible, and clicks activate immediately.
+
+- [ ] **Step 2: Replace the old Hero structure**
+
+  Remove the captain and CSS-built desk. Render the empty cockpit background, a rising console base, and four positioned `HeroDestinationControl` components.
+
+- [ ] **Step 3: Add mechanical interaction motion**
+
+  Map `turn`, `push`, `pull`, and `boot` to the approved knob rotation, joystick tilt, handle pull, and AI-core charge animations. Add reduced-motion fallbacks.
+
+- [ ] **Step 4: Verify**
+
+  Run `npm test -- --run`, `npm run lint`, and `npm run build`. Expected: all commands exit successfully; existing unrelated warnings may remain.

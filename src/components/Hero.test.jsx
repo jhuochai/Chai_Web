@@ -38,19 +38,23 @@ describe('Hero 2.5D cockpit', () => {
     vi.restoreAllMocks();
   });
 
-  it('starts far with a usable flat console and no isolated center captain', () => {
+  it('starts as an empty cockpit and reveals the layered console on approach', () => {
     const { container } = renderHero();
     const cockpit = container.querySelector('.hero__cockpit');
     const archive = screen.getByRole('button', { name: /discarded drafts archive/i });
     expect(cockpit).toHaveAttribute('data-approach', '0');
     expect(archive).toBeEnabled();
-    expect(container.querySelector('.hero__control-rail')).toBeInTheDocument();
-    expect(container.querySelector('.hero__captain')).toBeTruthy();
-    expect(screen.getByRole('button', { name: "Captain's Office" })).toBeEnabled();
+    expect(container.querySelector('.hero__console-layer')).toBeInTheDocument();
+    expect(container.querySelector('.hero__control-surface')).toBeInTheDocument();
+    expect(container.querySelector('.hero__city-lights')).toBeInTheDocument();
+    expect(container.querySelector('.hero__atmosphere')).toBeInTheDocument();
+    expect(container.querySelector('.hero__captain')).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: "Captain's Office" })).toBeDisabled();
     fireEvent.wheel(cockpit, { deltaY: -800 });
     expect(cockpit).toHaveAttribute('data-approach', '1');
     expect(window.sessionStorage.getItem('hero-approached')).toBe('1');
-    expect(archive).toBeEnabled();
+    expect(archive).toBeDisabled();
+    expect(screen.getByRole('button', { name: "Captain's Office" })).toBeEnabled();
   });
 
   it('returns to the captain on reverse wheel without forgetting the session visit', () => {
@@ -92,13 +96,14 @@ describe('Hero 2.5D cockpit', () => {
     expect(onTravel).toHaveBeenCalledWith('/ai-lab');
   });
 
-  it('opens the making-of archive only after approach', () => {
+  it('opens the making-of archive only from the distant cockpit', () => {
     const { container } = renderHero();
     const cockpit = container.querySelector('.hero__cockpit');
     const archive = screen.getByRole('button', { name: /discarded drafts archive/i });
-    fireEvent.wheel(cockpit, { deltaY: -800 });
     fireEvent.click(archive);
     expect(routeMocks.navigateToRoute).toHaveBeenCalledWith('/making-of');
+    fireEvent.wheel(cockpit, { deltaY: -800 });
+    expect(archive).toBeDisabled();
   });
 
   it('supports a deliberate upward swipe', () => {
@@ -112,8 +117,14 @@ describe('Hero 2.5D cockpit', () => {
     expect(move.defaultPrevented).toBe(true);
   });
 
-  it('keeps roughly 1.7 controls visible in a mobile scroll-snap rail', () => {
-    expect(heroStyles).toMatch(/@media\s*\(max-width:\s*700px\)[\s\S]*?\.hero__control-rail\s*\{[^}]*overflow-x:\s*auto[^}]*scroll-snap-type:\s*x mandatory/s);
-    expect(heroStyles).toMatch(/\.hero-control\s*\{[^}]*flex:\s*0 0 58\.8%/s);
+  it('places each mechanical control independently and provides reduced-motion fallbacks', () => {
+    expect(heroStyles).toMatch(/\.hero__control--portfolio\s*\{[^}]*left:\s*12\.9%/s);
+    expect(heroStyles).toMatch(/\.hero__control--career\s*\{[^}]*left:\s*40%/s);
+    expect(heroStyles).toMatch(/\.hero__control--intro\s*\{[^}]*left:\s*66\.7%/s);
+    expect(heroStyles).toMatch(/\.hero__control--ai-lab\s*\{[^}]*left:\s*90\.1%/s);
+    expect(heroStyles).toMatch(/\.hero__trash-bin\s*\{[^}]*right:\s*5%[^}]*bottom:\s*13%/s);
+    expect(heroStyles).toMatch(/@keyframes\s+hero-city-lights/s);
+    expect(heroStyles).toMatch(/@keyframes\s+hero-atmosphere/s);
+    expect(heroStyles).toMatch(/@media\s*\(prefers-reduced-motion:\s*reduce\)/s);
   });
 });

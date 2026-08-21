@@ -35,4 +35,16 @@ describe('HeroDestinationControl', () => {
     fireEvent.click(screen.getByRole('button'));
     expect(onActivate).toHaveBeenCalledOnce();
   });
+
+  it('separates articulated controls into a fixed base and a moving mechanism', () => {
+    const { container, rerender } = render(
+      <HeroDestinationControl entry={{ id: 'career', label: '航跡樹站' }} image="/joystick.webp" motion="push" enabled onActivate={() => {}} />,
+    );
+    expect(container.querySelector('.hero-control__image--base')).toBeInTheDocument();
+    expect(container.querySelector('.hero-control__image--moving')).toBeInTheDocument();
+
+    rerender(<HeroDestinationControl entry={{ id: 'portfolio', label: '任務檔案庫' }} image="/knob.webp" motion="turn" enabled onActivate={() => {}} />);
+    expect(container.querySelectorAll('.hero-control__image')).toHaveLength(1);
+    expect(container.querySelector('.hero-control__image--moving')).not.toBeInTheDocument();
+  });
 });
