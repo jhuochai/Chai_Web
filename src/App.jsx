@@ -5,6 +5,7 @@ import Hero from './components/Hero';
 import Intro from './components/Intro';
 import CareerTree from './components/CareerTree';
 import Portfolio from './components/Portfolio';
+import AiLab from './components/AiLab';
 import ChapterTransition from './components/ChapterTransition';
 import MakingOf from './components/MakingOf';
 import Contact from './components/Contact';
@@ -24,12 +25,13 @@ function StationScene({ route, onTravel }) {
     profile: <Intro />,
     'career-tree': <CareerTree controls={controls} />,
     portfolio: <Portfolio />,
+    'ai-lab': <AiLab controls={controls} />,
   }[route] ?? <Hero />;
 
   return (
     <main className="scene-flow">
       {station}
-      {route !== 'career-tree' && controls}
+      {!['career-tree', 'ai-lab'].includes(route) && controls}
     </main>
   );
 }

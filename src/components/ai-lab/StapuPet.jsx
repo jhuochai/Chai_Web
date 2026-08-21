@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { forwardRef, useEffect, useState } from 'react';
 import { useReducedMotion } from 'motion/react';
 import stapuSheet from '../../assets/pets/stapu-spritesheet.webp';
 import { getStapuFrameStyle, STAPU_STATES } from './stapuSprite';
@@ -6,7 +6,7 @@ import './StapuPet.css';
 
 const patrol = ['running-right', 'waving', 'running-left', 'idle'];
 
-export default function StapuPet({ onInspect, label = 'Inspect Stapu' }) {
+const StapuPet = forwardRef(function StapuPet({ onInspect, label = 'Inspect Stapu' }, ref) {
   const reduce = useReducedMotion();
   const [phaseIndex, setPhaseIndex] = useState(0);
   const [frame, setFrame] = useState(0);
@@ -27,7 +27,7 @@ export default function StapuPet({ onInspect, label = 'Inspect Stapu' }) {
   }, [reduce]);
 
   return (
-    <button type="button" className="stapu-pet" aria-label={label} data-state={state} onClick={onInspect}>
+    <button ref={ref} type="button" className="stapu-pet" aria-label={label} data-state={state} onClick={onInspect}>
       <span className="stapu-pet__viewport" aria-hidden="true">
         <img
           src={stapuSheet}
@@ -39,4 +39,6 @@ export default function StapuPet({ onInspect, label = 'Inspect Stapu' }) {
       <span className="stapu-pet__shadow" aria-hidden="true" />
     </button>
   );
-}
+});
+
+export default StapuPet;

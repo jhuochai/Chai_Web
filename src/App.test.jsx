@@ -15,6 +15,7 @@ const routes = [
   ['/profile', 'scene-2'],
   ['/career-tree', 'scene-3'],
   ['/portfolio', 'scene-5'],
+  ['/ai-lab', 'scene-ai-lab'],
 ];
 
 describe('App station routes', () => {
@@ -37,6 +38,14 @@ describe('App station routes', () => {
     const { container } = render(<App />);
     const stage = container.querySelector('.career-tree__stage');
     expect(stage.querySelector('.station-controls')).toBeInTheDocument();
+    expect(container.querySelector('main > .station-controls')).toBeNull();
+  });
+
+  it('embeds AI lab station controls inside the lab instead of below it', () => {
+    window.history.replaceState({}, '', '/ai-lab');
+    const { container } = render(<App />);
+    const lab = container.querySelector('.ai-lab__room');
+    expect(lab.querySelector('.station-controls')).toBeInTheDocument();
     expect(container.querySelector('main > .station-controls')).toBeNull();
   });
 
