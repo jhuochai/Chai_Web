@@ -1,0 +1,7 @@
+.stapu-pet { position:relative; display:grid; place-items:end center; width:clamp(118px,18vw,220px); aspect-ratio:192/208; padding:0; border:0; background:transparent; cursor:pointer; }
+.stapu-pet__viewport { position:relative; z-index:1; display:block; width:100%; height:100%; overflow:hidden; }
+.stapu-pet__viewport img { position:absolute; top:0; left:0; width:800%; height:1100%; max-width:none; transform:translate(var(--stapu-x),var(--stapu-y)); image-rendering:auto; filter:drop-shadow(0 10px 9px #000b) drop-shadow(0 0 8px #5946c666); }
+.stapu-pet__shadow { position:absolute; left:16%; right:16%; bottom:1%; height:10%; border-radius:50%; background:#000b; filter:blur(6px); }
+.stapu-pet:is(:hover,:focus-visible) .stapu-pet__viewport { filter:drop-shadow(0 0 10px #66dcec99); transform:translateY(-3px); }
+.stapu-pet:focus-visible { outline:2px solid #71dff1; outline-offset:5px; }
+@media (prefers-reduced-motion:reduce) { .stapu-pet__viewport { transition:none; } }
