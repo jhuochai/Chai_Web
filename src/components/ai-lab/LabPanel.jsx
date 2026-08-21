@@ -9,6 +9,7 @@ export default function LabPanel({ open, title, onClose, children, returnFocusTo
   useEffect(() => {
     if (!open) return undefined;
     const release = acquireBodyScrollLock();
+    const focusTarget = returnFocusTo?.current;
     panelRef.current?.focus();
     const onKeyDown = (event) => {
       if (event.key === 'Escape') {
@@ -32,7 +33,7 @@ export default function LabPanel({ open, title, onClose, children, returnFocusTo
     return () => {
       document.removeEventListener('keydown', onKeyDown);
       release();
-      window.setTimeout(() => returnFocusTo?.current?.focus?.(), 0);
+      window.setTimeout(() => focusTarget?.focus?.(), 0);
     };
   }, [open, onClose, returnFocusTo]);
 
