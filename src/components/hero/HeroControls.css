@@ -14,7 +14,7 @@
 
 .hero-control:disabled { cursor: default; filter: saturate(.45) brightness(.6); }
 .hero-control__well { display: grid; width: 100%; height: 100%; place-items: end center; }
-.hero-control__well img { width: 100%; height: 100%; object-fit: contain; object-position: center bottom; pointer-events: none; filter: drop-shadow(0 12px 12px rgba(0,0,0,.62)); }
+.hero-control__well img { width: auto; max-width: 100%; height: 88%; object-fit: contain; object-position: center bottom; pointer-events: none; filter: drop-shadow(0 9px 9px rgba(0,0,0,.72)); }
 .hero-control__fallback { width: 72%; height: 68%; border: 1px solid #796b54; border-radius: 18% 18% 8% 8%; background: linear-gradient(145deg,#3d4146,#11151a 60%,#575047); box-shadow: inset 0 0 0 3px #111, 0 10px 22px #0009; }
 .hero-control__label { position: absolute; left: 50%; bottom: .2rem; translate: -50% 0; width: max-content; max-width: 92%; padding: .32rem .7rem; border: 1px solid #7c6b45; background: linear-gradient(#262624,#121314); color: #d6c18b; font: 600 clamp(.62rem,1vw,.78rem)/1.2 var(--font-body); letter-spacing: .08em; text-transform: uppercase; box-shadow: inset 0 1px #ffffff17, 0 3px 7px #000b; }
 .hero-control:is(:hover,:focus-visible):not(:disabled) img { filter: drop-shadow(0 12px 14px #0009) drop-shadow(0 0 9px var(--control-glow)); transform: translateY(-2%); }

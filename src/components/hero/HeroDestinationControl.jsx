@@ -17,9 +17,9 @@ export default function HeroDestinationControl({ entry, image, motion, enabled, 
       return;
     }
     setActiveMotion(motion);
+    onActivate(entry);
     timerRef.current = window.setTimeout(() => {
       setActiveMotion('');
-      onActivate(entry);
     }, 450);
   };
 

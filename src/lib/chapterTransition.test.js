@@ -8,7 +8,7 @@ import {
 describe('station transition requests', () => {
   afterEach(() => vi.restoreAllMocks());
 
-  it.each(['/', '/profile', '/career-tree', '/portfolio'])('accepts the formal station pathname %s', (pathname) => {
+  it.each(['/', '/profile', '/career-tree', '/portfolio', '/ai-lab'])('accepts the formal station pathname %s', (pathname) => {
     expect(isSafeStationPathname(pathname)).toBe(true);
   });
 

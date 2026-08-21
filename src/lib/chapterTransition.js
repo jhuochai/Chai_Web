@@ -1,6 +1,6 @@
 export const STATION_TRANSITION_EVENT = 'station-transition:start';
 
-const SAFE_STATION_PATHNAMES = new Set(['/', '/profile', '/career-tree', '/portfolio']);
+const SAFE_STATION_PATHNAMES = new Set(['/', '/profile', '/career-tree', '/portfolio', '/ai-lab']);
 
 export function isSafeStationPathname(pathname) {
   return typeof pathname === 'string' && SAFE_STATION_PATHNAMES.has(pathname);

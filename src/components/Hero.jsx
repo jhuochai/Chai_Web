@@ -154,9 +154,9 @@ export default function Hero({ onTravel = playStationTransition }) {
                 <HeroDestinationControl
                   key={entry.id}
                   entry={entry}
-                  image={approach ? controlImages[entry.id] : undefined}
+                  image={controlImages[entry.id]}
                   motion={action.motion}
-                  enabled={approach === 1}
+                  enabled
                   onActivate={activateEntry}
                 />
               );
@@ -168,7 +168,6 @@ export default function Hero({ onTravel = playStationTransition }) {
           type="button"
           className="hero__trash-bin"
           aria-label={copy.binLabel}
-          disabled={approach === 0}
           onClick={() => navigateToRoute('/making-of')}
         >
           <img src={trashImage} alt="" draggable="false" aria-hidden="true" />

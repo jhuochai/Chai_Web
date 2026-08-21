@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -38,18 +38,19 @@ describe('Hero 2.5D cockpit', () => {
     vi.restoreAllMocks();
   });
 
-  it('starts far with locked controls, then wheel-forward approaches and unlocks the console', () => {
+  it('starts far with a usable flat console and no isolated center captain', () => {
     const { container } = renderHero();
     const cockpit = container.querySelector('.hero__cockpit');
     const archive = screen.getByRole('button', { name: /discarded drafts archive/i });
     expect(cockpit).toHaveAttribute('data-approach', '0');
-    expect(archive).toBeDisabled();
+    expect(archive).toBeEnabled();
     expect(container.querySelector('.hero__control-rail')).toBeInTheDocument();
+    expect(container.querySelector('.hero__captain')).toBeTruthy();
+    expect(screen.getByRole('button', { name: "Captain's Office" })).toBeEnabled();
     fireEvent.wheel(cockpit, { deltaY: -800 });
     expect(cockpit).toHaveAttribute('data-approach', '1');
     expect(window.sessionStorage.getItem('hero-approached')).toBe('1');
     expect(archive).toBeEnabled();
-    expect(container.querySelector('.hero__captain--near')).toBeInTheDocument();
   });
 
   it('returns to the captain on reverse wheel without forgetting the session visit', () => {
@@ -72,24 +73,19 @@ describe('Hero 2.5D cockpit', () => {
     expect(second.container.querySelector('.hero__cockpit')).toHaveAttribute('data-approach', '1');
   });
 
-  it('travels only after the tactile control motion finishes', () => {
-    vi.useFakeTimers();
+  it('travels immediately when a destination control is clicked', () => {
     const onTravel = vi.fn();
     window.sessionStorage.setItem('hero-approached', '1');
     renderHero({ onTravel });
     fireEvent.click(screen.getByRole('button', { name: "Captain's Office" }));
-    expect(onTravel).not.toHaveBeenCalled();
-    act(() => vi.advanceTimersByTime(450));
     expect(onTravel).toHaveBeenCalledWith('/profile');
   });
 
   it('boots a hologram before entering the AI lab', () => {
-    vi.useFakeTimers();
     const onTravel = vi.fn();
     window.sessionStorage.setItem('hero-approached', '1');
     renderHero({ onTravel });
     fireEvent.click(screen.getByRole('button', { name: 'AI Lab' }));
-    act(() => vi.advanceTimersByTime(450));
     expect(screen.getByRole('dialog', { name: /AI Lab preview/i })).toBeInTheDocument();
     expect(onTravel).not.toHaveBeenCalled();
     fireEvent.click(screen.getByRole('button', { name: /Enter AI Lab/i }));

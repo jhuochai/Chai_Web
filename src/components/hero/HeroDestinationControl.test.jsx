@@ -11,7 +11,7 @@ describe('HeroDestinationControl', () => {
     motionState.reduced = false;
   });
 
-  it('plays one tactile motion before activating', () => {
+  it('activates immediately while preventing a duplicate tactile action', () => {
     vi.useFakeTimers();
     const onActivate = vi.fn();
     render(<HeroDestinationControl entry={{ id: 'career', label: '航跡樹站' }} image="/control.webp" motion="push" enabled onActivate={onActivate} />);
@@ -19,10 +19,9 @@ describe('HeroDestinationControl', () => {
     const control = screen.getByRole('button', { name: '航跡樹站' });
     fireEvent.click(control);
     fireEvent.click(control);
-    expect(onActivate).not.toHaveBeenCalled();
-    expect(control).toHaveAttribute('data-motion', 'push');
-    act(() => vi.advanceTimersByTime(450));
     expect(onActivate).toHaveBeenCalledOnce();
+    expect(control).toHaveAttribute('data-motion', 'push');
+    act(() => vi.runAllTimers());
   });
 
   it('activates immediately with reduced motion and respects disabled state', () => {
