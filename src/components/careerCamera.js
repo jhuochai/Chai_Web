@@ -38,6 +38,12 @@ export function createCareerCameraController({ stage, onProgress = () => {}, red
   };
   const onPointerDown = (event) => {
     if (event.button != null && event.button !== 0) return;
+    if (
+      event.target instanceof Element &&
+      event.target.closest('button, a, input, select, textarea, [role="button"]')
+    ) {
+      return;
+    }
     resetPointer();
     pointer = { id: event.pointerId, startY: event.clientY, lastY: event.clientY, consumed: false };
     try { stage.setPointerCapture?.(event.pointerId); } catch { /* window-level input still works */ }

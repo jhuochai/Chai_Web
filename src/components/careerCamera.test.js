@@ -9,7 +9,7 @@ function makeStage() {
 }
 
 function pointer(type, values) {
-  return Object.assign(new Event(type, { cancelable: true }), values);
+  return Object.assign(new Event(type, { cancelable: true, bubbles: true }), values);
 }
 
 describe('createCareerCameraController', () => {
@@ -112,6 +112,20 @@ describe('createCareerCameraController', () => {
     stage.dispatchEvent(atBoundary);
     expect(atBoundary.defaultPrevented).toBe(true);
     expect(stage.releasePointerCapture).not.toHaveBeenCalled();
+    controller.destroy();
+    stage.remove();
+  });
+
+  it('does not capture pointer gestures that begin on an interactive control', () => {
+    const stage = makeStage();
+    const button = document.createElement('button');
+    stage.append(button);
+    stage.setPointerCapture = vi.fn();
+    const controller = createCareerCameraController({ stage, initialProgress: 1 });
+
+    button.dispatchEvent(pointer('pointerdown', { pointerId: 23, clientY: 180 }));
+
+    expect(stage.setPointerCapture).not.toHaveBeenCalled();
     controller.destroy();
     stage.remove();
   });

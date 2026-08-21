@@ -17,11 +17,11 @@ describe('CareerTree', () => {
   const careerStyles = readFileSync('src/components/CareerTree.css', 'utf8');
   const bloomStyles = readFileSync('src/components/GameBloom.css', 'utf8');
 
-  it('fully owns stage touch input and reserves separate mobile lanes for controls, hint, and mode', () => {
+  it('fully owns stage touch input and reserves separate mobile lanes for hint and mode', () => {
     expect(careerStyles).toMatch(/\.career-tree__stage\s*\{[^}]*touch-action:\s*none;/s);
     expect(careerStyles).toMatch(/\.career-tree__hint\s*\{[^}]*bottom:\s*max\(132px/s);
-    expect(careerStyles).toMatch(/\.career-tree__camera-controls\s*\{[^}]*bottom:\s*max\(186px/s);
     expect(careerStyles).toMatch(/\.career-tree__toggle\s*\{[^}]*bottom:\s*max\(186px/s);
+    expect(careerStyles).not.toMatch(/\.career-tree__camera-controls/);
     expect(careerStyles).toMatch(/@media \(max-width: 600px\)[\s\S]*?\.career-tree__station-controls \.station-controls__console \{ flex-direction: row; \}/);
   });
 
@@ -32,17 +32,17 @@ describe('CareerTree', () => {
     // The embedded station console is 64px tall: two 44px controls plus 10px vertical padding.
     const stationControls = { top: height - 76, bottom: height - 12 };
     const hint = { top: height - 172, bottom: height - 132 };
-    const cameraAndMode = { top: height - 220, bottom: height - 176 };
+    const mode = { top: height - 220, bottom: height - 176 };
     const overlaps = (a, b) => a.top < b.bottom && a.bottom > b.top;
 
     expect(overlaps(stationControls, hint)).toBe(false);
-    expect(overlaps(hint, cameraAndMode)).toBe(false);
+    expect(overlaps(hint, mode)).toBe(false);
     expect(careerStyles).toMatch(/\.career-tree__station-controls \{ right: 14px; bottom: max\(12px, env\(safe-area-inset-bottom\)\); \}/);
-    expect(careerStyles).toMatch(/\.career-tree__camera-controls \{ bottom: max\(176px, calc\(env\(safe-area-inset-bottom\) \+ 164px\)\); \}/);
+    expect(careerStyles).not.toMatch(/\.career-tree__camera-controls/);
   });
 
-  it('uses oversized local masks to conceal baked attachments', () => {
-    expect(careerStyles).toMatch(/\.career-tree__ribbon-mask\s*\{[^}]*inset:\s*-24px -30px;/s);
+  it('uses clean day art without a ribbon mask and keeps flower masks for the night art', () => {
+    expect(careerStyles).not.toMatch(/\.career-tree__ribbon-mask/);
     expect(bloomStyles).toMatch(/\.game-bloom__mask\s*\{[^}]*inset:\s*-20px;/s);
   });
   it('does not render the retired ScrollTrigger camera pathway', () => {
@@ -123,10 +123,31 @@ describe('CareerTree', () => {
     expect(screen.getByRole('button', { name: content.en.careerTree.ribbons[0].org })).toBeEnabled();
   });
 
-  it('provides explicit approach and retreat controls alongside the focused keyboard alternative', () => {
+  it('keeps wheel and keyboard camera movement without redundant on-screen zoom controls', () => {
     renderTree();
-    expect(screen.getByRole('button', { name: 'Approach the route tree' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Retreat from the route tree' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Approach the route tree' })).toBeNull();
+    expect(screen.queryByRole('button', { name: 'Retreat from the route tree' })).toBeNull();
+  });
+
+  it('lets visitors switch day and night before approaching the tree', () => {
+    renderTree();
+    const toggle = screen.getByRole('button', { name: 'Switch to night' });
+    expect(toggle).toBeEnabled();
+    fireEvent.click(toggle);
+    expect(screen.getByRole('button', { name: 'Switch to day' })).toBeInTheDocument();
+  });
+
+  it('opens a work chapter with one click and preserves camera distance after closing', async () => {
+    const { container } = renderTree();
+    fireEvent(window, new CustomEvent('career-tree:test-progress', { detail: 0.8 }));
+    const trigger = screen.getByRole('button', { name: content.en.careerTree.ribbons[0].org });
+
+    fireEvent.click(trigger);
+    expect(screen.getByRole('dialog', { name: content.en.careerTree.ribbons[0].org })).toBeInTheDocument();
+    fireEvent.keyDown(document, { key: 'Escape' });
+
+    await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
+    expect(container.querySelector('.career-tree__stage')).toHaveAttribute('data-camera-progress', '0.800');
   });
 
   it('contains no scroll-linked walking strip or persistent walker', () => {
@@ -161,12 +182,24 @@ describe('CareerTree', () => {
     expect(new Set(assets).size).toBe(1);
     expect(container.querySelectorAll('[data-ribbon-family="route-gold"]').length).toBe(4);
     expect(container.querySelectorAll('[data-branch-anchor]').length).toBe(4);
-    expect(container.querySelectorAll('[data-testid="career-ribbon-mask"]')).toHaveLength(4);
+    expect(container.querySelectorAll('[data-testid="career-ribbon-mask"]')).toHaveLength(0);
     expect(
       Array.from(container.querySelectorAll('[data-ribbon-id]')).map((node) =>
         node.getAttribute('data-ribbon-id')
       )
     ).toEqual(content.en.careerTree.ribbons.map((ribbon) => ribbon.id));
+  });
+
+  it('keeps ribbons visibly attached to the same camera scale from the far state', () => {
+    const { container } = renderTree();
+    const camera = container.querySelector('.career-tree__camera');
+    const ribbons = Array.from(container.querySelectorAll('.career-tree__spot--ribbon'));
+
+    expect(ribbons).toHaveLength(4);
+    expect(ribbons.every((ribbon) => camera.contains(ribbon))).toBe(true);
+    expect(careerStyles).toMatch(
+      /\.career-tree__spot--ribbon:disabled\s*\{[^}]*opacity:\s*0\.82;[^}]*transform:\s*translate\(-50%, -50%\);/s
+    );
   });
 
   it('switches to night mode when the hero broadcasts games mode', () => {

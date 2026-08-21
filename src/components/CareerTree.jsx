@@ -6,10 +6,10 @@ import { Sun, MoonStars } from '@phosphor-icons/react';
 import CareerRibbonSheet from './CareerRibbonSheet';
 import GameBloom from './GameBloom';
 import { useLanguage } from '../i18n/LanguageContext';
-import treeDay from '../assets/scenes/career-tree-day-factory-v2.webp';
+import treeDay from '../assets/scenes/career-tree-day-factory-clean-v3.webp';
 import treeNight from '../assets/scenes/career-tree-night-factory.webp';
 import bloom01 from '../assets/scenes/blooms/bloom-01.webp';
-import ribbonSmoke from '../assets/scenes/ribbons/ribbon-smoke.webp';
+import ribbonGold from '../assets/scenes/ribbons/ribbon-route-gold-v2.webp';
 import { createCareerCameraController, INTERACTIVE_PROGRESS } from './careerCamera';
 import './CareerTree.css';
 
@@ -26,7 +26,7 @@ const RIBBON_SPOTS = {
   eelin: { left: '59.6%', top: '63.6%', anchor: 'lower-right' },
 };
 
-const RIBBON_ASSET = ribbonSmoke;
+const RIBBON_ASSET = ribbonGold;
 
 const GAME_BLOOM_LAYOUT = {
   'wild-rift': { left: '40.8%', top: '61.3%', mobileLeft: '18%', mobileTop: '62%', size: 'lg', branch: 'lower-left', stemAngle: '-28deg', stemLength: '36px', rotation: '-12deg', hue: '4deg' },
@@ -200,7 +200,7 @@ export default function CareerTree({ controls }) {
     ? (lang === 'zh' ? '遊戲' : 'Games')
     : (lang === 'zh' ? '航跡' : 'Career');
   const hint = interactive
-    ? (night ? tree.nightHint : tree.pullHint)
+    ? (night ? tree.nightHint : tree.dayHint)
     : (lang === 'zh' ? '向上滾動，靠近航跡樹' : 'Scroll up to approach the route tree');
 
   return (
@@ -269,8 +269,13 @@ export default function CareerTree({ controls }) {
                         aria-haspopup="dialog"
                         aria-expanded={activeId === item.id}
                         disabled={!interactive}
+                        onClick={() => setActiveId(item.id)}
+                        onKeyDown={(event) => {
+                          if (event.key !== 'Enter' && event.key !== ' ') return;
+                          event.preventDefault();
+                          setActiveId(item.id);
+                        }}
                       >
-                        <span className="career-tree__ribbon-mask" data-testid="career-ribbon-mask" aria-hidden="true" />
                         <img
                           src={RIBBON_ASSET}
                           alt=""
@@ -279,14 +284,8 @@ export default function CareerTree({ controls }) {
                         />
                       </button>
                       <CareerRibbonSheet
-                        item={{
-                          ...item,
-                          dragHint: tree.pullHint,
-                          pullReady: tree.pullReady,
-                          closeLabel: tree.closeLabel,
-                        }}
+                        item={{ ...item, closeLabel: tree.closeLabel }}
                         open={activeId === item.id}
-                        onOpen={() => setActiveId(item.id)}
                         onClose={() => setActiveId(null)}
                         triggerRef={triggerRef}
                       />
@@ -305,16 +304,10 @@ export default function CareerTree({ controls }) {
           onClick={toggleNight}
           aria-label={night ? tree.toggleToDay : tree.toggleToNight}
           aria-pressed={night}
-          disabled={!interactive}
         >
           {night ? <Sun size={20} weight="light" /> : <MoonStars size={20} weight="light" />}
           <span>{night ? tree.dayLabel : tree.nightLabel}</span>
         </button>
-
-        <div className="career-tree__camera-controls" aria-label={lang === 'zh' ? '航跡樹鏡頭控制' : 'Route tree camera controls'}>
-          <button type="button" onClick={() => controllerRef.current?.approach()} aria-label={lang === 'zh' ? '靠近航跡樹' : 'Approach the route tree'}>+</button>
-          <button type="button" onClick={() => controllerRef.current?.retreat()} aria-label={lang === 'zh' ? '遠離航跡樹' : 'Retreat from the route tree'}>−</button>
-        </div>
 
         <p className="career-tree__hint" aria-live="polite">
           {hint}

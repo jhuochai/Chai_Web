@@ -235,14 +235,12 @@ describe('content.careerTree', () => {
     expect(enFlowers).toEqual(zhFlowers);
   });
 
-  it('provides aligned instructions for pulling a career ribbon', () => {
+  it('provides aligned instructions for opening a career ribbon', () => {
     expect(content.en.careerTree).toEqual(expect.objectContaining({
-      pullHint: 'Hold the ribbon and pull down',
-      pullReady: 'Release to open this work chapter',
+      dayHint: 'Select a ribbon to open a work chapter',
     }));
     expect(content.zh.careerTree).toEqual(expect.objectContaining({
-      pullHint: '按住絲帶，向下拉開',
-      pullReady: '放開後展開這段工作經歷',
+      dayHint: '點擊絲帶，展開一段工作經歷',
     }));
   });
 });
