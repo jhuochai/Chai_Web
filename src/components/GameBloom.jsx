@@ -200,10 +200,7 @@ export default function GameBloom({
           top: position.top,
           '--bloom-mobile-left': position.mobileLeft,
           '--bloom-mobile-top': position.mobileTop,
-          '--stem-angle': position.stemAngle,
-          '--stem-length': position.stemLength,
           '--bloom-rotation': position.rotation,
-          '--bloom-hue': position.hue,
         }}
         onClick={() => onOpen?.(game.id)}
         aria-label={game.name}
@@ -217,11 +214,8 @@ export default function GameBloom({
         data-size={size}
         data-branch={position.branch}
         data-branch-anchor={position.branch}
-        data-stem-endpoint={`${position.branch}:${position.stemAngle}:${position.stemLength}`}
-        data-family="lumen-forge-bloom"
+        data-family="arcane-lumen-bloom"
       >
-        <span className="game-bloom__mask" data-testid="game-bloom-mask" aria-hidden="true" />
-        <span className="game-bloom__stem" aria-hidden="true" />
         {!assetFailed && (
           <img
             src={asset}

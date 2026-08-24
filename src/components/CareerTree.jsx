@@ -7,18 +7,17 @@ import CareerRibbonSheet from './CareerRibbonSheet';
 import GameBloom from './GameBloom';
 import { useLanguage } from '../i18n/LanguageContext';
 import treeDay from '../assets/scenes/career-tree-day-factory-clean-v3.webp';
-import treeNight from '../assets/scenes/career-tree-night-factory.webp';
-import bloom01 from '../assets/scenes/blooms/bloom-01.webp';
+import treeNight from '../assets/scenes/career-tree-night-factory-clean-v2.webp';
+import bloomArcane from '../assets/scenes/blooms/bloom-arcane-v2.webp';
 import ribbonGold from '../assets/scenes/ribbons/ribbon-route-gold-v2.webp';
 import { createCareerCameraController, INTERACTIVE_PROGRESS } from './careerCamera';
 import './CareerTree.css';
 
 // Hotspot anchors in % of the BACKGROUND IMAGE (not the stage): the day
-// tree has glowing ribbons and the night tree glowing flower clusters
-// painted right into the art, so the click targets sit on those. The
-// canvas element reproduces object-fit: cover geometry, which keeps
-// these glued to the branches at every viewport size. Kept within
-// 22-78% horizontally so no hotspot is cropped away down to ~1024px.
+// tree art is deliberately clean: ribbons and blooms are interactive
+// sprites in this same image coordinate system. The canvas reproduces
+// object-fit: cover geometry, keeping every sprite attached to its
+// branch across viewport sizes.
 const RIBBON_SPOTS = {
   gamesofa: { left: '34.3%', top: '47.7%', anchor: 'crown-left' },
   ntpu: { left: '65.9%', top: '54.1%', anchor: 'crown-right' },
@@ -29,20 +28,20 @@ const RIBBON_SPOTS = {
 const RIBBON_ASSET = ribbonGold;
 
 const GAME_BLOOM_LAYOUT = {
-  'wild-rift': { left: '40.8%', top: '61.3%', mobileLeft: '18%', mobileTop: '62%', size: 'lg', branch: 'lower-left', stemAngle: '-28deg', stemLength: '36px', rotation: '-12deg', hue: '4deg' },
-  'identity-v': { left: '34.8%', top: '48.2%', mobileLeft: '50%', mobileTop: '48%', size: 'md', branch: 'crown-left', stemAngle: '18deg', stemLength: '32px', rotation: '9deg', hue: '-8deg' },
-  stardew: { left: '44.5%', top: '32.2%', mobileLeft: '50%', mobileTop: '30%', size: 'sm', branch: 'crown-center', stemAngle: '-12deg', stemLength: '30px', rotation: '-5deg', hue: '8deg' },
-  lol: { left: '58.2%', top: '34.4%', mobileLeft: '82%', mobileTop: '31%', size: 'lg', branch: 'crown-right', stemAngle: '24deg', stemLength: '39px', rotation: '13deg', hue: '-4deg' },
-  valorant: { left: '34.7%', top: '36.4%', mobileLeft: '18%', mobileTop: '32%', size: 'sm', branch: 'crown-left', stemAngle: '-22deg', stemLength: '28px', rotation: '6deg', hue: '12deg' },
-  r6: { left: '64.4%', top: '42.6%', mobileLeft: '82%', mobileTop: '42%', size: 'md', branch: 'crown-right', stemAngle: '30deg', stemLength: '34px', rotation: '-10deg', hue: '-10deg' },
-  gta5: { left: '53.4%', top: '44.7%', mobileLeft: '50%', mobileTop: '37%', size: 'sm', branch: 'crown-center', stemAngle: '-8deg', stemLength: '30px', rotation: '11deg', hue: '6deg' },
-  minecraft: { left: '63.1%', top: '54.7%', mobileLeft: '82%', mobileTop: '58%', size: 'md', branch: 'lower-right', stemAngle: '16deg', stemLength: '36px', rotation: '-8deg', hue: '2deg' },
-  palworld: { left: '60.1%', top: '65.5%', mobileLeft: '72%', mobileTop: '72%', size: 'lg', branch: 'lower-right', stemAngle: '-20deg', stemLength: '40px', rotation: '7deg', hue: '-6deg' },
-  'dont-starve': { left: '47.5%', top: '51.2%', mobileLeft: '18%', mobileTop: '48%', size: 'md', branch: 'crown-left', stemAngle: '12deg', stemLength: '32px', rotation: '-13deg', hue: '10deg' },
-  raft: { left: '52.4%', top: '59.2%', mobileLeft: '36%', mobileTop: '72%', size: 'sm', branch: 'lower-left', stemAngle: '-18deg', stemLength: '29px', rotation: '4deg', hue: '-2deg' },
+  'wild-rift': { left: '40.8%', top: '61.3%', mobileLeft: '18%', mobileTop: '62%', size: 'lg', branch: 'lower-left', rotation: '-12deg' },
+  'identity-v': { left: '34.8%', top: '48.2%', mobileLeft: '50%', mobileTop: '48%', size: 'md', branch: 'crown-left', rotation: '9deg' },
+  stardew: { left: '44.5%', top: '32.2%', mobileLeft: '50%', mobileTop: '30%', size: 'sm', branch: 'crown-center', rotation: '-5deg' },
+  lol: { left: '58.2%', top: '34.4%', mobileLeft: '82%', mobileTop: '31%', size: 'lg', branch: 'crown-right', rotation: '13deg' },
+  valorant: { left: '34.7%', top: '36.4%', mobileLeft: '18%', mobileTop: '32%', size: 'sm', branch: 'crown-left', rotation: '6deg' },
+  r6: { left: '64.4%', top: '42.6%', mobileLeft: '82%', mobileTop: '42%', size: 'md', branch: 'crown-right', rotation: '-10deg' },
+  gta5: { left: '53.4%', top: '44.7%', mobileLeft: '50%', mobileTop: '37%', size: 'sm', branch: 'crown-center', rotation: '11deg' },
+  minecraft: { left: '63.1%', top: '54.7%', mobileLeft: '82%', mobileTop: '58%', size: 'md', branch: 'lower-right', rotation: '-8deg' },
+  palworld: { left: '60.1%', top: '65.5%', mobileLeft: '72%', mobileTop: '72%', size: 'lg', branch: 'lower-right', rotation: '7deg' },
+  'dont-starve': { left: '47.5%', top: '51.2%', mobileLeft: '18%', mobileTop: '48%', size: 'md', branch: 'crown-left', rotation: '-13deg' },
+  raft: { left: '52.4%', top: '59.2%', mobileLeft: '36%', mobileTop: '72%', size: 'sm', branch: 'lower-left', rotation: '4deg' },
 };
 
-const GAME_BLOOM_ASSET = bloom01;
+const GAME_BLOOM_ASSET = bloomArcane;
 
 const LEAF_COLORS = ['rgba(201,162,75,0.75)', 'rgba(224,188,106,0.6)', 'rgba(110,139,61,0.65)'];
 

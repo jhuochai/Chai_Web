@@ -3,13 +3,13 @@
   width: max(52px, var(--bloom-visual));
   height: max(52px, var(--bloom-visual));
   background: transparent;
-  animation: bloom-breathe 3.2s ease-in-out infinite;
   isolation: isolate;
 }
 
-.career-tree__stage[data-interactive='false'] .game-bloom {
-  opacity: calc(0.2 + var(--camera-progress) * 0.28);
-  transform: translate(-50%, -50%) scale(calc(0.55 + var(--camera-progress) * 0.34));
+.career-tree__spot--flower:disabled {
+  opacity: 0.82;
+  filter: saturate(0.92);
+  transform: translate(-50%, -50%);
 }
 
 .career-tree__spot.game-bloom:hover,
@@ -26,35 +26,12 @@
   background: rgba(107, 150, 255, 0.24);
   filter: blur(12px);
   transform: translateY(5px);
+  animation: bloom-glow 3.2s ease-in-out infinite;
 }
 
-.game-bloom__mask {
-  position: absolute;
-  z-index: 0;
-  inset: -20px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(7, 12, 22, 0.9) 0%, rgba(8, 13, 22, 0.7) 52%, transparent 77%);
-  filter: blur(5px);
-  pointer-events: none;
-}
-
-.game-bloom__stem {
-  position: absolute;
-  z-index: 1;
-  left: 50%;
-  top: 54%;
-  width: clamp(4px, 0.5vw, 7px);
-  height: var(--stem-length, 32px);
-  border-radius: 999px 999px 46% 46%;
-  background: linear-gradient(90deg, #3a3222, #bd9653 52%, #514127);
-  box-shadow: 0 0 8px rgba(209, 164, 86, 0.24);
-  transform: translateX(-50%) rotate(var(--stem-angle, 9deg));
-  transform-origin: top center;
-}
-
-.game-bloom--sm { --bloom-visual: clamp(44px, 4.2vw, 58px); }
-.game-bloom--md { --bloom-visual: clamp(54px, 5.1vw, 72px); }
-.game-bloom--lg { --bloom-visual: clamp(66px, 6.2vw, 88px); }
+.game-bloom--sm { --bloom-visual: clamp(28px, 2.5vw, 34px); }
+.game-bloom--md { --bloom-visual: clamp(32px, 2.9vw, 39px); }
+.game-bloom--lg { --bloom-visual: clamp(36px, 3.3vw, 44px); }
 
 .game-bloom > img {
   position: absolute;
@@ -67,14 +44,14 @@
   transform: translate(-50%, -50%) rotate(var(--bloom-rotation, 0deg));
   pointer-events: none;
   user-select: none;
-  filter: sepia(0.42) saturate(0.82) hue-rotate(calc(164deg + var(--bloom-hue, 0deg))) brightness(1.08) drop-shadow(0 10px 9px rgba(1, 7, 18, 0.72)) drop-shadow(0 0 8px rgba(138, 158, 255, 0.3));
+  filter: drop-shadow(0 10px 9px rgba(1, 7, 18, 0.72)) drop-shadow(0 0 8px rgba(92, 154, 255, 0.42));
   transition: filter 0.24s ease, transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .game-bloom:hover > img,
 .game-bloom:focus-visible > img {
   transform: translate(-50%, -54%) rotate(var(--bloom-rotation, 0deg)) scale(1.08);
-  filter: sepia(0.42) saturate(0.82) hue-rotate(calc(164deg + var(--bloom-hue, 0deg))) brightness(1.14) drop-shadow(0 14px 11px rgba(1, 7, 18, 0.78)) drop-shadow(0 0 12px rgba(181, 197, 255, 0.42));
+  filter: brightness(1.08) drop-shadow(0 14px 11px rgba(1, 7, 18, 0.78)) drop-shadow(0 0 13px rgba(111, 173, 255, 0.58));
 }
 
 .game-bloom__name {
@@ -266,13 +243,13 @@
   line-height: 1.65;
 }
 
-@keyframes bloom-breathe {
-  0%, 100% { transform: translate(-50%, -50%) scale(0.96); }
-  50% { transform: translate(-50%, -50%) scale(1.04); }
+@keyframes bloom-glow {
+  0%, 100% { opacity: 0.62; }
+  50% { opacity: 1; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .game-bloom,
+  .game-bloom::before,
   .game-bloom > img,
   .game-bloom__name {
     animation: none;
@@ -291,8 +268,8 @@
 
 @media (max-width: 600px) {
   .game-bloom { left: var(--bloom-mobile-left) !important; top: var(--bloom-mobile-top) !important; }
-  .game-bloom--sm { --bloom-visual: 42px; }
-  .game-bloom--md { --bloom-visual: 50px; }
-  .game-bloom--lg { --bloom-visual: 58px; }
+  .game-bloom--sm { --bloom-visual: 28px; }
+  .game-bloom--md { --bloom-visual: 34px; }
+  .game-bloom--lg { --bloom-visual: 40px; }
   .game-bloom__name { display: none; }
 }

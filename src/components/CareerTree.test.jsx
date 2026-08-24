@@ -16,6 +16,7 @@ function renderTree() {
 describe('CareerTree', () => {
   const careerStyles = readFileSync('src/components/CareerTree.css', 'utf8');
   const bloomStyles = readFileSync('src/components/GameBloom.css', 'utf8');
+  const careerSource = readFileSync('src/components/CareerTree.jsx', 'utf8');
 
   it('fully owns stage touch input and reserves separate mobile lanes for hint and mode', () => {
     expect(careerStyles).toMatch(/\.career-tree__stage\s*\{[^}]*touch-action:\s*none;/s);
@@ -41,9 +42,10 @@ describe('CareerTree', () => {
     expect(careerStyles).not.toMatch(/\.career-tree__camera-controls/);
   });
 
-  it('uses clean day art without a ribbon mask and keeps flower masks for the night art', () => {
+  it('uses clean day and night art without painted-element masks', () => {
     expect(careerStyles).not.toMatch(/\.career-tree__ribbon-mask/);
-    expect(bloomStyles).toMatch(/\.game-bloom__mask\s*\{[^}]*inset:\s*-20px;/s);
+    expect(bloomStyles).not.toMatch(/\.game-bloom__mask/);
+    expect(careerSource).toContain('career-tree-night-factory-clean-v2.webp');
   });
   it('does not render the retired ScrollTrigger camera pathway', () => {
     const { container } = renderTree();
@@ -223,18 +225,38 @@ describe('CareerTree', () => {
   });
 
   it('renders eleven distinct game blooms without the old shelf group', () => {
-    renderTree();
+    const { container } = renderTree();
     fireEvent(window, new CustomEvent('career-tree:test-progress', { detail: 0.8 }));
     fireEvent.click(screen.getByRole('button', { name: 'Switch to night' }));
 
     const blooms = screen.getAllByTestId('game-bloom');
     expect(blooms).toHaveLength(11);
-    expect(blooms.every((node) => node.dataset.family === 'lumen-forge-bloom')).toBe(true);
+    expect(blooms.every((node) => node.dataset.family === 'arcane-lumen-bloom')).toBe(true);
     expect(blooms.every((node) => node.dataset.branchAnchor)).toBeTruthy();
     expect(new Set(blooms.map((node) => node.dataset.asset)).size).toBe(1);
-    expect(blooms.every((node) => node.dataset.stemEndpoint)).toBeTruthy();
-    expect(screen.getAllByTestId('game-bloom-mask')).toHaveLength(11);
+    expect(blooms.every((node) => node.dataset.stemEndpoint == null)).toBe(true);
+    expect(screen.queryAllByTestId('game-bloom-mask')).toHaveLength(0);
+    expect(container.querySelectorAll('.game-bloom__stem')).toHaveLength(0);
     expect(screen.queryByText(/Bookshelf|書架上還有/i)).not.toBeInTheDocument();
+  });
+
+  it('keeps blossom-only hotspots on the same camera scale from the far state', () => {
+    const { container } = renderTree();
+    fireEvent.click(screen.getByRole('button', { name: 'Switch to night' }));
+
+    const camera = container.querySelector('.career-tree__camera');
+    const blooms = Array.from(container.querySelectorAll('.career-tree__spot--flower'));
+    expect(blooms).toHaveLength(11);
+    expect(blooms.every((bloom) => camera.contains(bloom))).toBe(true);
+    expect(bloomStyles).toMatch(
+      /\.career-tree__spot--flower:disabled\s*\{[^}]*opacity:\s*0\.82;[^}]*transform:\s*translate\(-50%, -50%\);/s
+    );
+  });
+
+  it('keeps every blossom visually smaller than the hanging lamp', () => {
+    expect(bloomStyles).toMatch(/\.game-bloom--sm\s*\{\s*--bloom-visual:\s*clamp\(28px, 2\.5vw, 34px\);\s*\}/);
+    expect(bloomStyles).toMatch(/\.game-bloom--md\s*\{\s*--bloom-visual:\s*clamp\(32px, 2\.9vw, 39px\);\s*\}/);
+    expect(bloomStyles).toMatch(/\.game-bloom--lg\s*\{\s*--bloom-visual:\s*clamp\(36px, 3\.3vw, 44px\);\s*\}/);
   });
 
   it('uses three bloom sizes and keeps at most three blooms on a branch', () => {
@@ -279,8 +301,8 @@ describe('CareerTree', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Switch to night' }));
 
     const visualDiameter = (size) => {
-      if (mobile) return { sm: 42, md: 50, lg: 58 }[size];
-      const scale = { sm: [44, 4.2, 58], md: [54, 5.1, 72], lg: [66, 6.2, 88] }[size];
+      if (mobile) return { sm: 28, md: 34, lg: 40 }[size];
+      const scale = { sm: [28, 2.5, 34], md: [32, 2.9, 39], lg: [36, 3.3, 44] }[size];
       return Math.max(scale[0], Math.min((width * scale[1]) / 100, scale[2]));
     };
     const canvasWidth = mobile ? width : Math.max(width, height * (1672 / 941));
