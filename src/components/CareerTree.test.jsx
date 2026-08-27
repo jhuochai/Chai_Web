@@ -175,14 +175,14 @@ describe('CareerTree', () => {
     expect(trigger).toHaveFocus();
   });
 
-  it('renders four branch-attached ribbons from the same gold visual family in day mode', () => {
+  it('renders four branch-attached ribbons with distinct approved assets in day mode', () => {
     const { container } = renderTree();
     const assets = screen
       .getAllByTestId('career-ribbon-asset')
       .map((image) => image.getAttribute('src'));
     expect(assets).toHaveLength(4);
-    expect(new Set(assets).size).toBe(1);
-    expect(container.querySelectorAll('[data-ribbon-family="route-gold"]').length).toBe(4);
+    expect(new Set(assets).size).toBe(4);
+    expect(container.querySelectorAll('[data-ribbon-family="career-record"]').length).toBe(4);
     expect(container.querySelectorAll('[data-branch-anchor]').length).toBe(4);
     expect(container.querySelectorAll('[data-testid="career-ribbon-mask"]')).toHaveLength(0);
     expect(
@@ -224,16 +224,16 @@ describe('CareerTree', () => {
     expect(screen.getByText(flower.desc)).toBeInTheDocument();
   });
 
-  it('renders eleven distinct game blooms without the old shelf group', () => {
+  it('renders twelve distinct game blooms without the old shelf group', () => {
     const { container } = renderTree();
     fireEvent(window, new CustomEvent('career-tree:test-progress', { detail: 0.8 }));
     fireEvent.click(screen.getByRole('button', { name: 'Switch to night' }));
 
     const blooms = screen.getAllByTestId('game-bloom');
-    expect(blooms).toHaveLength(11);
+    expect(blooms).toHaveLength(12);
     expect(blooms.every((node) => node.dataset.family === 'arcane-lumen-bloom')).toBe(true);
     expect(blooms.every((node) => node.dataset.branchAnchor)).toBeTruthy();
-    expect(new Set(blooms.map((node) => node.dataset.asset)).size).toBe(1);
+    expect(new Set(blooms.map((node) => node.dataset.asset)).size).toBe(12);
     expect(blooms.every((node) => node.dataset.stemEndpoint == null)).toBe(true);
     expect(screen.queryAllByTestId('game-bloom-mask')).toHaveLength(0);
     expect(container.querySelectorAll('.game-bloom__stem')).toHaveLength(0);
@@ -246,7 +246,7 @@ describe('CareerTree', () => {
 
     const camera = container.querySelector('.career-tree__camera');
     const blooms = Array.from(container.querySelectorAll('.career-tree__spot--flower'));
-    expect(blooms).toHaveLength(11);
+    expect(blooms).toHaveLength(12);
     expect(blooms.every((bloom) => camera.contains(bloom))).toBe(true);
     expect(bloomStyles).toMatch(
       /\.career-tree__spot--flower:disabled\s*\{[^}]*opacity:\s*0\.82;[^}]*transform:\s*translate\(-50%, -50%\);/s
@@ -265,7 +265,7 @@ describe('CareerTree', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Switch to night' }));
 
     const blooms = screen.getAllByTestId('game-bloom');
-    expect(new Set(blooms.map((node) => node.dataset.position)).size).toBe(11);
+    expect(new Set(blooms.map((node) => node.dataset.position)).size).toBe(12);
     expect(new Set(blooms.map((node) => node.dataset.size))).toEqual(
       new Set(['sm', 'md', 'lg'])
     );

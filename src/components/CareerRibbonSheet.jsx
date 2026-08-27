@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { X } from '@phosphor-icons/react';
+import InspectionDock from './InspectionDock';
 import './CareerRibbonSheet.css';
 
 const FOCUSABLE = [
@@ -13,7 +14,7 @@ const FOCUSABLE = [
   '[tabindex]:not([tabindex="-1"])',
 ].join(',');
 
-export default function CareerRibbonSheet({ item, open, onClose, triggerRef }) {
+export default function CareerRibbonSheet({ item, open, onClose, triggerRef, visual }) {
   const reduce = useReducedMotion();
   const panelRef = useRef(null);
   const onCloseRef = useRef(onClose);
@@ -97,17 +98,24 @@ export default function CareerRibbonSheet({ item, open, onClose, triggerRef }) {
               <X size={22} weight="light" aria-hidden="true" />
             </button>
 
-            <div className="career-ribbon-sheet__content">
-              <p className="career-ribbon-sheet__period">{item.period}</p>
-              <h3>{item.org}</h3>
-              <p className="career-ribbon-sheet__role">{item.role}</p>
-              <p className="career-ribbon-sheet__summary">{item.summary}</p>
-              <ul className="career-ribbon-sheet__points">
-                {item.points.map((point) => (
-                  <li key={point}>{point}</li>
-                ))}
-              </ul>
-            </div>
+            <InspectionDock
+              variant="ribbon"
+              accent={visual?.accent}
+              glow={visual?.glow}
+              specimen={visual?.asset ? <img src={visual.asset} alt="" draggable="false" /> : null}
+            >
+              <div className="career-ribbon-sheet__content">
+                <p className="career-ribbon-sheet__period">{item.period}</p>
+                <h3>{item.org}</h3>
+                <p className="career-ribbon-sheet__role">{item.role}</p>
+                <p className="career-ribbon-sheet__summary">{item.summary}</p>
+                <ul className="career-ribbon-sheet__points">
+                  {item.points.map((point) => (
+                    <li key={point}>{point}</li>
+                  ))}
+                </ul>
+              </div>
+            </InspectionDock>
           </motion.article>
         </motion.div>
       )}

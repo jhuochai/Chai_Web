@@ -3,11 +3,11 @@ import { content } from './content';
 import { STATIONS } from './stations';
 
 describe('chaptered portfolio content', () => {
-  it('defines four hero entries and eleven distinct games in both languages', () => {
+  it('defines four hero entries and twelve distinct games in both languages', () => {
     for (const lang of ['zh', 'en']) {
       expect(content[lang].hero.entries).toHaveLength(4);
-      expect(content[lang].careerTree.flowers).toHaveLength(11);
-      expect(new Set(content[lang].careerTree.flowers.map((game) => game.id)).size).toBe(11);
+      expect(content[lang].careerTree.flowers).toHaveLength(12);
+      expect(new Set(content[lang].careerTree.flowers.map((game) => game.id)).size).toBe(12);
     }
   });
 
@@ -89,14 +89,14 @@ describe('chaptered portfolio content', () => {
   it('keeps the bilingual game IDs aligned', () => {
     const expectedIds = [
       'wild-rift', 'identity-v', 'stardew', 'lol', 'valorant', 'r6', 'gta5',
-      'minecraft', 'palworld', 'dont-starve', 'raft',
+      'minecraft', 'palworld', 'dont-starve', 'raft', 'ready-or-not',
     ];
     for (const lang of ['zh', 'en']) {
       expect(content[lang].careerTree.flowers.map((game) => game.id)).toEqual(expectedIds);
     }
   });
 
-  it('uses the approved eleven game display names exactly', () => {
+  it('uses the approved twelve game display names exactly', () => {
     expect(content.zh.careerTree.flowers.map(({ id, name }) => [id, name])).toEqual([
       ['wild-rift', '激鬥峽谷'],
       ['identity-v', '第五人格'],
@@ -109,6 +109,7 @@ describe('chaptered portfolio content', () => {
       ['palworld', 'Palworld'],
       ['dont-starve', '飢荒'],
       ['raft', 'Raft'],
+      ['ready-or-not', 'Ready or Not'],
     ]);
     expect(content.en.careerTree.flowers.map(({ id, name }) => [id, name])).toEqual([
       ['wild-rift', 'Wild Rift'],
@@ -122,6 +123,7 @@ describe('chaptered portfolio content', () => {
       ['palworld', 'Palworld'],
       ['dont-starve', "Don't Starve Together"],
       ['raft', 'Raft'],
+      ['ready-or-not', 'Ready or Not'],
     ]);
   });
 
@@ -218,7 +220,7 @@ describe('content.buildStory', () => {
 });
 
 describe('content.careerTree', () => {
-  it('has four day ribbons and eleven night flowers with matching shapes, in both languages', () => {
+  it('has four day ribbons and twelve night flowers with matching shapes, in both languages', () => {
     for (const lang of ['en', 'zh']) {
       const tree = content[lang].careerTree;
       expect(tree.ribbons).toHaveLength(4);
@@ -234,7 +236,7 @@ describe('content.careerTree', () => {
         );
         expect(ribbon.points.length).toBeGreaterThan(0);
       }
-      expect(tree.flowers).toHaveLength(11);
+      expect(tree.flowers).toHaveLength(12);
       for (const flower of tree.flowers) {
         expect(flower).toEqual(
           expect.objectContaining({

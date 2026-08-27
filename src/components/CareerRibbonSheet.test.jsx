@@ -41,6 +41,7 @@ describe('CareerRibbonSheet', () => {
     render(<RibbonHarness />);
     fireEvent.click(screen.getByRole('button', { name: item.org }));
     expect(screen.getByRole('dialog', { name: item.org })).toBeInTheDocument();
+    expect(screen.getByTestId('inspection-dock')).toHaveAttribute('data-variant', 'ribbon');
     expect(screen.queryByRole('status')).toBeNull();
   });
 

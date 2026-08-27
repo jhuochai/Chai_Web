@@ -2,6 +2,7 @@ import { useEffect, useId, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, useReducedMotion } from 'motion/react';
 import { Play, X } from '@phosphor-icons/react';
+import InspectionDock from './InspectionDock';
 import './GameBloom.css';
 
 const FOCUSABLE = [
@@ -22,6 +23,8 @@ export default function GameBloom({
   position,
   size,
   asset,
+  accent = '#6b96ff',
+  glow = 'rgba(107, 150, 255, 0.3)',
   active,
   disabled = false,
   onOpen,
@@ -134,55 +137,58 @@ export default function GameBloom({
               <X size={22} weight="light" aria-hidden="true" />
             </button>
 
-            <div className="game-bloom__portrait" aria-hidden="true">
-              {!assetFailed && (
+            <InspectionDock
+              variant="flower"
+              accent={accent}
+              glow={glow}
+              specimen={!assetFailed ? (
                 <img src={asset} alt="" draggable="false" onError={() => setAssetFailed(true)} />
-              )}
-            </div>
+              ) : null}
+            >
+              <div className="game-bloom__copy">
+                {game.note && <p className="game-bloom__note">{game.note}</p>}
+                <h3 id={titleId}>{game.name}</h3>
+                <p id={descriptionId} className="game-bloom__description">{game.desc}</p>
 
-            <div className="game-bloom__copy">
-              {game.note && <p className="game-bloom__note">{game.note}</p>}
-              <h3 id={titleId}>{game.name}</h3>
-              <p id={descriptionId} className="game-bloom__description">{game.desc}</p>
-
-              <div className="game-bloom__media">
-                {game.video && !reduce && !videoFailed ? (
-                  videoLoaded ? (
-                    <video
-                      ref={videoRef}
-                      src={game.video}
-                      poster={game.poster}
-                      preload="none"
-                      muted
-                      playsInline
-                      controls
-                      data-game-media
-                      onError={() => setVideoFailed(true)}
+                <div className="game-bloom__media">
+                  {game.video && !reduce && !videoFailed ? (
+                    videoLoaded ? (
+                      <video
+                        ref={videoRef}
+                        src={game.video}
+                        poster={game.poster}
+                        preload="none"
+                        muted
+                        playsInline
+                        controls
+                        data-game-media
+                        onError={() => setVideoFailed(true)}
+                      />
+                    ) : (
+                      <button
+                        type="button"
+                        className="game-bloom__play"
+                        onClick={() => setVideoLoaded(true)}
+                        style={game.poster ? { backgroundImage: `url(${game.poster})` } : undefined}
+                        aria-label={copy.play}
+                      >
+                        <Play size={22} weight="fill" aria-hidden="true" />
+                        <span>{copy.play}</span>
+                      </button>
+                    )
+                  ) : game.poster && !posterFailed ? (
+                    <img
+                      src={game.poster}
+                      alt=""
+                      loading="lazy"
+                      onError={() => setPosterFailed(true)}
                     />
                   ) : (
-                    <button
-                      type="button"
-                      className="game-bloom__play"
-                      onClick={() => setVideoLoaded(true)}
-                      style={game.poster ? { backgroundImage: `url(${game.poster})` } : undefined}
-                      aria-label={copy.play}
-                    >
-                      <Play size={22} weight="fill" aria-hidden="true" />
-                      <span>{copy.play}</span>
-                    </button>
-                  )
-                ) : game.poster && !posterFailed ? (
-                  <img
-                    src={game.poster}
-                    alt=""
-                    loading="lazy"
-                    onError={() => setPosterFailed(true)}
-                  />
-                ) : (
-                  <p className="game-bloom__media-future">{copy.mediaFuture}</p>
-                )}
+                    <p className="game-bloom__media-future">{copy.mediaFuture}</p>
+                  )}
+                </div>
               </div>
-            </div>
+            </InspectionDock>
           </motion.article>
         </motion.div>,
         document.body
@@ -201,6 +207,8 @@ export default function GameBloom({
           '--bloom-mobile-left': position.mobileLeft,
           '--bloom-mobile-top': position.mobileTop,
           '--bloom-rotation': position.rotation,
+          '--item-accent': accent,
+          '--item-glow': glow,
         }}
         onClick={() => onOpen?.(game.id)}
         aria-label={game.name}

@@ -1,0 +1,144 @@
+.inspection-dock {
+  --dock-accent: #d8c9a2;
+  --dock-glow: rgba(216, 201, 162, 0.28);
+  position: relative;
+  width: min(1120px, calc(100vw - 40px));
+  aspect-ratio: 16 / 9;
+  max-height: calc(100dvh - 40px);
+  margin-inline: auto;
+  color: var(--parchment);
+  isolation: isolate;
+  filter: drop-shadow(0 34px 46px rgba(0, 0, 0, 0.54));
+}
+
+.inspection-dock::before {
+  content: '';
+  position: absolute;
+  inset: 12% 4% 6%;
+  z-index: -1;
+  border-radius: 18%;
+  background: var(--dock-glow);
+  filter: blur(38px);
+  opacity: 0.34;
+  pointer-events: none;
+}
+
+.inspection-dock__base {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+}
+
+.inspection-dock__specimen {
+  position: absolute;
+  z-index: 1;
+  left: 7.2%;
+  top: 18.5%;
+  width: 21.5%;
+  height: 62%;
+  display: grid;
+  place-items: center;
+}
+
+.inspection-dock__specimen-glow {
+  position: absolute;
+  inset: 22% 14%;
+  border-radius: 50%;
+  background: var(--dock-glow);
+  filter: blur(24px);
+  opacity: 0.82;
+}
+
+.inspection-dock__specimen > img {
+  position: relative;
+  z-index: 1;
+  width: 82%;
+  height: 82%;
+  object-fit: contain;
+  filter: drop-shadow(0 15px 18px rgba(0, 0, 0, 0.58)) drop-shadow(0 0 10px var(--dock-glow));
+}
+
+.inspection-dock--ribbon .inspection-dock__specimen > img {
+  width: 58%;
+  height: 88%;
+}
+
+.inspection-dock__content {
+  position: absolute;
+  z-index: 1;
+  left: 34.2%;
+  top: 19.5%;
+  width: 56.5%;
+  height: 45%;
+  overflow: auto;
+  padding: clamp(18px, 2.6vw, 36px);
+  scrollbar-width: thin;
+  scrollbar-color: var(--dock-accent) rgba(0, 0, 0, 0.18);
+}
+
+.inspection-dock__content::before {
+  content: '';
+  position: sticky;
+  top: 0;
+  display: block;
+  width: 54px;
+  height: 2px;
+  margin-bottom: 18px;
+  background: var(--dock-accent);
+  box-shadow: 0 0 12px var(--dock-glow);
+}
+
+@media (max-width: 720px) {
+  .inspection-dock {
+    width: 100vw;
+    height: min(92dvh, 760px);
+    max-height: none;
+    aspect-ratio: auto;
+    margin-inline: auto;
+    overflow: hidden;
+    background: linear-gradient(180deg, #171a1c, #090d10);
+    border: 1px solid rgba(197, 166, 103, 0.52);
+    border-radius: 22px 22px 0 0;
+  }
+
+  .inspection-dock__base {
+    width: 148%;
+    height: auto;
+    left: -24%;
+    top: -3%;
+    opacity: 0.78;
+  }
+
+  .inspection-dock__specimen {
+    left: 8%;
+    top: 7%;
+    width: 84%;
+    height: 27%;
+  }
+
+  .inspection-dock__specimen > img,
+  .inspection-dock--ribbon .inspection-dock__specimen > img {
+    width: min(44vw, 176px);
+    height: 94%;
+  }
+
+  .inspection-dock__content {
+    left: 7%;
+    top: 34%;
+    width: 86%;
+    height: 60%;
+    padding: 22px 10px 28px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .inspection-dock,
+  .inspection-dock__specimen > img {
+    transition: none;
+  }
+}

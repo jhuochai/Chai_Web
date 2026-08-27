@@ -143,6 +143,7 @@ const en = {
       { id: 'palworld', name: 'Palworld', desc: 'The loop of catching, building, and optimizing makes small goals stack up fast.' },
       { id: 'dont-starve', name: "Don't Starve Together", desc: 'Survival is much easier when everyone shares a plan—and remembers who was meant to bring food.' },
       { id: 'raft', name: 'Raft', desc: 'Starting with a tiny platform and gradually making it home is the part I keep coming back for.' },
+      { id: 'ready-or-not', name: 'Ready or Not', desc: 'A slow, high-pressure room clear where one missed detail can change the whole plan.' },
     ],
   },
   interests: {
@@ -353,6 +354,7 @@ const en = {
         { name: 'Palworld' },
         { name: "Don't Starve Together" },
         { name: 'Raft' },
+        { name: 'Ready or Not' },
       ],
     },
   },
@@ -513,6 +515,7 @@ const zh = {
       { id: 'palworld', name: 'Palworld', desc: '抓帕魯、蓋基地、調整流程；一個小目標接一個小目標，會很快忘記時間。' },
       { id: 'dont-starve', name: '飢荒', desc: '大家先把計畫講好、記得誰要帶食物，存活率真的差很多。' },
       { id: 'raft', name: 'Raft', desc: '從一小塊木板慢慢把漂流處變成家，是我最喜歡的部分。' },
+      { id: 'ready-or-not', name: 'Ready or Not', desc: '慢速但高壓的室內攻堅；一個漏掉的細節，就可能讓整個計畫必須重排。' },
     ],
   },
   interests: {
@@ -718,6 +721,7 @@ const zh = {
         { name: 'Palworld' },
         { name: '飢荒' },
         { name: 'Raft' },
+        { name: 'Ready or Not' },
       ],
     },
   },

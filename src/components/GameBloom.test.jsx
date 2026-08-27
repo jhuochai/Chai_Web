@@ -70,6 +70,7 @@ describe('GameBloom', () => {
     const dialog = screen.getByRole('dialog', { name: 'Raft' });
     expect(dialog).toBeInTheDocument();
     expect(dialog.closest('.framed-panel')).toBeNull();
+    expect(screen.getByTestId('inspection-dock')).toHaveAttribute('data-variant', 'flower');
     expect(document.body.style.overflow).toBe('hidden');
     expect(screen.getByText(baseGame.desc)).toBeInTheDocument();
     expect(screen.getByText(labels.mediaFuture)).toBeInTheDocument();

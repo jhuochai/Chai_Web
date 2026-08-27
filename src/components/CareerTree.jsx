@@ -6,10 +6,9 @@ import { Sun, MoonStars } from '@phosphor-icons/react';
 import CareerRibbonSheet from './CareerRibbonSheet';
 import GameBloom from './GameBloom';
 import { useLanguage } from '../i18n/LanguageContext';
+import { getCareerVisual } from '../data/careerVisuals';
 import treeDay from '../assets/scenes/career-tree-day-factory-clean-v3.webp';
 import treeNight from '../assets/scenes/career-tree-night-factory-clean-v2.webp';
-import bloomArcane from '../assets/scenes/blooms/bloom-arcane-v2.webp';
-import ribbonGold from '../assets/scenes/ribbons/ribbon-route-gold-v2.webp';
 import { createCareerCameraController, INTERACTIVE_PROGRESS } from './careerCamera';
 import './CareerTree.css';
 
@@ -25,8 +24,6 @@ const RIBBON_SPOTS = {
   eelin: { left: '59.6%', top: '63.6%', anchor: 'lower-right' },
 };
 
-const RIBBON_ASSET = ribbonGold;
-
 const GAME_BLOOM_LAYOUT = {
   'wild-rift': { left: '40.8%', top: '61.3%', mobileLeft: '18%', mobileTop: '62%', size: 'lg', branch: 'lower-left', rotation: '-12deg' },
   'identity-v': { left: '34.8%', top: '48.2%', mobileLeft: '50%', mobileTop: '48%', size: 'md', branch: 'crown-left', rotation: '9deg' },
@@ -39,9 +36,8 @@ const GAME_BLOOM_LAYOUT = {
   palworld: { left: '60.1%', top: '65.5%', mobileLeft: '72%', mobileTop: '72%', size: 'lg', branch: 'lower-right', rotation: '7deg' },
   'dont-starve': { left: '47.5%', top: '51.2%', mobileLeft: '18%', mobileTop: '48%', size: 'md', branch: 'crown-left', rotation: '-13deg' },
   raft: { left: '52.4%', top: '59.2%', mobileLeft: '36%', mobileTop: '72%', size: 'sm', branch: 'lower-left', rotation: '4deg' },
+  'ready-or-not': { left: '69.3%', top: '62.5%', mobileLeft: '88%', mobileTop: '72%', size: 'sm', branch: 'lower-right', rotation: '-4deg' },
 };
-
-const GAME_BLOOM_ASSET = bloomArcane;
 
 const LEAF_COLORS = ['rgba(201,162,75,0.75)', 'rgba(224,188,106,0.6)', 'rgba(110,139,61,0.65)'];
 
@@ -233,13 +229,16 @@ export default function CareerTree({ controls }) {
             {night
               ? items.map((item) => {
                   const position = GAME_BLOOM_LAYOUT[item.id];
+                  const visual = getCareerVisual('game', item.id);
                   return (
                     <GameBloom
                       key={`flower-${item.id}`}
                       game={item}
                       position={position}
                       size={position.size}
-                      asset={GAME_BLOOM_ASSET}
+                      asset={visual.asset}
+                      accent={visual.accent}
+                      glow={visual.glow}
                       active={activeId === item.id}
                       disabled={!interactive}
                       onOpen={setActiveId}
@@ -254,6 +253,7 @@ export default function CareerTree({ controls }) {
                 })
               : items.map((item) => {
                   const triggerRef = getRibbonTriggerRef(item.id);
+                  const visual = getCareerVisual('ribbon', item.id);
                   return (
                     <div key={`ribbon-${item.id}`}>
                       <button
@@ -261,9 +261,13 @@ export default function CareerTree({ controls }) {
                         type="button"
                         className="career-tree__spot career-tree__spot--ribbon"
                         data-ribbon-id={item.id}
-                        data-ribbon-family="route-gold"
+                        data-ribbon-family="career-record"
                         data-branch-anchor={spots[item.id].anchor}
-                        style={spots[item.id]}
+                        style={{
+                          ...spots[item.id],
+                          '--item-accent': visual.accent,
+                          '--item-glow': visual.glow,
+                        }}
                         aria-label={item.org}
                         aria-haspopup="dialog"
                         aria-expanded={activeId === item.id}
@@ -276,7 +280,7 @@ export default function CareerTree({ controls }) {
                         }}
                       >
                         <img
-                          src={RIBBON_ASSET}
+                          src={visual.asset}
                           alt=""
                           data-testid="career-ribbon-asset"
                           draggable="false"
@@ -287,6 +291,7 @@ export default function CareerTree({ controls }) {
                         open={activeId === item.id}
                         onClose={() => setActiveId(null)}
                         triggerRef={triggerRef}
+                        visual={visual}
                       />
                     </div>
                   );
