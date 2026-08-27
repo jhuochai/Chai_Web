@@ -14,15 +14,15 @@ function renderLab() {
 describe('AiLab', () => {
   afterEach(() => { document.body.style.overflow = ''; });
 
-  it('renders one honest incubator, Stapu, Skills, and in-scene controls', () => {
+  it('renders only finished Stapu and capability records with in-scene controls', () => {
     const { container } = renderLab();
     expect(screen.getByRole('heading', { name: 'AI Lab' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Inspect Stapu/i })).toBeEnabled();
     expect(screen.getByRole('button', { name: /Open Skills cabinet/i })).toBeEnabled();
-    expect(screen.getByText(/Incubating/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Return to Cockpit' })).toBeInTheDocument();
-    expect(container.querySelectorAll('.incubation-pod')).toHaveLength(1);
+    expect(container.querySelectorAll('.incubation-pod')).toHaveLength(0);
     expect(container.querySelectorAll('.ai-lab__project-card')).toHaveLength(0);
+    expect(container).not.toHaveTextContent(/Incubating|培育中/i);
   });
 
   it('opens the Stapu record and returns focus on Escape', async () => {
@@ -37,13 +37,14 @@ describe('AiLab', () => {
     await waitFor(() => expect(opener).toHaveFocus());
   });
 
-  it('lists only the four Skills actually used in this project', () => {
+  it('lists five recruiter-facing capabilities and the AI responsibility boundary', () => {
     renderLab();
     fireEvent.click(screen.getByRole('button', { name: /Open Skills cabinet/i }));
     const dialog = screen.getByRole('dialog', { name: /Skills Cabinet/i });
-    for (const skill of ['impeccable', 'grill-me', 'brainstorming', 'hatch-pet']) {
-      expect(dialog).toHaveTextContent(skill);
+    for (const capability of ['Social content planning', 'Meta performance review', 'KOC / KOL collaboration', 'Player feedback synthesis', 'Basic visual and short-form video production']) {
+      expect(dialog).toHaveTextContent(capability);
     }
-    expect(dialog.querySelectorAll('li')).toHaveLength(4);
+    expect(dialog.querySelectorAll('li')).toHaveLength(5);
+    expect(dialog).toHaveTextContent(/AI supports early exploration and information organization/i);
   });
 });

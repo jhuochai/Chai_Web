@@ -12,10 +12,11 @@ describe('MakingOf', () => {
     vi.spyOn(window, 'scrollTo').mockImplementation(() => {});
   });
 
-  it('retains five archive stages and preserves collaborator seats inside the lid', () => {
+  it('hides timeline records without evidence and preserves collaborator credits', () => {
     const { container } = render(<LanguageProvider><MakingOf /></LanguageProvider>);
 
-    expect(container.querySelectorAll('.making-of__timeline > li')).toHaveLength(5);
+    expect(container.querySelectorAll('.making-of__timeline > li')).toHaveLength(0);
+    expect(container.querySelector('.making-of__open-slot')).toBeNull();
     expect(container.querySelector('.collaborator-seats')).toBeInTheDocument();
     expect(screen.getByText(/decisions and collaborators/i)).toBeInTheDocument();
   });

@@ -20,22 +20,22 @@ describe('portfolioCases', () => {
     expect(serialized).not.toMatch(/ROG Phone 9/i);
   });
 
-  it('keeps the hero image/metrics disclosure and marks every unsupported learning as pending', () => {
+  it('keeps the hero image/metrics disclosure and omits unsupported learning claims', () => {
     const zhHero = portfolioCases.zh.cases[0].items.find((item) => item.id === 'thirty-k-hero');
     const enHero = portfolioCases.en.cases[0].items.find((item) => item.id === 'thirty-k-hero');
 
-    expect(zhHero.proof.join(' ')).toContain('畫面為本機保存的三萬粉系列第一篇');
+    expect(zhHero.proof.join(' ')).toContain('三萬粉系列第一篇主視覺');
     expect(zhHero.proof.join(' ')).toContain('三萬粉－2');
-    expect(zhHero.proof.join(' ')).toContain('替換');
-    expect(enHero.proof.join(' ')).toContain('part-one asset');
-    expect(enHero.proof.join(' ')).toContain('30k followers — 2');
-    expect(enHero.proof.join(' ')).toContain('replaced');
+    expect(zhHero.proof.join(' ')).not.toContain('替換');
+    expect(enHero.proof.join(' ')).toContain('part-one key visual');
+    expect(enHero.proof.join(' ')).toContain('second post');
+    expect(enHero.proof.join(' ')).not.toContain('replaced');
 
     for (const item of portfolioCases.zh.cases.flatMap((caseData) => caseData.items)) {
-      expect(item.learning).toBe('待補：這段學習會由我在確認專案回顧後補上。');
+      expect(item).not.toHaveProperty('learning');
     }
     for (const item of portfolioCases.en.cases.flatMap((caseData) => caseData.items)) {
-      expect(item.learning).toBe('Pending: I will add this reflection after reviewing the project record.');
+      expect(item).not.toHaveProperty('learning');
     }
   });
 

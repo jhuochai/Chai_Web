@@ -123,10 +123,12 @@ export default function CaseAnalysisDesk({ caseData, copy, onClose }) {
                 {activeItem.proof.map((fact) => <li key={fact}>{fact}</li>)}
               </ul>
             </section>
-            <section>
-              <h3>{copy.learning}</h3>
-              <p>{activeItem.learning}</p>
-            </section>
+            {activeItem.learning ? (
+              <section>
+                <h3>{copy.learning}</h3>
+                <p>{activeItem.learning}</p>
+              </section>
+            ) : null}
           </div>
         </div>
       </article>

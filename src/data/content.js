@@ -24,7 +24,7 @@ const en = {
     before: 'A game marketing coordinator who pitches ideas on ',
     emphasis: 'instinct and creativity',
     after:
-      ", then executes them fast. I've built social growth, ad audience tests, and KOC partnerships from zero, and I keep stacking real-world cases.",
+      ', then executes them fast, with hands-on experience in social content, ad audience testing, and KOC partnerships.',
   },
   traits: [
     {
@@ -44,23 +44,28 @@ const en = {
     },
   ],
   personalityBlurb:
-    "I start with a player's eye for what feels worth stopping for, then use results to refine the next move. That approach has taken a community from 18k to 30k followers and kept an ad test within budget when the signal changed.",
+    "I start with a player's eye for what feels worth stopping for, then use results to refine the next move. During the placement, the community grew from 18k to 30k followers; when an ad test underperformed, I stopped it to protect the remaining budget.",
   intro: {
-    eyebrow: 'Nice to meet you',
-    claim: 'Aim on instinct. Hit with execution.',
+    eyebrow: 'About me',
+    summary: 'Hands-on experience in social content planning, player communication, and performance review.',
+    results: [
+      'During the placement, Instagram followers increased from 18k to 30k.',
+      'Delivered 24 cross-format assets and 26 scripts that were produced and published.',
+      'Coordinated three KOC partnerships, including outreach, terms, and script direction.',
+    ],
+    caseCta: 'View marketing cases',
     strengthsLabel: 'Core strengths',
     playerViewTitle: 'A player’s eye is where my marketing starts',
   },
   aiLab: {
     title: 'AI Lab',
-    incubationTitle: 'AI Mini-App Incubator',
-    incubationStatus: 'Incubating. The first public experiment will unlock here when it is ready.',
     petTitle: 'Stapu',
     petBody: "A-Juo’s Codex pet and the little assistant roaming this lab.",
     skillsTitle: 'Skills Cabinet',
     openPet: 'Inspect Stapu',
     openSkills: 'Open Skills cabinet',
     returnCockpit: 'Return to Cockpit',
+    disclaimer: 'AI supports early exploration and information organization; I make the content choices, verify the facts, and own the final judgment.',
   },
   careerTree: {
     eyebrow: 'The Career Tree',
@@ -85,10 +90,10 @@ const en = {
         period: 'Mar 2026 – Present',
         summary: 'Social growth, ad audience testing, and KOC partnerships for 貓咪造咖 and 神來也暗棋.',
         points: [
-          'Grew IG followers from 18k to 30k (+67%), owning content planning, posting, and community replies solo across FB, IG, and Threads.',
+          'Managed content planning, posting, and community replies across Facebook, Instagram, and Threads; during the placement, Instagram followers increased from 18k to 30k (+67%).',
           "Ran a NT$10,000 ad test for 暗棋 using Meta's CPI/CPM/CTR/CVR/IR data plus AI-assisted analysis to validate a new audience profile, and pulled the campaign the moment it underperformed.",
-          'Sourced and closed 3 KOC partnerships, owning deal terms and script outlines end to end.',
-          'Produced 24 cross-format assets and 26 shot-and-shipped scripts solo, using Canva, GPT, and Gemini.',
+          'Coordinated 3 KOC partnerships, including outreach, terms, and script outlines.',
+          'Produced 24 cross-format assets and wrote 26 scripts that were filmed and published, using Canva, GPT, and Gemini.',
         ],
       },
       {
@@ -107,12 +112,12 @@ const en = {
         org: 'ACT Genomics',
         role: 'HR Intern',
         period: 'Jul – Sep 2024',
-        summary: 'Three months of high-speed, zero-error people operations.',
+        summary: 'Three months supporting recruiting, records, and employee activities.',
         points: [
-          'Coordinated recruiting and interviews: ~20% screening pass rate for sales reps, 60% offer rate for biotech engineers.',
-          'Digitized 200 personnel files in 3 weeks with a 0% error rate.',
-          'Ran 20 exit interviews (75% response rate) and turned them into an analysis report.',
-          'Helped update gender-equality workplace policy and training materials, and led the Intern Gathering Party from concept to event day.',
+          'Supported candidate screening, interview scheduling, and candidate communication.',
+          'Digitized and checked 200 personnel files in 3 weeks.',
+          'Conducted 20 exit interviews and prepared an analysis report.',
+          'Helped update gender-equality workplace policy and training materials, and supported the Intern Gathering Party.',
         ],
       },
       {
@@ -146,7 +151,7 @@ const en = {
     insight:
       'Making something from nothing, sinking into the process, then sharing it and watching people react. That loop is cooking. That loop is gaming. And that loop is exactly how the 貓咪造咖 community content gets made — the hobbies and the job are one personality, expressed three ways.',
     loop: [
-      { key: 'create', label: 'Create', desc: 'From zero to a real thing' },
+      { key: 'create', label: 'Create', desc: 'Turn an idea into a real thing' },
       { key: 'immerse', label: 'Immerse', desc: 'Deep in the process' },
       { key: 'share', label: 'Share', desc: 'Put it out, watch it land' },
     ],
@@ -229,11 +234,11 @@ const en = {
       period: 'Mar 2026 - Present',
       products: ['貓咪造咖', '暗棋'],
       points: [
-        'Grew IG followers from 18k to 30k (+67%), owning content planning, posting, and community replies solo across FB, IG, and Threads.',
+        'Managed content planning, posting, and community replies across Facebook, Instagram, and Threads; during the placement, Instagram followers increased from 18k to 30k (+67%).',
         "Ran a NT$10,000 ad test for 暗棋 using Meta's CPI/CPM/CTR/CVR/IR data plus AI-assisted analysis to validate a new audience profile, and pulled the campaign the moment it underperformed to protect budget.",
-        'Sourced and closed 3 KOC partnerships, owning deal terms and script outlines end to end.',
-        'Produced 24 cross-format assets and 26 shot-and-shipped scripts solo, using Canva, GPT, and Gemini.',
-        "Led the concept and rollout for 貓咪造咖's 30k-follower IG celebration campaign.",
+        'Coordinated 3 KOC partnerships, including outreach, terms, and script outlines.',
+        'Produced 24 cross-format assets and wrote 26 scripts that were filmed and published, using Canva, GPT, and Gemini.',
+        "Planned the concept, visual direction, and social schedule for 貓咪造咖's 30k-follower Instagram celebration.",
       ],
     },
   ],
@@ -241,7 +246,7 @@ const en = {
     {
       value: '67%',
       label: 'IG follower growth',
-      note: '18k to 30k, driven by content strategy, not ad spend.',
+      note: 'During the placement, Instagram followers increased from 18k to 30k.',
     },
     {
       value: 'GA',
@@ -251,7 +256,7 @@ const en = {
     {
       value: '24',
       label: 'Cross-format assets shipped',
-      note: 'Plus 26 scripts written and shot, solo.',
+      note: 'Plus 26 scripts that were filmed and published.',
     },
   ],
   skills: {
@@ -297,16 +302,16 @@ const en = {
   portfolio: {
     heading: 'Selected Work',
     intro:
-      "Three real cases from creative pitch to shipped execution. Data is the evidence that the creative worked, not the headline.",
+      'Three real cases from creative pitch to shipped execution, with verified response data kept close to each decision.',
     cases: [
       {
         id: 'catcafe',
         title: '貓咪造咖',
         tag: 'Community Growth',
-        scenario: 'A newly launched title needed its brand voice and community built from zero.',
+        scenario: 'A newly launched title needed a consistent brand voice and repeatable community content.',
         approach:
-          "Owned content planning and scheduling solo across FB, IG, and Threads, then directed the 30k-follower IG celebration campaign end to end.",
-        result: 'IG followers grew 18k to 30k (+67%).',
+          "Managed content planning and scheduling across Facebook, Instagram, and Threads, including the 30k-follower celebration campaign.",
+        result: 'During the placement, Instagram followers increased from 18k to 30k (+67%).',
         imageSeed: 'catcafe-community-growth',
       },
       {
@@ -317,7 +322,7 @@ const en = {
           'Needed to find the highest-value audience profile and creative combination on a tight budget.',
         approach:
           "Ran a NT$10,000 test using Meta's CPI/CPM/CTR/CVR/IR data with AI-assisted analysis, and cut the campaign the moment performance dropped.",
-        result: 'Validated a new target audience profile while protecting ad spend.',
+        result: 'The result fell below target, so the campaign was stopped to protect the remaining budget.',
         imageSeed: 'darkchess-ad-test',
       },
       {
@@ -327,8 +332,8 @@ const en = {
         tag: 'Creator Collabs',
         scenario: "Needed creator voices outside the brand's own channels to extend reach.",
         approach:
-          'Sourced and negotiated 3 KOC partnerships, owning deal terms and writing every script outline myself.',
-        result: '3 partnerships shipped, from outreach to published content.',
+          'Coordinated 3 KOC partnerships, including outreach, terms, and script outlines.',
+        result: '3 partnerships progressed from outreach to published content.',
         imageSeed: 'koc-collaboration',
       },
     ],
@@ -390,7 +395,7 @@ const zh = {
   positioning: {
     before: '一個靠',
     emphasis: '創意與直覺',
-    after: '提出想法、並用高效率把想法落地執行的遊戲行銷企劃新秀，從0到1做過社群成長、廣告受眾測試、KOC合作，並持續累積實戰案例。',
+    after: '提出想法、並用高效率把想法落地執行的遊戲行銷企劃新秀，具社群內容、廣告受眾測試與 KOC 合作實務經驗。',
   },
   traits: [
     {
@@ -401,7 +406,7 @@ const zh = {
     {
       key: 'multitasking',
       label: '多工',
-      desc: '同時經營貓咪造咖與暗棋兩款產品的社群，多線並行不掉球。',
+      desc: '同時支援貓咪造咖與暗棋兩款產品的社群，依時程安排內容與測試工作。',
     },
     {
       key: 'creativity',
@@ -410,23 +415,28 @@ const zh = {
     },
   ],
   personalityBlurb:
-    '我先用玩家視角判斷什麼值得停下來看，再從結果裡找下一步。這套做法讓社群從 1.8 萬成長到 3 萬，也讓我在廣告訊號轉弱時，及時停下投放、守住預算。',
+    '我先用玩家視角判斷什麼值得停下來看，再從結果裡找下一步。任職期間社群由 1.8 萬成長到 3 萬；廣告訊號轉弱時，我也會及時停止投放、控管預算。',
   intro: {
-    eyebrow: '很高興認識你',
-    claim: '靠直覺瞄準，用效率命中。',
+    eyebrow: '關於我',
+    summary: '具社群內容企劃、玩家溝通與成效判讀實務經驗。',
+    results: [
+      '任職期間 IG 追蹤由 1.8 萬增至 3 萬。',
+      '完成 24 組跨格式素材與 26 支實際拍攝上線的腳本。',
+      '負責 3 組 KOC 合作洽談與腳本方向。',
+    ],
+    caseCta: '查看行銷案例',
     strengthsLabel: '核心能力',
     playerViewTitle: '玩家視角，是我做行銷的起點',
   },
   aiLab: {
     title: 'AI 實驗艙',
-    incubationTitle: 'AI 小程式孵化槽',
-    incubationStatus: '培育中；第一個可公開實驗完成後會在這裡解鎖。',
     petTitle: '史達普 Stapu',
     petBody: '阿居的 Codex 寵物，也是這艘實驗艙裡四處巡看的小助手。',
     skillsTitle: 'Skills 工具櫃',
     openPet: '查看史達普資料',
     openSkills: '拉開 Skills 工具櫃',
     returnCockpit: '返回駕駛艙',
+    disclaimer: 'AI 用於初稿探索與資料整理；內容選擇、查證與最終判斷由本人完成。',
   },
   careerTree: {
     eyebrow: '生涯大樹',
@@ -450,10 +460,10 @@ const zh = {
         period: '2026/03 – 至今',
         summary: '負責貓咪造咖與神來也暗棋：社群成長、廣告受眾測試、KOC 合作。',
         points: [
-          '獨立負責 FB／IG／Threads 三平台內容規劃、發文與留言互動，帶動 IG 粉絲數自 1.8 萬成長至 3 萬，成長幅度達 67%。',
+          '負責 FB／IG／Threads 三平台內容規劃、發文與留言互動；任職期間 IG 粉絲數自 1.8 萬增至 3 萬（+67%）。',
           '獲配 1 萬元預算執行暗棋廣告測試，運用 Meta 後台數據（CPI、CPM、CTR、CVR、IR）搭配 AI 輔助分析驗證新受眾輪廓，成效未達預期時即時終止投放。',
-          '接洽並促成 3 組 KOC 合作，獨立負責條件溝通與腳本大綱撰寫。',
-          '運用 Canva、GPT、Gemini 獨立產出 24 件跨形式行銷素材，撰寫 26 份腳本，皆實際拍攝上線。',
+          '接洽並促成 3 組 KOC 合作，負責條件溝通與腳本大綱撰寫。',
+          '運用 Canva、GPT、Gemini 產出 24 件跨形式行銷素材，撰寫 26 份腳本，皆實際拍攝上線。',
         ],
       },
       {
@@ -472,12 +482,12 @@ const zh = {
         org: '行動基因生技',
         role: '人資實習生',
         period: '2024/07 – 2024/09',
-        summary: '三個月的高效零失誤人資實戰。',
+        summary: '三個月的人資招募、資料整理與活動支援實務。',
         points: [
-          '統籌招募與面試安排：業務代表篩選成功率約 20%、生技工程師錄取率 60%。',
-          '3 週內完成 200 份人員資料數位化，錯誤率 0%。',
-          '執行 20 份離職訪談（回收率 75%）並製作分析報告。',
-          '協助性別工作平等法規更新與教材製作，並主導 Intern Gathering Party 活動企劃到落地。',
+          '協助招募篩選、面試安排與候選人聯繫。',
+          '3 週內完成 200 份人員資料數位化與核對。',
+          '執行 20 份離職訪談並製作分析報告。',
+          '協助性別工作平等法規更新、教材製作與 Intern Gathering Party 活動執行。',
         ],
       },
       {
@@ -594,11 +604,11 @@ const zh = {
       period: '2026/03 - 至今',
       products: ['貓咪造咖', '暗棋'],
       points: [
-        '獨立負責 FB／IG／Threads 三平台內容規劃、發文與留言互動，帶動 IG 粉絲數自 1.8 萬成長至 3 萬，成長幅度達 67%。',
+        '負責 FB／IG／Threads 三平台內容規劃、發文與留言互動；任職期間 IG 粉絲數自 1.8 萬增至 3 萬（+67%）。',
         '獲配 1 萬元預算執行暗棋廣告測試，運用 Meta 後台數據（CPI、CPM、CTR、CVR、IR）搭配 AI 輔助分析驗證新受眾輪廓，成效未達預期時即時終止投放，控管預算風險。',
-        '接洽並促成 3 組 KOC 合作，獨立負責條件溝通與腳本大綱撰寫。',
-        '運用 Canva、GPT、Gemini 獨立產出 24 件跨形式行銷素材，撰寫 26 份腳本，皆實際拍攝上線。',
-        '主導貓咪造咖 IG 三萬粉絲慶祝活動的企劃與執行，統籌視覺方向與社群宣傳排程。',
+        '接洽並促成 3 組 KOC 合作，負責條件溝通與腳本大綱撰寫。',
+        '運用 Canva、GPT、Gemini 產出 24 件跨形式行銷素材，撰寫 26 份腳本，皆實際拍攝上線。',
+        '規劃貓咪造咖 IG 三萬粉絲慶祝活動，負責視覺方向與社群宣傳排程。',
       ],
     },
   ],
@@ -606,7 +616,7 @@ const zh = {
     {
       value: '67%',
       label: 'IG 粉絲成長',
-      note: '1.8萬到3萬，創意內容策略驅動，非投放堆量。',
+      note: '任職期間 IG 粉絲由 1.8 萬增至 3 萬。',
     },
     {
       value: 'GA',
@@ -668,8 +678,8 @@ const zh = {
         title: '貓咪造咖',
         tag: '社群成長',
         scenario: '新品上線初期，社群聲量與品牌調性都要從零建立。',
-        approach: '獨立主導三平台內容企劃與排程，並主導 IG 三萬粉絲慶祝活動的企劃與執行。',
-        result: 'IG 粉絲數 1.8萬 → 3萬，成長 67%。',
+        approach: '負責三平台內容企劃與排程，並規劃 IG 三萬粉絲慶祝活動。',
+        result: '任職期間 IG 粉絲數由 1.8 萬增至 3 萬（+67%）。',
         imageSeed: 'catcafe-community-growth',
       },
       {
@@ -678,7 +688,7 @@ const zh = {
         tag: '廣告受眾測試',
         scenario: '需要在有限預算內找出最有效的受眾輪廓與素材組合。',
         approach: '以1萬元預算執行測試，運用 Meta 後台數據並輔以 AI 分析，成效不如預期時即時終止投放。',
-        result: '成功驗證新受眾輪廓，同時控管預算風險。',
+        result: '測試結果未達預期，據此停止投放並控管剩餘預算。',
         imageSeed: 'darkchess-ad-test',
       },
       {
@@ -687,8 +697,8 @@ const zh = {
         title: 'KOC 異業合作',
         tag: '創作者合作',
         scenario: '需要借助品牌外的創作者聲量擴大觸及。',
-        approach: '接洽並促成 3 組 KOC 合作，獨立負責條件溝通與腳本大綱撰寫。',
-        result: '3 組合作從接洽到上線曝光全數完成。',
+        approach: '接洽並促成 3 組 KOC 合作，負責條件溝通與腳本大綱撰寫。',
+        result: '3 組合作皆完成接洽並產出上線內容。',
         imageSeed: 'koc-collaboration',
       },
     ],

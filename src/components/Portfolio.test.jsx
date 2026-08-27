@@ -21,8 +21,10 @@ describe('Portfolio analysis bay', () => {
     const { container } = renderPortfolio();
 
     expect(container.querySelector('[data-station="portfolio"]')).toBeInTheDocument();
-    expect(container.querySelector('.analysis-viewport__bezel')).toBeInTheDocument();
+    expect(container.querySelector('.analysis-viewport__hatch')).toBeInTheDocument();
+    expect(container.querySelector('.analysis-viewport__bezel')).toBeNull();
     expect(container.querySelector('.analysis-viewport__gasket')).toBeInTheDocument();
+    expect(container.querySelector('.circular-gallery__selectors')).toBeNull();
     expect(screen.getByRole('region', { name: '作品案例環形觀景窗' })).toBeInTheDocument();
     expect(screen.getAllByRole('button', { name: /開啟案例：/ })).toHaveLength(2);
     expect(screen.getByRole('button', { name: '開啟案例：貓咪造咖' })).toBeInTheDocument();

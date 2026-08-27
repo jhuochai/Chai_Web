@@ -4,6 +4,8 @@ import outfitGuide02 from '../assets/cases/cat-cafe/2026/outfit-guide-02.jpg';
 import outfitGuide03 from '../assets/cases/cat-cafe/2026/outfit-guide-03.jpg';
 import outfitGuide04 from '../assets/cases/cat-cafe/2026/outfit-guide-04.jpg';
 import mealSpinnerVideo from '../assets/cases/cat-cafe/2026/meal-spinner-final-1000x1000.mp4';
+import catCafeCard from '../assets/portfolio/cat-cafe-case-card-v1.webp';
+import darkChessCard from '../assets/portfolio/dark-chess-case-card-v1.webp';
 
 function dataCover(title, subtitle) {
   const svg = `
@@ -52,9 +54,6 @@ const purposeById = {
 
 function makeCatItems(lang) {
   const source = catCafeCase[lang];
-  const pendingLearning = lang === 'zh'
-    ? '待補：這段學習會由我在確認專案回顧後補上。'
-    : 'Pending: I will add this reflection after reviewing the project record.';
   const role = lang === 'zh'
     ? '社群內容企劃、發佈與社群回覆。'
     : 'Social content planning, publishing, and community replies.';
@@ -69,7 +68,6 @@ function makeCatItems(lang) {
       : 'Turn the 30k milestone from a one-way announcement into a shared community event.',
     role,
     proof: [source.hero.note, ...source.metrics.map((metric) => `${metric.label} ${metric.value}`)],
-    learning: pendingLearning,
   };
 
   const evidence = source.pillars.flatMap((pillar) => pillar.items).map((item) => ({
@@ -81,7 +79,6 @@ function makeCatItems(lang) {
     purpose: purposeById[lang][item.id],
     role,
     proof: [item.proof],
-    learning: pendingLearning,
   }));
 
   const processRole = lang === 'zh'
@@ -103,7 +100,6 @@ function makeCatItems(lang) {
     proof: [lang === 'zh'
       ? `4 張正式對稿素材中的第 ${index + 1} 張；此處作為創作流程證據，不沿用舊貼文成效。`
       : `Final review card ${index + 1} of 4; shown as process evidence without reusing older post metrics.`],
-    learning: pendingLearning,
   }));
 
   const videoItem = {
@@ -120,7 +116,6 @@ function makeCatItems(lang) {
     proof: [lang === 'zh'
       ? '實際 1000×1000 MP4 成品；此處只證明互動形式與完成度，不套用其他年份素材的成效數字。'
       : 'Actual 1000×1000 MP4 final; presented as format and completion evidence without borrowing metrics from another asset.'],
-    learning: pendingLearning,
   };
 
   return [hero, ...evidence, ...processItems, videoItem];
@@ -129,9 +124,6 @@ function makeCatItems(lang) {
 function makePortfolio(lang) {
   const cat = catCafeCase[lang];
   const isZh = lang === 'zh';
-  const pendingLearning = isZh
-    ? '待補：這段學習會由我在確認專案回顧後補上。'
-    : 'Pending: I will add this reflection after reviewing the project record.';
   return {
     pageTitle: isZh ? '影像分析艙' : 'Analysis Bay',
     pageIntro: isZh
@@ -159,6 +151,7 @@ function makePortfolio(lang) {
       {
         id: 'cat-cafe',
         title: cat.title,
+        card: catCafeCard,
         cover: cat.hero.src,
         coverKind: 'image',
         summary: cat.summary,
@@ -167,6 +160,7 @@ function makePortfolio(lang) {
       {
         id: 'dark-chess',
         title: cat.darkChess.title,
+        card: darkChessCard,
         cover: dataCover(isZh ? '暗棋' : 'DARK CHESS', isZh ? '受眾測試紀錄' : 'AUDIENCE TEST'),
         coverKind: 'data',
         summary: cat.darkChess.intro,
@@ -181,7 +175,6 @@ function makePortfolio(lang) {
               ? '在 Meta Ads Manager 讀取 CPI、CPM、CTR、CVR 與 IR，依訊號判斷是否繼續投放。'
               : 'Read CPI, CPM, CTR, CVR, and IR in Meta Ads Manager to decide whether to continue.',
             proof: [cat.darkChess.signal, cat.darkChess.decision],
-            learning: pendingLearning,
           },
         ],
       },

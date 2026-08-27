@@ -1,5 +1,5 @@
 import { navigateToRoute } from '../lib/siteRoute';
-import { ArrowLeft, Archive, Sparkle } from '@phosphor-icons/react';
+import { ArrowLeft, Archive } from '@phosphor-icons/react';
 import { useLanguage } from '../i18n/LanguageContext';
 import CollaboratorSeats from './CollaboratorSeats';
 import './MakingOf.css';
@@ -14,6 +14,7 @@ export default function MakingOf() {
     window.scrollTo({ top: 0, behavior: 'auto' });
     navigateToRoute('/');
   };
+  const publishedTimeline = makingOf.timeline.filter((entry) => entry.images?.length);
 
   return (
     <main className="making-of">
@@ -35,7 +36,7 @@ export default function MakingOf() {
       <section className="making-of__archive container" aria-labelledby="making-of-heading">
         <CollaboratorSeats />
         <ol className="making-of__timeline">
-          {makingOf.timeline.map((entry, index) => (
+          {publishedTimeline.map((entry, index) => (
             <li key={entry.id} className="making-of__entry">
               <div className="making-of__rail" aria-hidden="true">
                 <span>{String(index + 1).padStart(2, '0')}</span>
@@ -43,16 +44,9 @@ export default function MakingOf() {
               <article>
                 <h2>{entry.label}</h2>
                 <p>{entry.desc}</p>
-                {entry.images?.length ? (
-                  <div className="making-of__evidence">
-                    {entry.images.map((image) => <img key={image.src} src={image.src} alt={image.alt} />)}
-                  </div>
-                ) : (
-                  <p className="making-of__open-slot">
-                    <Sparkle aria-hidden="true" size={14} />
-                    {lang === 'zh' ? '保留給下一份對話、草稿或畫面' : 'Reserved for the next conversation, draft, or screen'}
-                  </p>
-                )}
+                <div className="making-of__evidence">
+                  {entry.images.map((image) => <img key={image.src} src={image.src} alt={image.alt} />)}
+                </div>
               </article>
             </li>
           ))}

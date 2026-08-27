@@ -15,12 +15,14 @@ const copy = {
     close: 'Close route map',
     comingSoon: 'Coming soon',
     comms: 'Comms',
+    commsPurpose: 'Contact',
   },
   zh: {
     title: '飛船航線圖',
     close: '關閉航線圖',
     comingSoon: '建置中',
     comms: '通訊台',
+    commsPurpose: '聯絡方式',
   },
 };
 
@@ -141,16 +143,22 @@ export default function RouteMap({ open, currentRoute, onClose, onTravel, onOpen
         <ol className="route-map__stations">
           {STATIONS.filter((station) => station.next).map((station, index) => {
             const isCurrent = station.id === currentStation?.id;
+            const purposeId = `route-map-purpose-${station.id}`;
             return (
               <li key={station.id}>
                 <button
                   type="button"
                   className={`route-map__station${isCurrent ? ' route-map__station--current' : ''}`}
+                  aria-label={station[lang]}
+                  aria-describedby={purposeId}
                   aria-current={isCurrent ? 'page' : undefined}
                   onClick={() => travelTo(station)}
                 >
                   <span className="route-map__index" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
-                  <span>{station[lang]}</span>
+                  <span className="route-map__station-copy">
+                    <span className="route-map__station-name">{station[lang]}</span>
+                    <span id={purposeId} className="route-map__station-purpose">{station.purpose[lang]}</span>
+                  </span>
                 </button>
               </li>
             );
@@ -166,9 +174,12 @@ export default function RouteMap({ open, currentRoute, onClose, onTravel, onOpen
           ))}
         </ol>
 
-        <button type="button" className="route-map__comms" onClick={openComms}>
+        <button type="button" className="route-map__comms" aria-label={labels.comms} aria-describedby="route-map-purpose-comms" onClick={openComms}>
           <Broadcast aria-hidden="true" size={19} weight="light" />
-          {labels.comms}
+          <span className="route-map__station-copy">
+            <span className="route-map__station-name">{labels.comms}</span>
+            <span id="route-map-purpose-comms" className="route-map__station-purpose">{labels.commsPurpose}</span>
+          </span>
         </button>
       </section>
     </div>,

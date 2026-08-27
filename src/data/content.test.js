@@ -17,6 +17,17 @@ describe('chaptered portfolio content', () => {
     ]);
   });
 
+  it('provides a plain-language purpose for every public station', () => {
+    expect(STATIONS.map(({ id, purpose }) => [id, purpose])).toEqual([
+      ['cockpit', { zh: '航行首頁', en: 'Home' }],
+      ['profile', { zh: '關於我', en: 'About me' }],
+      ['career-tree', { zh: '經歷與遊戲', en: 'Experience & games' }],
+      ['portfolio', { zh: '行銷案例', en: 'Marketing cases' }],
+      ['ai-lab', { zh: 'AI 協作與史達普', en: 'AI collaboration & Stapu' }],
+      ['making-of', { zh: '網站製作過程', en: 'Website process' }],
+    ]);
+  });
+
   it('publishes the real LinkedIn profile', () => {
     for (const lang of ['zh', 'en']) {
       expect(content[lang].contact.linkedin).toBe(
@@ -42,19 +53,21 @@ describe('chaptered portfolio content', () => {
 
   it('defines aligned AI lab copy in both languages', () => {
     const keys = [
-      'title', 'incubationTitle', 'incubationStatus', 'petTitle', 'petBody',
-      'skillsTitle', 'openPet', 'openSkills', 'returnCockpit',
+      'title', 'petTitle', 'petBody', 'skillsTitle', 'openPet', 'openSkills',
+      'returnCockpit', 'disclaimer',
     ];
     expect(Object.keys(content.en.aiLab).sort()).toEqual(keys.sort());
     expect(Object.keys(content.zh.aiLab).sort()).toEqual(keys.sort());
-    expect(content.zh.aiLab.incubationStatus).toContain('培育中');
+    expect(content.zh.aiLab.disclaimer).toBe('AI 用於初稿探索與資料整理；內容選擇、查證與最終判斷由本人完成。');
   });
 
   it('does not keep retired hash-route scenes or public proposal placeholders in active hero data', () => {
     for (const lang of ['en', 'zh']) {
       expect(content[lang].hero.scenes).toBeUndefined();
       expect(content[lang].hero.tagline).toBeUndefined();
-      expect(content[lang].intro.claim).toEqual(expect.any(String));
+      expect(content[lang].intro.claim).toBeUndefined();
+      expect(content[lang].intro.results).toHaveLength(3);
+      expect(content[lang].intro.caseCta).toEqual(expect.any(String));
       expect(content[lang].contact.linkedinPlaceholder).toBeUndefined();
       expect(content[lang].portfolio.cases.some((entry) => entry.id === 'rog')).toBe(false);
       expect(content[lang].closingStatement).toBeUndefined();
@@ -139,6 +152,16 @@ describe('chaptered portfolio content', () => {
     for (const lang of ['zh', 'en']) {
       const koc = content[lang].portfolio.cases.find((caseStudy) => caseStudy.id === 'koc');
       expect(koc).toEqual(expect.objectContaining({ visibility: 'private' }));
+    }
+  });
+
+  it('keeps recruiter-facing copy neutral and evidence-bounded outside the unchanged hero', () => {
+    for (const lang of ['zh', 'en']) {
+      const { hero: _hero, ...recruiterFacingContent } = content[lang];
+      const serialized = JSON.stringify(recruiterFacingContent);
+
+      expect(serialized).not.toMatch(/\bsolo\b|\bowning\b|end to end|from zero|from 0 to 1|從0到1|獨立負責|帶動 IG|靠直覺瞄準|多線並行不掉球/i);
+      expect(serialized).not.toMatch(/篩選成功率|錄取率|零失誤|創意內容策略驅動/i);
     }
   });
 });

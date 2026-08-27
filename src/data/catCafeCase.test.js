@@ -41,10 +41,13 @@ describe('catCafeCase', () => {
     const values = catCafeCase.zh.metrics.map((metric) => metric.value);
 
     expect(values).toEqual(['51,173', '3,898', '1,476', '383', '50']);
-    expect(catCafeCase.zh.growth).toContain('18k → 30k');
+    expect(catCafeCase.zh.growth).toContain('任職期間');
+    expect(catCafeCase.zh.growth).toContain('1.8 萬');
     expect(catCafeCase.zh.growth).toContain('+67%');
     expect(catCafeCase.zh.hero.note).toContain('三萬粉－2');
     expect(catCafeCase.zh.hero.note).toContain('第一篇');
+    expect(catCafeCase.zh.hero.note).not.toContain('替換');
+    expect(catCafeCase.zh.hero.src).toContain('thirty-k-first');
     expect(catCafeCase.zh.darkChess.signal).not.toContain('預設');
     expect(JSON.stringify(catCafeCase)).not.toMatch(/互動率|engagement rate/i);
   });

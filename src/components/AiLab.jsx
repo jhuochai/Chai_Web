@@ -1,23 +1,24 @@
 import { useRef, useState } from 'react';
 import { useLanguage } from '../i18n/LanguageContext';
 import StapuPet from './ai-lab/StapuPet';
-import IncubationPod from './ai-lab/IncubationPod';
 import SkillsCabinet from './ai-lab/SkillsCabinet';
 import LabPanel from './ai-lab/LabPanel';
 import './AiLab.css';
 
 const skills = {
   zh: [
-    { id: 'impeccable', use: '統一介面、動態與可讀性' },
-    { id: 'grill-me', use: '在動工前釐清每個視覺與互動決策' },
-    { id: 'brainstorming', use: '把想法整理成可驗收的設計規格' },
-    { id: 'hatch-pet', use: '製作並驗證史達普的完整動畫表' },
+    { id: '社群內容企劃', use: '規劃角色、節慶、攻略與品牌資訊等內容支柱。' },
+    { id: 'Meta 成效判讀', use: '依 CPI、CPM、CTR、CVR 與 IR 判讀投放訊號。' },
+    { id: 'KOC／KOL 協作', use: '處理接洽、條件溝通與腳本方向。' },
+    { id: '玩家回饋整理', use: '從留言、分享與收藏找出下一步內容方向。' },
+    { id: '基礎視覺與短影音製作', use: '使用 Canva 與 AI 工具完成可上線的素材與腳本。' },
   ],
   en: [
-    { id: 'impeccable', use: 'Unified interface, motion, and readability' },
-    { id: 'grill-me', use: 'Stress-tested visual and interaction decisions before building' },
-    { id: 'brainstorming', use: 'Turned ideas into an acceptance-ready design spec' },
-    { id: 'hatch-pet', use: 'Created and validated Stapu’s complete animation atlas' },
+    { id: 'Social content planning', use: 'Plan repeatable pillars for characters, seasonal moments, guides, and brand information.' },
+    { id: 'Meta performance review', use: 'Read CPI, CPM, CTR, CVR, and IR to assess campaign signals.' },
+    { id: 'KOC / KOL collaboration', use: 'Coordinate outreach, terms, and script direction.' },
+    { id: 'Player feedback synthesis', use: 'Use comments, shares, and saves to shape the next content direction.' },
+    { id: 'Basic visual and short-form video production', use: 'Use Canva and AI tools to prepare publishable assets and scripts.' },
   ],
 };
 
@@ -35,10 +36,6 @@ export default function AiLab({ controls }) {
         <div className="ai-lab__bulkhead" aria-hidden="true"><i /><i /><i /><i /></div>
         <div className="ai-lab__window" aria-hidden="true"><span /><span /></div>
         <div className="ai-lab__title-plate" aria-hidden="true"><span>{copy.title}</span><i /></div>
-
-        <div className="ai-lab__incubator-zone">
-          <IncubationPod title={copy.incubationTitle} status={copy.incubationStatus} />
-        </div>
 
         <div className="ai-lab__pet-zone">
           <div className="ai-lab__pet-platform" aria-hidden="true" />
@@ -65,6 +62,7 @@ export default function AiLab({ controls }) {
         <ul className="skills-record">
           {skills[lang].map((skill) => <li key={skill.id}><strong>{skill.id}</strong><span>{skill.use}</span></li>)}
         </ul>
+        <p className="lab-panel__disclaimer">{copy.disclaimer}</p>
       </LabPanel>
     </section>
   );

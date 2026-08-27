@@ -1,4 +1,4 @@
-import thirtyK from '../assets/cases/cat-cafe/thirty-k.webp';
+import thirtyK from '../assets/cases/cat-cafe/thirty-k-first.png';
 import watermelonCat from '../assets/cases/cat-cafe/watermelon-cat.webp';
 import outfitGuide from '../assets/cases/cat-cafe/outfit-guide.webp';
 import mealSpinner from '../assets/cases/cat-cafe/meal-spinner.webp';
@@ -25,13 +25,13 @@ const zh = {
   pageIntro: '不是把貼文排成一面牆，而是回頭看每一種內容，究竟讓玩家做了什麼。',
   title: '貓咪造咖',
   subtitle: '從內容節奏到社群成長的實戰紀錄',
-  growth: 'IG 追蹤從 18k → 30k（+67%）',
-  summary: '我獨立負責 FB、IG、Threads 的內容企劃、發佈與社群回覆，並把角色、節慶、互動機制與遊戲資訊拆成可持續測試的內容支柱。',
+  growth: '任職期間 IG 追蹤由 1.8 萬增至 3 萬（+67%）',
+  summary: '負責 FB、IG、Threads 的內容企劃、發佈與社群回覆，並把角色、節慶、互動機制與遊戲資訊拆成可持續測試的內容支柱。',
   hero: {
     src: assets.thirtyK,
     title: '三萬粉系列里程碑',
     alt: '貓咪造咖三萬粉系列第一篇影片主視覺，貓咪角色站在明亮宮殿中央。',
-    note: '畫面為本機保存的三萬粉系列第一篇；下列成效來自成效表中的「三萬粉－2」。待第二篇成品補入後，這張主圖會一併替換。',
+    note: '畫面為三萬粉系列第一篇主視覺；下列成效數據來自三萬粉系列第二篇「三萬粉－2」。',
   },
   metrics: [
     { id: 'impressions', value: '51,173', label: '曝光' },
@@ -165,13 +165,13 @@ const en = {
   pageIntro: 'Not a wall of posts, but a closer look at what each kind of content prompted players to do.',
   title: 'Cat Café',
   subtitle: 'A working record of content rhythm and community growth',
-  growth: 'Instagram grew from 18k → 30k followers (+67%)',
-  summary: 'I independently planned, published, and managed replies across Facebook, Instagram, and Threads, turning character stories, seasonal moments, interaction mechanics, and game information into repeatable content pillars.',
+  growth: 'During the placement, Instagram followers increased from 18k to 30k (+67%).',
+  summary: 'Responsible for content planning, publishing, and community replies across Facebook, Instagram, and Threads, with repeatable pillars for characters, seasonal moments, interactions, and game information.',
   hero: {
     src: assets.thirtyK,
     title: 'The 30k milestone series',
     alt: 'Key visual from part one of the Cat Café 30k-follower series, with the cat character centered in a bright palace.',
-    note: 'The visual is the locally preserved part-one asset; the metrics below belong to “30k followers — 2” in the performance sheet. This image will be replaced when that exact final asset is added.',
+    note: 'This is the part-one key visual; the performance figures below belong to the second post in the 30k series.',
   },
   metrics: [
     { id: 'impressions', value: '51,173', label: 'Impressions' },

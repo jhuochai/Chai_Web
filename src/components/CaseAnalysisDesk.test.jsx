@@ -47,4 +47,15 @@ describe('CaseAnalysisDesk', () => {
     fireEvent.mouseDown(screen.getByTestId('case-analysis-backdrop'));
     expect(onClose).toHaveBeenCalledTimes(1);
   });
+
+  it('does not render an empty learning section when the case has no verified reflection', () => {
+    const withoutLearning = {
+      ...caseData,
+      items: caseData.items.map(({ learning: _learning, ...item }) => item),
+    };
+
+    render(<CaseAnalysisDesk caseData={withoutLearning} copy={copy} onClose={vi.fn()} />);
+
+    expect(screen.queryByRole('heading', { name: '學習' })).not.toBeInTheDocument();
+  });
 });

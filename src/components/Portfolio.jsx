@@ -1,4 +1,5 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
+import analysisHatchFrame from '../assets/portfolio/analysis-hatch-frame-v1.webp';
 import CircularGallery from './CircularGallery';
 import CaseAnalysisDesk from './CaseAnalysisDesk';
 import { portfolioCases } from '../data/portfolioCases';
@@ -15,7 +16,7 @@ export default function Portfolio() {
   const galleryItems = useMemo(
     () => work.cases.map((caseData) => ({
       id: caseData.id,
-      image: caseData.cover,
+      image: caseData.card,
       text: caseData.title,
     })),
     [work]
@@ -48,25 +49,16 @@ export default function Portfolio() {
       </header>
 
       <div className={`analysis-viewport${activeCase ? ' analysis-viewport--dimmed' : ''}`}>
-        <div className="analysis-viewport__bezel" aria-hidden="true">
-          {Array.from({ length: 12 }, (_, index) => <i key={index} style={{ '--bolt': index }} />)}
-        </div>
-        <div className="analysis-viewport__ticks" aria-hidden="true">
-          {Array.from({ length: 24 }, (_, index) => <i key={index} style={{ '--tick': index }} />)}
-        </div>
+        <img className="analysis-viewport__hatch" src={analysisHatchFrame} alt="" aria-hidden="true" />
         <div className="analysis-viewport__gasket">
           <CircularGallery
             items={galleryItems}
             activeId={selectedId}
             onSelect={openCase}
-            bend={2.2}
-            borderRadius={0.035}
-            scrollEase={0.045}
             ariaLabel={work.viewportLabel}
             selectLabel={(item) => `${work.selectPrefix}${item.text}`}
           />
         </div>
-        <div className="analysis-viewport__glint" aria-hidden="true" />
       </div>
 
       <aside className="analysis-bay__note">

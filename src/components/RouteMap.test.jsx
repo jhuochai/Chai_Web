@@ -29,11 +29,11 @@ describe('RouteMap', () => {
   it('lists the formal stations and marks the current station', () => {
     renderRouteMap({ currentRoute: '/profile' });
 
-    expect(screen.getByRole('button', { name: 'Cockpit' })).toBeEnabled();
+    expect(screen.getByRole('button', { name: 'Cockpit' })).toHaveAccessibleDescription('Home');
     expect(screen.getByRole('button', { name: "Captain's Office" })).toHaveAttribute('aria-current', 'page');
-    expect(screen.getByRole('button', { name: 'Route Tree Station' })).toBeEnabled();
-    expect(screen.getByRole('button', { name: 'Analysis Bay' })).toBeEnabled();
-    expect(screen.getByRole('button', { name: 'AI Lab' })).toBeEnabled();
+    expect(screen.getByRole('button', { name: 'Route Tree Station' })).toHaveAccessibleDescription('Experience & games');
+    expect(screen.getByRole('button', { name: 'Analysis Bay' })).toHaveAccessibleDescription('Marketing cases');
+    expect(screen.getByRole('button', { name: 'AI Lab' })).toHaveAccessibleDescription('AI collaboration & Stapu');
   });
 
   it('identifies coming-soon stations as disabled without navigable links', () => {
@@ -51,9 +51,9 @@ describe('RouteMap', () => {
     window.localStorage.setItem('site-lang', 'zh');
     renderRouteMap();
 
-    expect(screen.getByRole('button', { name: 'AI 實驗艙' })).toBeEnabled();
+    expect(screen.getByRole('button', { name: 'AI 實驗艙' })).toHaveAccessibleDescription('AI 協作與史達普');
     expect(screen.getByRole('button', { name: '私人典藏艙建置中' })).toBeDisabled();
-    expect(screen.getByRole('button', { name: '通訊台' })).toBeEnabled();
+    expect(screen.getByRole('button', { name: '通訊台' })).toHaveAccessibleDescription('聯絡方式');
   });
 
   it('travels to a different formal station once and then closes', () => {

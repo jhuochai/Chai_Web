@@ -70,6 +70,27 @@
   transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
+.route-map__station-copy {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.route-map__station-name {
+  color: currentColor;
+  font-size: 0.9rem;
+  line-height: 1.2;
+}
+
+.route-map__station-purpose {
+  color: var(--parchment-dim);
+  font-family: var(--body);
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  line-height: 1.35;
+}
+
 .route-map__station:hover,
 .route-map__station:focus-visible,
 .route-map__station--current {
@@ -99,7 +120,7 @@
 .route-map__comms {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 10px;
   width: 100%;
   border-color: var(--hairline);
