@@ -190,11 +190,20 @@
 @media (max-width: 700px) {
   .hero { padding-inline: 0; }
   .hero__cockpit { min-height: calc(100dvh - var(--nav-h) - 8px); border-width: 5px; border-radius: 14px; }
-  .hero__scene, .hero__console-layer { object-position: 50% center; }
-  .hero__control--intro { left: 12%; bottom: 34%; width: 12vw; height: 12vw; }
-  .hero__control--career { left: 34%; bottom: 29%; width: 10vw; height: 20vw; }
-  .hero__control--portfolio { left: 66%; bottom: 31%; width: 14vw; height: 14vw; }
-  .hero__control--ai-lab { left: 88%; bottom: 34%; width: 13vw; height: 13vw; }
+  .hero__scene { object-position: 50% center; }
+  .hero__console-layer {
+    top: auto;
+    bottom: 0;
+    left: -30%;
+    width: 160%;
+    height: auto;
+    object-fit: contain;
+    object-position: 50% 100%;
+  }
+  .hero__control--intro { left: 11%; bottom: 13%; width: 11vw; height: 11vw; }
+  .hero__control--career { left: 34%; bottom: 12%; width: 8.5vw; height: 17vw; }
+  .hero__control--portfolio { left: 66%; bottom: 12%; width: 11.5vw; height: 11.5vw; }
+  .hero__control--ai-lab { left: 89%; bottom: 13%; width: 11vw; height: 11vw; }
   .hero__trash-bin { right: 5%; bottom: 13%; width: 30px; }
 }
 

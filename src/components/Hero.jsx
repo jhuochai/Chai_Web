@@ -4,7 +4,7 @@ import { useLanguage } from '../i18n/LanguageContext';
 import { navigateToRoute } from '../lib/siteRoute';
 import { playStationTransition } from '../lib/chapterTransition';
 import emptyCockpitScene from '../assets/scenes/hero-empty-cockpit-v3.webp';
-import consoleBaseScene from '../assets/scenes/hero-cockpit-console-base-v9.webp';
+import consoleBaseScene from '../assets/scenes/hero-wraparound-console-base-v1.webp';
 import handleImage from '../assets/props/hero-handle-ui.webp';
 import joystickImage from '../assets/props/hero-joystick-ui.webp';
 import knobImage from '../assets/props/hero-knob-ui.webp';
@@ -29,9 +29,9 @@ const interfaceCopy = {
 };
 
 const controlImages = {
-  intro: handleImage,
+  intro: knobImage,
   career: joystickImage,
-  portfolio: knobImage,
+  portfolio: handleImage,
   'ai-lab': coreImage,
 };
 

@@ -131,7 +131,7 @@ describe('Hero 2.5D cockpit', () => {
   it('mounts the approved controls independently in cockpit order', () => {
     vi.useFakeTimers();
     window.sessionStorage.setItem('hero-approached', '1');
-    const { container } = renderHero({ onTravel: vi.fn() });
+    renderHero({ onTravel: vi.fn() });
 
     const officeControl = screen.getByRole('button', { name: "Captain's Office" });
     const portfolioControl = screen.getByRole('button', { name: 'Selected Work' });
@@ -157,10 +157,11 @@ describe('Hero 2.5D cockpit', () => {
     expect(heroStyles).toMatch(/@media\s*\(prefers-reduced-motion:\s*reduce\)/s);
   });
 
-  it('lifts and scales the four controls above the steering yoke on narrow screens', () => {
-    expect(heroStyles).toMatch(/@media \(max-width: 700px\)[\s\S]*?\.hero__control--intro\s*\{[^}]*left:\s*12%[^}]*bottom:\s*34%[^}]*width:\s*12vw/s);
-    expect(heroStyles).toMatch(/@media \(max-width: 700px\)[\s\S]*?\.hero__control--career\s*\{[^}]*left:\s*34%[^}]*bottom:\s*29%[^}]*height:\s*20vw/s);
-    expect(heroStyles).toMatch(/@media \(max-width: 700px\)[\s\S]*?\.hero__control--portfolio\s*\{[^}]*left:\s*66%[^}]*bottom:\s*31%/s);
-    expect(heroStyles).toMatch(/@media \(max-width: 700px\)[\s\S]*?\.hero__control--ai-lab\s*\{[^}]*left:\s*88%[^}]*bottom:\s*34%/s);
+  it('keeps a shallow console and four usable controls around the yoke on narrow screens', () => {
+    expect(heroStyles).toMatch(/@media \(max-width: 700px\)[\s\S]*?\.hero__console-layer\s*\{[^}]*top:\s*auto[^}]*bottom:\s*0[^}]*left:\s*-30%[^}]*width:\s*160%[^}]*height:\s*auto/s);
+    expect(heroStyles).toMatch(/@media \(max-width: 700px\)[\s\S]*?\.hero__control--intro\s*\{[^}]*left:\s*11%[^}]*bottom:\s*13%[^}]*width:\s*11vw/s);
+    expect(heroStyles).toMatch(/@media \(max-width: 700px\)[\s\S]*?\.hero__control--career\s*\{[^}]*left:\s*34%[^}]*bottom:\s*12%[^}]*height:\s*17vw/s);
+    expect(heroStyles).toMatch(/@media \(max-width: 700px\)[\s\S]*?\.hero__control--portfolio\s*\{[^}]*left:\s*66%[^}]*bottom:\s*12%/s);
+    expect(heroStyles).toMatch(/@media \(max-width: 700px\)[\s\S]*?\.hero__control--ai-lab\s*\{[^}]*left:\s*89%[^}]*bottom:\s*13%/s);
   });
 });

@@ -13,9 +13,9 @@ describe('hero state', () => {
   });
 
   it('maps each control to one exclusive action', () => {
-    expect(getDestinationAction('intro')).toEqual({ kind: 'travel', target: '/profile', motion: 'pull' });
+    expect(getDestinationAction('intro')).toEqual({ kind: 'travel', target: '/profile', motion: 'turn' });
     expect(getDestinationAction('career')).toEqual({ kind: 'travel', target: '/career-tree', motion: 'push' });
-    expect(getDestinationAction('portfolio')).toEqual({ kind: 'travel', target: '/portfolio', motion: 'turn' });
+    expect(getDestinationAction('portfolio')).toEqual({ kind: 'travel', target: '/portfolio', motion: 'pull' });
     expect(getDestinationAction('ai-lab')).toEqual({ kind: 'preview', target: '/ai-lab', motion: 'boot' });
   });
 });

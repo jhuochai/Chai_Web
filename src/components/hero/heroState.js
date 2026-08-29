@@ -1,9 +1,9 @@
 const APPROACHED_KEY = 'hero-approached';
 
 const actions = {
-  intro: { kind: 'travel', target: '/profile', motion: 'pull' },
+  intro: { kind: 'travel', target: '/profile', motion: 'turn' },
   career: { kind: 'travel', target: '/career-tree', motion: 'push' },
-  portfolio: { kind: 'travel', target: '/portfolio', motion: 'turn' },
+  portfolio: { kind: 'travel', target: '/portfolio', motion: 'pull' },
   'ai-lab': { kind: 'preview', target: '/ai-lab', motion: 'boot' },
 };
 
