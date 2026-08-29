@@ -129,7 +129,9 @@
   height: 100%;
   object-fit: cover;
   object-position: 50% 50%;
-  clip-path: inset(68% 0 0 0);
+  clip-path: inset(57% 0 0 0);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 55%, #000 61%);
+  mask-image: linear-gradient(to bottom, transparent 55%, #000 61%);
   opacity: var(--approach);
   transform: translateY(calc((1 - var(--approach)) * 34%)) scale(calc(.955 + var(--approach) * .045));
   transform-origin: 50% 100%;
@@ -154,12 +156,10 @@
   pointer-events: auto;
 }
 
-.hero__control--portfolio { left: 12.9%; bottom: 11%; width: clamp(58px, 7.4vw, 120px); height: clamp(58px, 10vw, 132px); }
-.hero__control--career { left: 40%; bottom: 11%; width: clamp(52px, 6.4vw, 104px); height: clamp(100px, 17vw, 216px); }
-.hero__control--intro { left: 66.7%; bottom: 11%; width: clamp(76px, 10vw, 164px); height: clamp(68px, 11vw, 142px); }
-.hero__control--ai-lab { left: 90.1%; bottom: 11%; width: clamp(64px, 8.2vw, 134px); height: clamp(72px, 11vw, 148px); }
-.hero__control--career .hero-control__well { transform: rotate(-3deg); }
-.hero__control--intro .hero-control__well { transform: rotate(-20deg); }
+.hero__control--intro { left: 14%; bottom: 18%; width: clamp(58px, 8.2vw, 136px); height: clamp(58px, 8.2vw, 136px); }
+.hero__control--career { left: 34%; bottom: 18%; width: clamp(48px, 6.2vw, 102px); height: clamp(96px, 14.5vw, 190px); }
+.hero__control--portfolio { left: 66%; bottom: 18%; width: clamp(66px, 8.6vw, 144px); height: clamp(66px, 8.6vw, 144px); }
+.hero__control--ai-lab { left: 86%; bottom: 18%; width: clamp(64px, 8.8vw, 146px); height: clamp(64px, 8.8vw, 146px); }
 
 .hero__trash-bin {
   position: absolute;
@@ -191,11 +191,10 @@
   .hero { padding-inline: 0; }
   .hero__cockpit { min-height: calc(100dvh - var(--nav-h) - 8px); border-width: 5px; border-radius: 14px; }
   .hero__scene, .hero__console-layer { object-position: 50% center; }
-  .hero__console-layer { clip-path: inset(66% 0 0 0); }
-  .hero__control--portfolio { width: 13vw; height: 13vw; }
-  .hero__control--career { width: 11vw; height: 24vw; }
-  .hero__control--intro { width: 17vw; height: 15vw; }
-  .hero__control--ai-lab { width: 14vw; height: 17vw; }
+  .hero__control--intro { left: 12%; bottom: 34%; width: 12vw; height: 12vw; }
+  .hero__control--career { left: 34%; bottom: 29%; width: 10vw; height: 20vw; }
+  .hero__control--portfolio { left: 66%; bottom: 31%; width: 14vw; height: 14vw; }
+  .hero__control--ai-lab { left: 88%; bottom: 34%; width: 13vw; height: 13vw; }
   .hero__trash-bin { right: 5%; bottom: 13%; width: 30px; }
 }
 

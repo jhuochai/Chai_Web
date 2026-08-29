@@ -128,16 +128,39 @@ describe('Hero 2.5D cockpit', () => {
     expect(cockpit.setPointerCapture).not.toHaveBeenCalled();
   });
 
-  it('places each mechanical control independently and provides reduced-motion fallbacks', () => {
-    expect(heroStyles).toMatch(/\.hero__control--portfolio\s*\{[^}]*left:\s*12\.9%[^}]*bottom:\s*11%/s);
-    expect(heroStyles).toMatch(/\.hero__control--career\s*\{[^}]*left:\s*40%[^}]*bottom:\s*11%/s);
-    expect(heroStyles).toMatch(/\.hero__control--intro\s*\{[^}]*left:\s*66\.7%[^}]*bottom:\s*11%/s);
-    expect(heroStyles).toMatch(/\.hero__control--ai-lab\s*\{[^}]*left:\s*90\.1%[^}]*bottom:\s*11%/s);
-    expect(heroStyles).toMatch(/\.hero__control--career\s+\.hero-control__well\s*\{[^}]*rotate\(-3deg\)/s);
-    expect(heroStyles).toMatch(/\.hero__control--intro\s+\.hero-control__well\s*\{[^}]*rotate\(-20deg\)/s);
+  it('mounts the approved controls independently in cockpit order', () => {
+    vi.useFakeTimers();
+    window.sessionStorage.setItem('hero-approached', '1');
+    const { container } = renderHero({ onTravel: vi.fn() });
+
+    const officeControl = screen.getByRole('button', { name: "Captain's Office" });
+    const portfolioControl = screen.getByRole('button', { name: 'Selected Work' });
+    expect(officeControl.querySelector('.hero-control__image--base')).toHaveAttribute('src', expect.stringContaining('hero-knob-ui'));
+    expect(portfolioControl.querySelector('.hero-control__image--base')).toHaveAttribute('src', expect.stringContaining('hero-handle-ui'));
+
+    fireEvent.click(officeControl);
+    fireEvent.click(portfolioControl);
+    expect(officeControl).toHaveAttribute('data-motion', 'turn');
+    expect(portfolioControl).toHaveAttribute('data-motion', 'pull');
+
+    expect(heroStyles).toMatch(/\.hero__control--intro\s*\{[^}]*left:\s*14%[^}]*bottom:\s*18%[^}]*width:\s*clamp\(58px,\s*8\.2vw,\s*136px\)/s);
+    expect(heroStyles).toMatch(/\.hero__control--career\s*\{[^}]*left:\s*34%[^}]*bottom:\s*18%[^}]*width:\s*clamp\(48px,\s*6\.2vw,\s*102px\)/s);
+    expect(heroStyles).toMatch(/\.hero__control--portfolio\s*\{[^}]*left:\s*66%[^}]*bottom:\s*18%[^}]*width:\s*clamp\(66px,\s*8\.6vw,\s*144px\)/s);
+    expect(heroStyles).toMatch(/\.hero__control--ai-lab\s*\{[^}]*left:\s*86%[^}]*bottom:\s*18%[^}]*width:\s*clamp\(64px,\s*8\.8vw,\s*146px\)/s);
+    expect(heroStyles).toMatch(/\.hero__console-layer\s*\{[^}]*clip-path:\s*inset\(57%\s+0\s+0\s+0\)/s);
+  });
+
+  it('keeps atmosphere and reduced-motion fallbacks around the wraparound console', () => {
     expect(heroStyles).toMatch(/\.hero__trash-bin\s*\{[^}]*right:\s*5%[^}]*bottom:\s*13%/s);
     expect(heroStyles).toMatch(/@keyframes\s+hero-city-lights/s);
     expect(heroStyles).toMatch(/@keyframes\s+hero-atmosphere/s);
     expect(heroStyles).toMatch(/@media\s*\(prefers-reduced-motion:\s*reduce\)/s);
+  });
+
+  it('lifts and scales the four controls above the steering yoke on narrow screens', () => {
+    expect(heroStyles).toMatch(/@media \(max-width: 700px\)[\s\S]*?\.hero__control--intro\s*\{[^}]*left:\s*12%[^}]*bottom:\s*34%[^}]*width:\s*12vw/s);
+    expect(heroStyles).toMatch(/@media \(max-width: 700px\)[\s\S]*?\.hero__control--career\s*\{[^}]*left:\s*34%[^}]*bottom:\s*29%[^}]*height:\s*20vw/s);
+    expect(heroStyles).toMatch(/@media \(max-width: 700px\)[\s\S]*?\.hero__control--portfolio\s*\{[^}]*left:\s*66%[^}]*bottom:\s*31%/s);
+    expect(heroStyles).toMatch(/@media \(max-width: 700px\)[\s\S]*?\.hero__control--ai-lab\s*\{[^}]*left:\s*88%[^}]*bottom:\s*34%/s);
   });
 });
