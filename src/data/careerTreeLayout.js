@@ -31,16 +31,16 @@ export const DAY_OCCLUSION_PATCHES = [
 ];
 
 export const NIGHT_OCCLUSION_PATCHES = [
-  { id: 'valorant', cx: 602, cy: 341, rx: 17, ry: 7, rotation: 18 },
-  { id: 'stardew', cx: 736, cy: 315, rx: 16, ry: 7, rotation: -12 },
-  { id: 'lol', cx: 903, cy: 338, rx: 20, ry: 8, rotation: 18 },
-  { id: 'r6', cx: 1037, cy: 381, rx: 18, ry: 8, rotation: 26 },
-  { id: 'identity-v', cx: 660, cy: 423, rx: 18, ry: 8, rotation: 24 },
-  { id: 'gta5', cx: 839, cy: 409, rx: 16, ry: 7, rotation: -14 },
-  { id: 'dont-starve', cx: 761, cy: 433, rx: 18, ry: 8, rotation: 22 },
-  { id: 'minecraft', cx: 960, cy: 444, rx: 18, ry: 8, rotation: -18 },
-  { id: 'wild-rift', cx: 619, cy: 518, rx: 20, ry: 9, rotation: 20 },
-  { id: 'raft', cx: 719, cy: 532, rx: 16, ry: 7, rotation: 16 },
-  { id: 'palworld', cx: 930, cy: 534, rx: 20, ry: 9, rotation: -17 },
-  { id: 'ready-or-not', cx: 1060, cy: 492, rx: 16, ry: 7, rotation: -22 },
+  { id: 'valorant', cx: 602, cy: 341, rx: 10, ry: 4, rotation: 18 },
+  { id: 'stardew', cx: 736, cy: 315, rx: 10, ry: 4, rotation: -12 },
+  { id: 'lol', cx: 903, cy: 338, rx: 14, ry: 6, rotation: 18 },
+  { id: 'r6', cx: 1037, cy: 381, rx: 12, ry: 5, rotation: 26 },
+  { id: 'identity-v', cx: 660, cy: 423, rx: 12, ry: 5, rotation: 24 },
+  { id: 'gta5', cx: 839, cy: 409, rx: 10, ry: 4, rotation: -14 },
+  { id: 'dont-starve', cx: 761, cy: 433, rx: 12, ry: 5, rotation: 22 },
+  { id: 'minecraft', cx: 960, cy: 444, rx: 12, ry: 5, rotation: -18 },
+  { id: 'wild-rift', cx: 619, cy: 518, rx: 14, ry: 6, rotation: 20 },
+  { id: 'raft', cx: 719, cy: 532, rx: 10, ry: 4, rotation: 16 },
+  { id: 'palworld', cx: 930, cy: 534, rx: 14, ry: 6, rotation: -17 },
+  { id: 'ready-or-not', cx: 1060, cy: 492, rx: 10, ry: 4, rotation: -22 },
 ];

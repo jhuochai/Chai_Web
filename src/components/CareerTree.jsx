@@ -5,9 +5,15 @@ import {
 import { Sun, MoonStars } from '@phosphor-icons/react';
 import CareerRibbonSheet from './CareerRibbonSheet';
 import GameBloom from './GameBloom';
+import TreeOcclusionLayer from './TreeOcclusionLayer';
 import { useLanguage } from '../i18n/LanguageContext';
 import { getCareerVisual } from '../data/careerVisuals';
-import { GAME_BLOOM_LAYOUT, RIBBON_SPOTS } from '../data/careerTreeLayout';
+import {
+  DAY_OCCLUSION_PATCHES,
+  GAME_BLOOM_LAYOUT,
+  NIGHT_OCCLUSION_PATCHES,
+  RIBBON_SPOTS,
+} from '../data/careerTreeLayout';
 import treeDay from '../assets/scenes/career-tree-day-factory-clean-v3.webp';
 import treeNight from '../assets/scenes/career-tree-night-factory-clean-v2.webp';
 import { createCareerCameraController, INTERACTIVE_PROGRESS } from './careerCamera';
@@ -270,6 +276,18 @@ export default function CareerTree({ controls }) {
                     </div>
                   );
                 })}
+            <TreeOcclusionLayer
+              source={treeDay}
+              mode="day"
+              patches={DAY_OCCLUSION_PATCHES}
+              active={!night}
+            />
+            <TreeOcclusionLayer
+              source={treeNight}
+              mode="night"
+              patches={NIGHT_OCCLUSION_PATCHES}
+              active={night}
+            />
           </div>
           <LeafCanvas dense={Boolean(activeItem)} />
         </div>

@@ -33,11 +33,17 @@ describe('career tree scene layout', () => {
   });
 
   it('keeps every occlusion patch local to an attachment seam', () => {
-    for (const patch of [...DAY_OCCLUSION_PATCHES, ...NIGHT_OCCLUSION_PATCHES]) {
-      expect(patch.rx).toBeGreaterThanOrEqual(10);
+    for (const patch of DAY_OCCLUSION_PATCHES) {
+      expect(patch.rx).toBeGreaterThanOrEqual(18);
       expect(patch.rx).toBeLessThanOrEqual(34);
-      expect(patch.ry).toBeGreaterThanOrEqual(5);
-      expect(patch.ry).toBeLessThanOrEqual(16);
+      expect(patch.ry).toBeGreaterThanOrEqual(7);
+      expect(patch.ry).toBeLessThanOrEqual(12);
+    }
+    for (const patch of NIGHT_OCCLUSION_PATCHES) {
+      expect(patch.rx).toBeGreaterThanOrEqual(8);
+      expect(patch.rx).toBeLessThanOrEqual(14);
+      expect(patch.ry).toBeGreaterThanOrEqual(3);
+      expect(patch.ry).toBeLessThanOrEqual(6);
     }
   });
 });

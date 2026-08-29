@@ -47,6 +47,23 @@ describe('CareerTree', () => {
     expect(bloomStyles).not.toMatch(/\.game-bloom__mask/);
     expect(careerSource).toContain('career-tree-night-factory-clean-v2.webp');
   });
+
+  it('crossfades matched foreground branch pixels above the interactive decorations', () => {
+    renderTree();
+
+    const dayLayer = screen.getByTestId('tree-occlusion-day');
+    const nightLayer = screen.getByTestId('tree-occlusion-night');
+    expect(dayLayer).toHaveClass('career-tree__occlusion--active');
+    expect(dayLayer.querySelectorAll('ellipse')).toHaveLength(4);
+    expect(nightLayer).not.toHaveClass('career-tree__occlusion--active');
+    expect(nightLayer.querySelectorAll('ellipse')).toHaveLength(12);
+    expect(careerStyles).toMatch(/\.career-tree__occlusion\s*\{[^}]*z-index:\s*3;[^}]*pointer-events:\s*none;/s);
+    expect(careerStyles).toMatch(/\.career-tree__leaves\s*\{[^}]*z-index:\s*4;/s);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Switch to night' }));
+    expect(dayLayer).not.toHaveClass('career-tree__occlusion--active');
+    expect(nightLayer).toHaveClass('career-tree__occlusion--active');
+  });
   it('does not render the retired ScrollTrigger camera pathway', () => {
     const { container } = renderTree();
     expect(container.querySelector('[data-scroll-trigger]')).toBeNull();

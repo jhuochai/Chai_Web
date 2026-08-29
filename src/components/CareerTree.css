@@ -61,9 +61,25 @@
   opacity: 1;
 }
 
+.career-tree__occlusion {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1s ease;
+}
+
+.career-tree__occlusion--active {
+  opacity: 1;
+}
+
 .career-tree__leaves {
   position: absolute;
   inset: 0;
+  z-index: 4;
   width: 100%;
   height: 100%;
   pointer-events: none;
@@ -182,8 +198,8 @@
 }
 
 .career-tree__spot--ribbon {
-  width: clamp(68px, 6.8vw, 112px);
-  height: clamp(118px, 15vh, 178px);
+  width: clamp(50px, 5.1vw, 84px);
+  height: clamp(88px, 11.2vh, 134px);
   border-radius: 0;
   background: transparent;
   animation: none;
@@ -199,9 +215,25 @@
   z-index: 0;
   background: var(--item-glow);
   border-radius: 50%;
-  filter: blur(15px);
-  opacity: calc(0.2 + var(--camera-progress) * 0.5);
+  filter: blur(11px);
+  opacity: calc(0.08 + var(--camera-progress) * 0.24);
   transition: opacity 0.24s ease, filter 0.24s ease;
+}
+
+.career-tree__spot--ribbon::after {
+  content: '';
+  position: absolute;
+  top: 4%;
+  left: 50%;
+  z-index: 2;
+  width: 28%;
+  height: 7%;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(31, 43, 24, 0.72), rgba(31, 43, 24, 0) 72%);
+  filter: blur(1px);
+  opacity: 0.76;
+  pointer-events: none;
 }
 
 .career-tree__spot--ribbon:disabled {
@@ -221,22 +253,35 @@
   height: 100%;
   object-fit: contain;
   object-position: center top;
-  transform: translateY(0);
+  transform: translateY(0) rotate(var(--ribbon-tilt, 0deg));
   transform-origin: 50% 0;
   transition: transform 0.44s var(--ease-reveal), filter 0.28s ease;
   position: relative;
   z-index: 1;
-  filter: drop-shadow(0 10px 12px rgba(0, 0, 0, 0.46)) drop-shadow(0 0 7px var(--item-glow));
+  opacity: 0.94;
+  filter:
+    saturate(0.88)
+    brightness(0.94)
+    drop-shadow(0 6px 7px rgba(0, 0, 0, 0.42))
+    drop-shadow(0 0 3px var(--item-glow));
   pointer-events: none;
   user-select: none;
 }
 
 .career-tree__spot--ribbon:hover img,
 .career-tree__spot--ribbon:focus-visible img {
+  opacity: 1;
   filter:
-    drop-shadow(0 12px 14px rgba(0, 0, 0, 0.5))
-    drop-shadow(0 0 12px var(--item-glow));
+    saturate(1)
+    brightness(1)
+    drop-shadow(0 8px 9px rgba(0, 0, 0, 0.46))
+    drop-shadow(0 0 7px var(--item-glow));
 }
+
+.career-tree__spot--ribbon[data-ribbon-id='gamesofa'] { --ribbon-tilt: -4deg; }
+.career-tree__spot--ribbon[data-ribbon-id='ntpu'] { --ribbon-tilt: 3deg; }
+.career-tree__spot--ribbon[data-ribbon-id='actg'] { --ribbon-tilt: -2deg; }
+.career-tree__spot--ribbon[data-ribbon-id='eelin'] { --ribbon-tilt: 4deg; }
 
 .career-tree__spot--ribbon:hover::before,
 .career-tree__spot--ribbon:focus-visible::before { opacity: 1; filter: blur(20px); }
@@ -267,6 +312,9 @@
   .career-tree__sky {
     transition: none;
   }
+  .career-tree__occlusion {
+    transition: none;
+  }
 }
 
 @media (max-width: 600px) {
@@ -287,8 +335,8 @@
   }
 
   .career-tree__spot--ribbon {
-    width: 64px;
-    height: 118px;
+    width: 48px;
+    height: 88px;
   }
 
   .career-tree__spot--ribbon[data-ribbon-id='gamesofa'] {
