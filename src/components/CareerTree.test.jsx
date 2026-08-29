@@ -240,6 +240,20 @@ describe('CareerTree', () => {
     expect(screen.queryByText(/Bookshelf|書架上還有/i)).not.toBeInTheDocument();
   });
 
+  it('uses the branch-safe scene coordinates instead of the former trunk positions', () => {
+    renderTree();
+    fireEvent.click(screen.getByRole('button', { name: 'Switch to night' }));
+
+    expect(screen.getByRole('button', { name: 'Wild Rift' })).toHaveAttribute(
+      'data-position',
+      '37%-53.6%'
+    );
+    expect(screen.getByRole('button', { name: 'Ready or Not' })).toHaveAttribute(
+      'data-position',
+      '63.4%-51%'
+    );
+  });
+
   it('keeps blossom-only hotspots on the same camera scale from the far state', () => {
     const { container } = renderTree();
     fireEvent.click(screen.getByRole('button', { name: 'Switch to night' }));

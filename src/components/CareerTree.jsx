@@ -7,37 +7,11 @@ import CareerRibbonSheet from './CareerRibbonSheet';
 import GameBloom from './GameBloom';
 import { useLanguage } from '../i18n/LanguageContext';
 import { getCareerVisual } from '../data/careerVisuals';
+import { GAME_BLOOM_LAYOUT, RIBBON_SPOTS } from '../data/careerTreeLayout';
 import treeDay from '../assets/scenes/career-tree-day-factory-clean-v3.webp';
 import treeNight from '../assets/scenes/career-tree-night-factory-clean-v2.webp';
 import { createCareerCameraController, INTERACTIVE_PROGRESS } from './careerCamera';
 import './CareerTree.css';
-
-// Hotspot anchors in % of the BACKGROUND IMAGE (not the stage): the day
-// tree art is deliberately clean: ribbons and blooms are interactive
-// sprites in this same image coordinate system. The canvas reproduces
-// object-fit: cover geometry, keeping every sprite attached to its
-// branch across viewport sizes.
-const RIBBON_SPOTS = {
-  gamesofa: { left: '34.3%', top: '47.7%', anchor: 'crown-left' },
-  ntpu: { left: '65.9%', top: '54.1%', anchor: 'crown-right' },
-  actg: { left: '38.9%', top: '61.8%', anchor: 'lower-left' },
-  eelin: { left: '59.6%', top: '63.6%', anchor: 'lower-right' },
-};
-
-const GAME_BLOOM_LAYOUT = {
-  'wild-rift': { left: '40.8%', top: '61.3%', mobileLeft: '18%', mobileTop: '62%', size: 'lg', branch: 'lower-left', rotation: '-12deg' },
-  'identity-v': { left: '34.8%', top: '48.2%', mobileLeft: '50%', mobileTop: '48%', size: 'md', branch: 'crown-left', rotation: '9deg' },
-  stardew: { left: '44.5%', top: '32.2%', mobileLeft: '50%', mobileTop: '30%', size: 'sm', branch: 'crown-center', rotation: '-5deg' },
-  lol: { left: '58.2%', top: '34.4%', mobileLeft: '82%', mobileTop: '31%', size: 'lg', branch: 'crown-right', rotation: '13deg' },
-  valorant: { left: '34.7%', top: '36.4%', mobileLeft: '18%', mobileTop: '32%', size: 'sm', branch: 'crown-left', rotation: '6deg' },
-  r6: { left: '64.4%', top: '42.6%', mobileLeft: '82%', mobileTop: '42%', size: 'md', branch: 'crown-right', rotation: '-10deg' },
-  gta5: { left: '53.4%', top: '44.7%', mobileLeft: '50%', mobileTop: '37%', size: 'sm', branch: 'crown-center', rotation: '11deg' },
-  minecraft: { left: '63.1%', top: '54.7%', mobileLeft: '82%', mobileTop: '58%', size: 'md', branch: 'lower-right', rotation: '-8deg' },
-  palworld: { left: '60.1%', top: '65.5%', mobileLeft: '72%', mobileTop: '72%', size: 'lg', branch: 'lower-right', rotation: '7deg' },
-  'dont-starve': { left: '47.5%', top: '51.2%', mobileLeft: '18%', mobileTop: '48%', size: 'md', branch: 'crown-left', rotation: '-13deg' },
-  raft: { left: '52.4%', top: '59.2%', mobileLeft: '36%', mobileTop: '72%', size: 'sm', branch: 'lower-left', rotation: '4deg' },
-  'ready-or-not': { left: '69.3%', top: '62.5%', mobileLeft: '88%', mobileTop: '72%', size: 'sm', branch: 'lower-right', rotation: '-4deg' },
-};
 
 const LEAF_COLORS = ['rgba(201,162,75,0.75)', 'rgba(224,188,106,0.6)', 'rgba(110,139,61,0.65)'];
 
