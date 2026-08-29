@@ -7,9 +7,9 @@ import {
 } from './careerTreeLayout';
 
 describe('career tree scene layout', () => {
-  it('keeps all twelve blooms away from the lower main-trunk corridor', () => {
+  it('keeps all seven blooms away from the lower main-trunk corridor', () => {
     const blooms = Object.values(GAME_BLOOM_LAYOUT);
-    expect(blooms).toHaveLength(12);
+    expect(blooms).toHaveLength(7);
 
     for (const bloom of blooms) {
       const x = Number.parseFloat(bloom.left);
@@ -27,7 +27,7 @@ describe('career tree scene layout', () => {
 
   it('provides one foreground attachment patch for every decoration', () => {
     expect(DAY_OCCLUSION_PATCHES).toHaveLength(4);
-    expect(NIGHT_OCCLUSION_PATCHES).toHaveLength(12);
+    expect(NIGHT_OCCLUSION_PATCHES).toHaveLength(7);
     expect(DAY_OCCLUSION_PATCHES.map(({ id }) => id).sort()).toEqual(Object.keys(RIBBON_SPOTS).sort());
     expect(NIGHT_OCCLUSION_PATCHES.map(({ id }) => id).sort()).toEqual(Object.keys(GAME_BLOOM_LAYOUT).sort());
   });

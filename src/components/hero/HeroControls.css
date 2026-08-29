@@ -12,6 +12,12 @@
   isolation: isolate;
 }
 
+.hero-control::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+}
+
 .hero-control:disabled { visibility: hidden; cursor: default; pointer-events: none; }
 .hero-control__well { position: relative; display: grid; width: 100%; height: 100%; place-items: center; overflow: visible; }
 .hero-control__image { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; object-position: center; pointer-events: none; filter: drop-shadow(0 8px 8px rgba(0,0,0,.72)); transition: transform 220ms cubic-bezier(.16,1,.3,1),filter 220ms ease; }

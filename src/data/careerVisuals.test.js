@@ -14,9 +14,9 @@ describe('career visual manifest', () => {
     }
   });
 
-  it('maps all twelve games to distinct approved bloom assets', () => {
-    expect(Object.keys(GAME_BLOOM_VISUALS)).toHaveLength(12);
-    expect(new Set(Object.values(GAME_BLOOM_VISUALS).map(({ asset }) => asset)).size).toBe(12);
+  it('maps all seven games to distinct approved bloom assets', () => {
+    expect(Object.keys(GAME_BLOOM_VISUALS)).toHaveLength(7);
+    expect(new Set(Object.values(GAME_BLOOM_VISUALS).map(({ asset }) => asset)).size).toBe(7);
     expect(getCareerVisual('game', 'minecraft').accent).toBe('#6d9f4d');
     expect(getCareerVisual('game', 'ready-or-not').accent).toBe('#d94141');
   });

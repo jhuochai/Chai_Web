@@ -3,11 +3,11 @@ import { content } from './content';
 import { STATIONS } from './stations';
 
 describe('chaptered portfolio content', () => {
-  it('defines four hero entries and twelve distinct games in both languages', () => {
+  it('defines four hero entries and seven curated games in both languages', () => {
     for (const lang of ['zh', 'en']) {
       expect(content[lang].hero.entries).toHaveLength(4);
-      expect(content[lang].careerTree.flowers).toHaveLength(12);
-      expect(new Set(content[lang].careerTree.flowers.map((game) => game.id)).size).toBe(12);
+      expect(content[lang].careerTree.flowers).toHaveLength(7);
+      expect(new Set(content[lang].careerTree.flowers.map((game) => game.id)).size).toBe(7);
     }
   });
 
@@ -88,50 +88,38 @@ describe('chaptered portfolio content', () => {
 
   it('keeps the bilingual game IDs aligned', () => {
     const expectedIds = [
-      'wild-rift', 'identity-v', 'stardew', 'lol', 'valorant', 'r6', 'gta5',
-      'minecraft', 'palworld', 'dont-starve', 'raft', 'ready-or-not',
+      'wild-rift', 'identity-v', 'lol', 'r6', 'gta5', 'minecraft', 'ready-or-not',
     ];
     for (const lang of ['zh', 'en']) {
       expect(content[lang].careerTree.flowers.map((game) => game.id)).toEqual(expectedIds);
     }
   });
 
-  it('uses the approved twelve game display names exactly', () => {
+  it('uses the approved seven game display names exactly', () => {
     expect(content.zh.careerTree.flowers.map(({ id, name }) => [id, name])).toEqual([
       ['wild-rift', '激鬥峽谷'],
       ['identity-v', '第五人格'],
-      ['stardew', '星露谷物語'],
       ['lol', '英雄聯盟'],
-      ['valorant', 'Valorant'],
       ['r6', '虹彩六號'],
       ['gta5', 'GTA 5'],
       ['minecraft', 'Minecraft'],
-      ['palworld', 'Palworld'],
-      ['dont-starve', '飢荒'],
-      ['raft', 'Raft'],
       ['ready-or-not', 'Ready or Not'],
     ]);
     expect(content.en.careerTree.flowers.map(({ id, name }) => [id, name])).toEqual([
       ['wild-rift', 'Wild Rift'],
       ['identity-v', 'Identity V'],
-      ['stardew', 'Stardew Valley'],
       ['lol', 'League of Legends'],
-      ['valorant', 'Valorant'],
       ['r6', 'Rainbow Six Siege'],
       ['gta5', 'GTA 5'],
       ['minecraft', 'Minecraft'],
-      ['palworld', 'Palworld'],
-      ['dont-starve', "Don't Starve Together"],
-      ['raft', 'Raft'],
       ['ready-or-not', 'Ready or Not'],
     ]);
   });
 
-  it('keeps the legacy player list aligned until that section is retired', () => {
+  it('keeps the legacy player list independent from the curated tree', () => {
     for (const lang of ['zh', 'en']) {
-      expect(content[lang].portfolio.player.games.map((game) => game.name)).toEqual(
-        content[lang].careerTree.flowers.map((game) => game.name)
-      );
+      expect(content[lang].portfolio.player.games).toHaveLength(12);
+      expect(content[lang].careerTree.flowers).toHaveLength(7);
     }
   });
 
@@ -220,7 +208,7 @@ describe('content.buildStory', () => {
 });
 
 describe('content.careerTree', () => {
-  it('has four day ribbons and twelve night flowers with matching shapes, in both languages', () => {
+  it('has four day ribbons and seven night flowers with matching shapes, in both languages', () => {
     for (const lang of ['en', 'zh']) {
       const tree = content[lang].careerTree;
       expect(tree.ribbons).toHaveLength(4);
@@ -236,7 +224,7 @@ describe('content.careerTree', () => {
         );
         expect(ribbon.points.length).toBeGreaterThan(0);
       }
-      expect(tree.flowers).toHaveLength(12);
+      expect(tree.flowers).toHaveLength(7);
       for (const flower of tree.flowers) {
         expect(flower).toEqual(
           expect.objectContaining({

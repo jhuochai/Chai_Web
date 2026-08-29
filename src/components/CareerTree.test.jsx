@@ -56,7 +56,7 @@ describe('CareerTree', () => {
     expect(dayLayer).toHaveClass('career-tree__occlusion--active');
     expect(dayLayer.querySelectorAll('ellipse')).toHaveLength(4);
     expect(nightLayer).not.toHaveClass('career-tree__occlusion--active');
-    expect(nightLayer.querySelectorAll('ellipse')).toHaveLength(12);
+    expect(nightLayer.querySelectorAll('ellipse')).toHaveLength(7);
     expect(careerStyles).toMatch(/\.career-tree__occlusion\s*\{[^}]*z-index:\s*3;[^}]*pointer-events:\s*none;/s);
     expect(careerStyles).toMatch(/\.career-tree__leaves\s*\{[^}]*z-index:\s*4;/s);
 
@@ -241,16 +241,16 @@ describe('CareerTree', () => {
     expect(screen.getByText(flower.desc)).toBeInTheDocument();
   });
 
-  it('renders twelve distinct game blooms without the old shelf group', () => {
+  it('renders seven distinct game blooms without the old shelf group', () => {
     const { container } = renderTree();
     fireEvent(window, new CustomEvent('career-tree:test-progress', { detail: 0.8 }));
     fireEvent.click(screen.getByRole('button', { name: 'Switch to night' }));
 
     const blooms = screen.getAllByTestId('game-bloom');
-    expect(blooms).toHaveLength(12);
+    expect(blooms).toHaveLength(7);
     expect(blooms.every((node) => node.dataset.family === 'arcane-lumen-bloom')).toBe(true);
     expect(blooms.every((node) => node.dataset.branchAnchor)).toBeTruthy();
-    expect(new Set(blooms.map((node) => node.dataset.asset)).size).toBe(12);
+    expect(new Set(blooms.map((node) => node.dataset.asset)).size).toBe(7);
     expect(blooms.every((node) => node.dataset.stemEndpoint == null)).toBe(true);
     expect(screen.queryAllByTestId('game-bloom-mask')).toHaveLength(0);
     expect(container.querySelectorAll('.game-bloom__stem')).toHaveLength(0);
@@ -277,7 +277,7 @@ describe('CareerTree', () => {
 
     const camera = container.querySelector('.career-tree__camera');
     const blooms = Array.from(container.querySelectorAll('.career-tree__spot--flower'));
-    expect(blooms).toHaveLength(12);
+    expect(blooms).toHaveLength(7);
     expect(blooms.every((bloom) => camera.contains(bloom))).toBe(true);
     expect(bloomStyles).toMatch(
       /\.career-tree__spot--flower:disabled\s*\{[^}]*opacity:\s*0\.82;[^}]*transform:\s*translate\(-50%, -50%\);/s
@@ -296,7 +296,7 @@ describe('CareerTree', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Switch to night' }));
 
     const blooms = screen.getAllByTestId('game-bloom');
-    expect(new Set(blooms.map((node) => node.dataset.position)).size).toBe(12);
+    expect(new Set(blooms.map((node) => node.dataset.position)).size).toBe(7);
     expect(new Set(blooms.map((node) => node.dataset.size))).toEqual(
       new Set(['sm', 'md', 'lg'])
     );
@@ -312,12 +312,12 @@ describe('CareerTree', () => {
     renderTree();
     fireEvent(window, new CustomEvent('career-tree:test-progress', { detail: 0.8 }));
     fireEvent.click(screen.getByRole('button', { name: 'Switch to night' }));
-    const stardew = screen.getByRole('button', { name: content.en.careerTree.flowers[2].name });
-    const lol = screen.getByRole('button', { name: content.en.careerTree.flowers[3].name });
-    expect(Number.parseFloat(stardew.style.top)).toBeGreaterThanOrEqual(32);
+    const lol = screen.getByRole('button', { name: content.en.careerTree.flowers[2].name });
+    const r6 = screen.getByRole('button', { name: content.en.careerTree.flowers[3].name });
     expect(Number.parseFloat(lol.style.top)).toBeGreaterThanOrEqual(34);
-    expect(Number.parseFloat(stardew.style.getPropertyValue('--bloom-mobile-top'))).toBeGreaterThanOrEqual(30);
+    expect(Number.parseFloat(r6.style.top)).toBeGreaterThanOrEqual(39);
     expect(Number.parseFloat(lol.style.getPropertyValue('--bloom-mobile-top'))).toBeGreaterThanOrEqual(31);
+    expect(Number.parseFloat(r6.style.getPropertyValue('--bloom-mobile-top'))).toBeGreaterThanOrEqual(39);
   });
 
   it.each([

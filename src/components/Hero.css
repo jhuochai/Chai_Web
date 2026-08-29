@@ -152,14 +152,30 @@
 
 .hero__control-surface .hero-control {
   position: absolute;
-  translate: -50% 0;
+  translate: -50% -50%;
   pointer-events: auto;
 }
 
-.hero__control--intro { left: 14%; bottom: 18%; width: clamp(58px, 8.2vw, 136px); height: clamp(58px, 8.2vw, 136px); }
-.hero__control--career { left: 34%; bottom: 18%; width: clamp(48px, 6.2vw, 102px); height: clamp(96px, 14.5vw, 190px); }
-.hero__control--portfolio { left: 66%; bottom: 18%; width: clamp(66px, 8.6vw, 144px); height: clamp(66px, 8.6vw, 144px); }
-.hero__control--ai-lab { left: 86%; bottom: 18%; width: clamp(64px, 8.8vw, 146px); height: clamp(64px, 8.8vw, 146px); }
+.hero__control--intro { left: 14%; top: 75.4%; width: clamp(52px, 6vw, 102px); height: clamp(52px, 6vw, 102px); }
+.hero__control--career { left: 31%; top: 72%; width: clamp(40px, 4.8vw, 76px); height: clamp(80px, 10vw, 128px); }
+.hero__control--portfolio { left: 69%; top: 72%; width: clamp(58px, 6vw, 104px); height: clamp(58px, 6vw, 104px); }
+.hero__control--ai-lab { left: 86%; top: 75.4%; width: clamp(58px, 6.6vw, 110px); height: clamp(58px, 6.6vw, 110px); }
+
+.hero__control--intro .hero-control__well {
+  transform: perspective(700px) rotateZ(-3deg) rotateY(5deg);
+}
+
+.hero__control--career .hero-control__well {
+  transform: perspective(700px) rotateZ(-2deg) rotateY(3deg);
+}
+
+.hero__control--portfolio .hero-control__well {
+  transform: perspective(700px) rotateZ(2deg) rotateY(-3deg);
+}
+
+.hero__control--ai-lab .hero-control__well {
+  transform: perspective(700px) rotateZ(3deg) rotateY(-5deg);
+}
 
 .hero__trash-bin {
   position: absolute;
@@ -175,6 +191,12 @@
   opacity: calc(1 - var(--approach));
   transform: translateY(calc(var(--approach) * 22px)) scale(calc(1 - var(--approach) * .12));
   transition: transform 520ms cubic-bezier(.16, 1, .3, 1), opacity 220ms ease, filter 180ms ease, visibility 0s linear;
+}
+
+.hero__trash-bin::before {
+  content: '';
+  position: absolute;
+  inset: -7px;
 }
 
 .hero__trash-bin img { display: block; width: 100%; filter: drop-shadow(0 8px 7px #000c); }
@@ -200,10 +222,10 @@
     object-fit: contain;
     object-position: 50% 100%;
   }
-  .hero__control--intro { left: 11%; bottom: 13%; width: 11vw; height: 11vw; }
-  .hero__control--career { left: 34%; bottom: 12%; width: 8.5vw; height: 17vw; }
-  .hero__control--portfolio { left: 66%; bottom: 12%; width: 11.5vw; height: 11.5vw; }
-  .hero__control--ai-lab { left: 89%; bottom: 13%; width: 11vw; height: 11vw; }
+  .hero__control--intro { left: 12%; top: 81%; width: 44px; height: 44px; }
+  .hero__control--career { left: 29%; top: 78%; width: 44px; height: 88px; }
+  .hero__control--portfolio { left: 66%; top: 78%; width: 52px; height: 52px; }
+  .hero__control--ai-lab { left: 85%; top: 81%; width: 50px; height: 50px; }
   .hero__trash-bin { right: 5%; bottom: 13%; width: 30px; }
 }
 
