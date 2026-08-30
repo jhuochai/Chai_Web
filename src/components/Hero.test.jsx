@@ -149,6 +149,7 @@ describe('Hero 2.5D cockpit', () => {
     expect(heroStyles).toMatch(/\.hero__control--ai-lab\s*\{[^}]*left:\s*95\.8%[^}]*top:\s*78\.7%[^}]*width:\s*clamp\(50px,\s*6\.2vw,\s*100px\)/s);
     expect(heroStyles).toMatch(/\.hero__console-layer\s*\{[^}]*clip-path:\s*inset\(57%\s+0\s+0\s+0\)/s);
     expect(heroStyles).not.toMatch(/\.hero__control--(?:career|portfolio|ai-lab)\s+\.hero-control__well\s*\{[^}]*clip-path/s);
+    expect(heroStyles).toMatch(/\.hero__control--portfolio\s+\.hero-control__well\s*\{[^}]*transform:[^;}]*scaleX\(-1\)/s);
   });
 
   it('keeps atmosphere and reduced-motion fallbacks around the wraparound console', () => {

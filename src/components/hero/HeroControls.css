@@ -21,8 +21,7 @@
 .hero-control:disabled { visibility: hidden; cursor: default; pointer-events: none; }
 .hero-control__well { position: relative; display: grid; width: 100%; height: 100%; place-items: center; overflow: visible; }
 .hero-control__image { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; object-position: center; pointer-events: none; filter: drop-shadow(0 8px 8px rgba(0,0,0,.72)); transition: transform 220ms cubic-bezier(.16,1,.3,1),filter 220ms ease; }
-.hero-control--career .hero-control__image--base { clip-path: inset(71% 0 0); }
-.hero-control--career .hero-control__image--moving { clip-path: inset(0 0 29%); transform-origin: 50% 72%; }
+.hero-control--career .hero-control__image--moving { transform-origin: 50% 72%; }
 .hero-control--portfolio .hero-control__image--base { clip-path: inset(54% 0 0); }
 .hero-control--portfolio .hero-control__image--moving { clip-path: inset(0 0 46%); transform-origin: 50% 68%; }
 .hero-control__fallback { width: 72%; height: 68%; border: 1px solid #796b54; border-radius: 18% 18% 8% 8%; background: linear-gradient(145deg,#3d4146,#11151a 60%,#575047); box-shadow: inset 0 0 0 3px #111, 0 10px 22px #0009; }

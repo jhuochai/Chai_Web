@@ -47,4 +47,19 @@ describe('HeroDestinationControl', () => {
     expect(container.querySelectorAll('.hero-control__image')).toHaveLength(1);
     expect(container.querySelector('.hero-control__image--moving')).not.toBeInTheDocument();
   });
+
+  it('uses separate transparent assets for an articulated control', () => {
+    const { container } = render(
+      <HeroDestinationControl
+        entry={{ id: 'career', label: '航跡樹站' }}
+        image={{ base: '/joystick-base.webp', moving: '/joystick-grip.webp' }}
+        motion="push"
+        enabled
+        onActivate={() => {}}
+      />,
+    );
+
+    expect(container.querySelector('.hero-control__image--base')).toHaveAttribute('src', '/joystick-base.webp');
+    expect(container.querySelector('.hero-control__image--moving')).toHaveAttribute('src', '/joystick-grip.webp');
+  });
 });

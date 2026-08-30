@@ -6,7 +6,8 @@ import { playStationTransition } from '../lib/chapterTransition';
 import emptyCockpitScene from '../assets/scenes/hero-empty-cockpit-v3.webp';
 import consoleBaseScene from '../assets/scenes/hero-wraparound-console-smooth-v2.webp';
 import handleImage from '../assets/props/hero-handle-panel-v3.webp';
-import joystickImage from '../assets/props/hero-joystick-panel-v2.webp';
+import joystickBaseImage from '../assets/props/hero-joystick-base-v3.webp';
+import joystickGripImage from '../assets/props/hero-joystick-grip-v3.webp';
 import knobImage from '../assets/props/hero-knob-panel-v2.webp';
 import coreImage from '../assets/props/hero-ai-core-ui.webp';
 import trashImage from '../assets/props/hero-trash.webp';
@@ -30,7 +31,7 @@ const interfaceCopy = {
 
 const controlImages = {
   intro: knobImage,
-  career: joystickImage,
+  career: { base: joystickBaseImage, moving: joystickGripImage },
   portfolio: handleImage,
   'ai-lab': coreImage,
 };

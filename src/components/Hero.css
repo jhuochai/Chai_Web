@@ -170,7 +170,7 @@
 }
 
 .hero__control--portfolio .hero-control__well {
-  transform: perspective(700px) rotateZ(2deg) rotateY(-3deg);
+  transform: perspective(700px) rotateZ(2deg) rotateY(-3deg) scaleX(-1);
 }
 
 .hero__control--ai-lab .hero-control__well {

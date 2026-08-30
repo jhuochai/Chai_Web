@@ -7,7 +7,9 @@ export default function HeroDestinationControl({ className = '', entry, image, m
   const timerRef = useRef(null);
   const [activeMotion, setActiveMotion] = useState('');
   const [imageFailed, setImageFailed] = useState(false);
-  const isArticulated = motion === 'pull' || motion === 'push';
+  const baseImage = typeof image === 'string' ? image : image?.base;
+  const movingImage = typeof image === 'string' ? image : image?.moving;
+  const isArticulated = (motion === 'pull' || motion === 'push') && movingImage;
 
   useEffect(() => () => window.clearTimeout(timerRef.current), []);
 
@@ -34,11 +36,11 @@ export default function HeroDestinationControl({ className = '', entry, image, m
       onClick={activate}
     >
       <span className="hero-control__well" aria-hidden="true">
-        {image && !imageFailed ? (
+        {baseImage && !imageFailed ? (
           <>
-            <img className="hero-control__image hero-control__image--base" src={image} alt="" draggable="false" onError={() => setImageFailed(true)} />
+            <img className="hero-control__image hero-control__image--base" src={baseImage} alt="" draggable="false" onError={() => setImageFailed(true)} />
             {isArticulated && (
-              <img className="hero-control__image hero-control__image--moving" src={image} alt="" draggable="false" onError={() => setImageFailed(true)} />
+              <img className="hero-control__image hero-control__image--moving" src={movingImage} alt="" draggable="false" onError={() => setImageFailed(true)} />
             )}
           </>
         ) : (
