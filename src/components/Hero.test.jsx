@@ -143,10 +143,10 @@ describe('Hero 2.5D cockpit', () => {
     expect(officeControl).toHaveAttribute('data-motion', 'turn');
     expect(portfolioControl).toHaveAttribute('data-motion', 'pull');
 
-    expect(heroStyles).toMatch(/\.hero__control--intro\s*\{[^}]*left:\s*14%[^}]*top:\s*75\.4%[^}]*width:\s*clamp\(52px,\s*6vw,\s*102px\)/s);
-    expect(heroStyles).toMatch(/\.hero__control--career\s*\{[^}]*left:\s*31%[^}]*top:\s*72%[^}]*width:\s*clamp\(40px,\s*4\.8vw,\s*76px\)/s);
-    expect(heroStyles).toMatch(/\.hero__control--portfolio\s*\{[^}]*left:\s*69%[^}]*top:\s*72%[^}]*width:\s*clamp\(58px,\s*6vw,\s*104px\)/s);
-    expect(heroStyles).toMatch(/\.hero__control--ai-lab\s*\{[^}]*left:\s*86%[^}]*top:\s*75\.4%[^}]*width:\s*clamp\(58px,\s*6\.6vw,\s*110px\)/s);
+    expect(heroStyles).toMatch(/\.hero__control--intro\s*\{[^}]*left:\s*7%[^}]*top:\s*76\.2%[^}]*width:\s*clamp\(52px,\s*6vw,\s*102px\)/s);
+    expect(heroStyles).toMatch(/\.hero__control--career\s*\{[^}]*left:\s*24%[^}]*top:\s*72\.8%[^}]*width:\s*clamp\(40px,\s*4\.8vw,\s*76px\)/s);
+    expect(heroStyles).toMatch(/\.hero__control--portfolio\s*\{[^}]*left:\s*78\.5%[^}]*top:\s*72\.7%[^}]*width:\s*clamp\(58px,\s*6vw,\s*104px\)/s);
+    expect(heroStyles).toMatch(/\.hero__control--ai-lab\s*\{[^}]*left:\s*95\.8%[^}]*top:\s*78\.7%[^}]*width:\s*clamp\(50px,\s*6\.2vw,\s*100px\)/s);
     expect(heroStyles).toMatch(/\.hero__console-layer\s*\{[^}]*clip-path:\s*inset\(57%\s+0\s+0\s+0\)/s);
     expect(heroStyles).not.toMatch(/\.hero__control--(?:career|portfolio|ai-lab)\s+\.hero-control__well\s*\{[^}]*clip-path/s);
   });
