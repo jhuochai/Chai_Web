@@ -17,6 +17,7 @@ import { LanguageProvider } from './i18n/LanguageContext';
 import { getSiteRoute, navigateToRoute } from './lib/siteRoute';
 import { playStationTransition } from './lib/chapterTransition';
 import { acquireBodyScrollLock } from './lib/bodyScrollLock';
+import { waitForSceneAssets } from './lib/sceneReady';
 
 function StationScene({ route, onTravel }) {
   const controls = <StationControls currentRoute={route} onTravel={onTravel} />;
@@ -40,6 +41,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [route, setRoute] = useState(getSiteRoute);
   const [contactOpen, setContactOpen] = useState(false);
+  const [travelling, setTravelling] = useState(false);
   const focusTimerRef = useRef(null);
 
   useEffect(() => {
@@ -58,9 +60,16 @@ function App() {
 
   useEffect(() => () => window.clearTimeout(focusTimerRef.current), []);
 
-  const completeStationTravel = (pathname) => {
+  const completeStationTravel = async (pathname, { signal } = {}) => {
     navigateToRoute(pathname);
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    // Let React commit the destination before inspecting its visible assets.
+    await new Promise((resolve) => window.requestAnimationFrame(() => window.requestAnimationFrame(resolve)));
+    if (signal?.aborted) return;
+    await waitForSceneAssets(document.querySelector('.scene-flow'), { signal });
+  };
+
+  const focusDestination = () => {
     window.clearTimeout(focusTimerRef.current);
     focusTimerRef.current = window.setTimeout(() => {
       const stationRoot = document.querySelector('.scene-flow > section');
@@ -73,8 +82,9 @@ function App() {
 
   return (
     <LanguageProvider>
-      <SmoothScroll paused={loading} />
+      <SmoothScroll paused={loading || travelling} />
       {loading && <LoadingScreen onDone={() => setLoading(false)} />}
+      <div inert={travelling ? true : undefined}>
       <ClickSpark sparkColor="#e0bc6a" sparkSize={9} sparkRadius={17} sparkCount={5} duration={550}>
         <GrainOverlay />
         {route === 'making-of' ? (
@@ -87,7 +97,6 @@ function App() {
               onOpenContact={() => setContactOpen(true)}
             />
             <StationScene route={route} onTravel={playStationTransition} />
-            <ChapterTransition onTravel={completeStationTravel} />
             <Contact
               open={contactOpen}
               onClose={() => setContactOpen(false)}
@@ -96,6 +105,8 @@ function App() {
           </>
         )}
       </ClickSpark>
+      </div>
+      {route !== 'making-of' && <ChapterTransition onTravel={completeStationTravel} onComplete={focusDestination} onActiveChange={setTravelling} />}
     </LanguageProvider>
   );
 }

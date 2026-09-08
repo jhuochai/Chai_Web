@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>艙門轉場檢查</title>
+  <link rel="stylesheet" href="/src/components/ChapterTransition.css">
+  <style>
+    body { margin: 0; font-family: system-ui, sans-serif; }
+    nav { position: fixed; z-index: 810; top: 12px; left: 12px; display: flex; gap: 8px; }
+    button { padding: 10px 14px; background: #171b1e; color: #f1ece1; border: 1px solid #aeb8bd; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <nav aria-label="預覽控制">
+    <button data-phase="closed">關門</button>
+    <button data-phase="half">半開</button>
+    <button data-phase="opening">開門</button>
+  </nav>
+  <div class="chapter-transition chapter-transition--closed">
+    <div class="chapter-transition__scene" aria-hidden="true">
+      <img class="chapter-transition__corridor" src="/src/assets/scenes/transit-corridor.webp" alt="">
+      <img class="chapter-transition__surround" src="/src/assets/scenes/transit-door-closed.webp" alt="">
+      <div class="chapter-transition__hinge">
+        <img class="chapter-transition__leaf" src="/src/assets/scenes/transit-door-closed.webp" alt="">
+      </div>
+    </div>
+  </div>
+  <script type="module">
+    const overlay = document.querySelector('.chapter-transition');
+    const hinge = document.querySelector('.chapter-transition__hinge');
+    document.querySelectorAll('button').forEach((button) => button.addEventListener('click', () => {
+      overlay.className = `chapter-transition chapter-transition--${button.dataset.phase}`;
+      hinge.style.transform = button.dataset.phase === 'half' ? 'rotateY(-45deg)' : '';
+    }));
+  </script>
+</body>
+</html>

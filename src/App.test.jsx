@@ -2,6 +2,11 @@ import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import App from './App';
 
+vi.mock('./lib/sceneReady', () => ({
+  preloadImages: () => Promise.resolve(),
+  waitForSceneAssets: () => Promise.resolve(),
+}));
+
 vi.mock('./components/ClickSpark', () => ({
   default: ({ children }) => <div>{children}</div>,
 }));
@@ -68,7 +73,7 @@ describe('App station routes', () => {
     expect(container.querySelectorAll('main > section')).toHaveLength(1);
   });
 
-  it('navigates through the route map without rendering another station', () => {
+  it('navigates through the route map and focuses the destination after its door opens', async () => {
     const { container } = render(<App />);
     vi.useFakeTimers();
     const scrollTo = vi.spyOn(window, 'scrollTo').mockImplementation(() => {});
@@ -77,12 +82,12 @@ describe('App station routes', () => {
     fireEvent.click(screen.getByRole('button', { name: "Captain's Office" }));
 
     expect(window.location.pathname).toBe('/');
-    act(() => vi.advanceTimersByTime(450));
+    await act(() => vi.advanceTimersByTimeAsync(450));
     expect(window.location.pathname).toBe('/profile');
     expect(container.querySelector('section#scene-2')).toBeInTheDocument();
     expect(container.querySelectorAll('main > section')).toHaveLength(1);
     expect(scrollTo).toHaveBeenCalledWith({ top: 0, left: 0, behavior: 'auto' });
-    act(() => vi.advanceTimersByTime(1));
+    await act(() => vi.advanceTimersByTimeAsync(1600));
     expect(document.activeElement).toBe(container.querySelector('#scene-2 h2'));
     vi.useRealTimers();
   });

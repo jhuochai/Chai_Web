@@ -1,95 +1,98 @@
 import { useEffect, useRef, useState } from 'react';
 import { useReducedMotion } from 'motion/react';
-import walkFrame0 from '../assets/scenes/character-walk-aligned-0.webp';
-import walkFrame1 from '../assets/scenes/character-walk-aligned-1.webp';
-import walkFrame2 from '../assets/scenes/character-walk-aligned-2.webp';
-import walkFrame3 from '../assets/scenes/character-walk-aligned-3.webp';
+import closedDoor from '../assets/scenes/transit-door-closed.webp';
+import corridor from '../assets/scenes/transit-corridor.webp';
 import { getStationByRoute } from '../data/stations';
 import { useLanguage } from '../i18n/LanguageContext';
 import { STATION_TRANSITION_EVENT, isSafeStationPathname } from '../lib/chapterTransition';
-import ShuffleText from './ShuffleText';
+import { preloadImages } from '../lib/sceneReady';
+import { acquireBodyScrollLock } from '../lib/bodyScrollLock';
 import './ChapterTransition.css';
 
-const TRANSITION_DURATION = 900;
-const TRAVEL_DELAY = Math.round(TRANSITION_DURATION * 0.5);
-const REDUCED_DURATION = 180;
-const WALK_FRAMES = [walkFrame0, walkFrame1, walkFrame2, walkFrame3];
-
-export default function ChapterTransition({ onTravel }) {
+export default function ChapterTransition({ onTravel, onComplete, onActiveChange }) {
   const { lang } = useLanguage();
   const reduce = useReducedMotion();
   const [active, setActive] = useState(null);
-  const activeRef = useRef(false);
-  const travelledRef = useRef(false);
-  const timersRef = useRef(new Set());
-  const onTravelRef = useRef(onTravel);
-  const reduceRef = useRef(Boolean(reduce));
-
-  onTravelRef.current = onTravel;
-  reduceRef.current = Boolean(reduce);
+  const latest = useRef({ onTravel, onComplete, onActiveChange, reduce });
+  latest.current = { onTravel, onComplete, onActiveChange, reduce };
 
   useEffect(() => {
-    const clearTimers = () => {
-      for (const timer of timersRef.current) window.clearTimeout(timer);
-      timersRef.current.clear();
-    };
-    const schedule = (callback, delay) => {
-      const timer = window.setTimeout(() => {
-        timersRef.current.delete(timer);
-        callback();
-      }, delay);
-      timersRef.current.add(timer);
-    };
-    const onStart = (event) => {
+    const lifetime = new AbortController();
+    const artworkReady = preloadImages([closedDoor, corridor], { signal: lifetime.signal });
+    let journey = null;
+    let unlock = null;
+    const timers = new Map();
+    const delay = (ms) => new Promise((resolve) => {
+      const timer = window.setTimeout(() => { timers.delete(timer); resolve(); }, ms);
+      timers.set(timer, resolve);
+    });
+    const onStart = async (event) => {
       const pathname = event.detail;
-      if (!isSafeStationPathname(pathname) || activeRef.current) return;
-      const reduced = reduceRef.current;
-      activeRef.current = true;
-      travelledRef.current = false;
-      setActive({ pathname, reduced });
-      const travel = () => {
-        if (!activeRef.current || travelledRef.current) return;
-        travelledRef.current = true;
-        onTravelRef.current?.(pathname, { immediate: reduced });
-      };
-      const finish = () => {
-        activeRef.current = false;
-        setActive(null);
-      };
-      if (reduced) {
-        travel();
-        schedule(finish, REDUCED_DURATION);
-        return;
+      if (!isSafeStationPathname(pathname) || journey) return;
+      const reduced = Boolean(latest.current.reduce);
+      const controller = new AbortController();
+      journey = controller;
+      unlock = acquireBodyScrollLock();
+      latest.current.onActiveChange?.(true);
+      setActive({ pathname, reduced, phase: 'closed' });
+      if (!reduced) await delay(180);
+      if (controller.signal.aborted) return;
+      try {
+        await Promise.all([
+          artworkReady,
+          latest.current.onTravel?.(pathname, { immediate: reduced, signal: controller.signal }),
+          delay(reduced ? 0 : 220),
+        ]);
+      } catch {
+        // Resource failures must not leave navigation locked.
       }
-      schedule(travel, TRAVEL_DELAY);
-      schedule(finish, TRANSITION_DURATION);
+      if (controller.signal.aborted) return;
+      if (!reduced) {
+        setActive({ pathname, reduced, phase: 'opening' });
+        await delay(1000);
+      }
+      if (controller.signal.aborted) return;
+      setActive({ pathname, reduced, phase: 'exiting' });
+      await delay(reduced ? 180 : 260);
+      if (controller.signal.aborted) return;
+      setActive(null);
+      unlock?.();
+      unlock = null;
+      journey = null;
+      latest.current.onActiveChange?.(false);
+      latest.current.onComplete?.(pathname);
     };
     window.addEventListener(STATION_TRANSITION_EVENT, onStart);
     return () => {
+      lifetime.abort();
+      journey?.abort();
       window.removeEventListener(STATION_TRANSITION_EVENT, onStart);
-      clearTimers();
-      activeRef.current = false;
-      travelledRef.current = false;
+      for (const [timer, resolve] of timers) { window.clearTimeout(timer); resolve(); }
+      timers.clear();
+      unlock?.();
     };
   }, []);
 
   if (!active) return null;
   const station = getStationByRoute(active.pathname);
-  const destinationName = station?.[lang] ?? station?.en;
+  const name = station?.[lang] ?? station?.en;
+  const loading = lang === 'zh' ? '正在準備艙室' : 'Preparing the next station';
+  const entering = lang === 'zh' ? '艙門開啟' : 'Door opening';
 
   return (
-    <div className={`chapter-transition${active.reduced ? ' chapter-transition--reduced' : ''}`} aria-hidden="true" data-target={active.pathname}>
-      <div className="chapter-transition__backdrop" />
-      <div className="chapter-transition__frame" />
-      {!active.reduced && (
-        <div className="chapter-transition__walker">
-          <div className="chapter-transition__walker-shadow" />
-          {WALK_FRAMES.map((source, index) => (
-            <img key={source} src={source} alt="" className="chapter-transition__walker-frame" draggable="false" style={{ animationDelay: `${index * 80}ms` }} />
-          ))}
+    <div className={`chapter-transition chapter-transition--${active.phase}${active.reduced ? ' chapter-transition--reduced' : ''}`} data-target={active.pathname} data-phase={active.phase}>
+      <div className="chapter-transition__scene" aria-hidden="true">
+        <img className="chapter-transition__corridor" src={corridor} alt="" draggable="false" />
+        {/* Fixed frame and rotating leaf use the same approved image. */}
+        <img className="chapter-transition__surround" src={closedDoor} alt="" draggable="false" />
+        <div className="chapter-transition__hinge">
+          <img className="chapter-transition__leaf" src={closedDoor} alt="" draggable="false" />
         </div>
-      )}
-      <p className="chapter-transition__arrival"><ShuffleText text={destinationName} active={!active.reduced} /></p>
+      </div>
+      <p className="chapter-transition__arrival" role="status" aria-live="polite">
+        <span>{name}</span>
+        <span>{active.phase === 'closed' ? loading : entering}</span>
+      </p>
     </div>
   );
 }

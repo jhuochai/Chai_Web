@@ -5,6 +5,8 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   test: {
+    // Saved worktrees contain older copies of tests, not this application's suite.
+    include: ['src/**/*.{test,spec}.{js,jsx}'],
     environment: 'jsdom',
     setupFiles: ['./src/test/setup.js'],
     globals: true,
