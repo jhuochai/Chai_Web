@@ -2,6 +2,7 @@ import { act, render } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { LanguageProvider } from '../i18n/LanguageContext';
 import ChapterTransition from './ChapterTransition';
+import { readFileSync } from 'node:fs';
 import { playStationTransition } from '../lib/chapterTransition';
 
 const motionState = vi.hoisted(() => ({ reduced: false }));
@@ -14,6 +15,28 @@ const mount = (props = {}) => render(<LanguageProvider><ChapterTransition {...pr
 describe('loading-gated spacecraft door', () => {
   beforeEach(() => { vi.useFakeTimers(); motionState.reduced = false; });
   afterEach(() => { vi.useRealTimers(); });
+
+  it('announces loading without painting a status card over the door', async () => {
+    const style = document.createElement('style');
+    style.textContent = readFileSync('src/components/ChapterTransition.css', 'utf8');
+    document.head.append(style);
+    try {
+      const { container } = mount();
+      start();
+      const status = container.querySelector('[role="status"]');
+      expect(status).toHaveAttribute('aria-live', 'polite');
+      expect(status).toHaveTextContent('Preparing the next station');
+      const computed = window.getComputedStyle(status);
+      expect(computed.width).toBe('1px');
+      expect(computed.height).toBe('1px');
+      expect(computed.overflow).toBe('hidden');
+      expect(computed.clipPath).toBe('inset(50%)');
+      await tick(400);
+      expect(status).toHaveTextContent('Door opening');
+    } finally {
+      style.remove();
+    }
+  });
 
   it('starts closed, keeps the door shut for pending destination assets, then opens and restores interaction', async () => {
     let ready;
