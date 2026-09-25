@@ -57,7 +57,7 @@
 .chapter-transition--exiting .chapter-transition__hinge { transform: rotateY(-70deg); }
 .chapter-transition--exiting { opacity: 0; }
 
-.chapter-transition__arrival {
+.chapter-transition__a11y-status {
   /* Announce navigation without overlaying a label on the door artwork. */
   position: absolute;
   width: 1px;
@@ -70,7 +70,6 @@
   border: 0;
 }
 
-.chapter-transition__arrival span { display: block; }
 .chapter-transition--reduced { transition-duration: 180ms; }
 .chapter-transition--reduced .chapter-transition__hinge { transition: none; transform: none; }
 

@@ -89,10 +89,12 @@ export default function ChapterTransition({ onTravel, onComplete, onActiveChange
           <img className="chapter-transition__leaf" src={closedDoor} alt="" draggable="false" />
         </div>
       </div>
-      <p className="chapter-transition__arrival" role="status" aria-live="polite">
-        <span>{name}</span>
-        <span>{active.phase === 'closed' ? loading : entering}</span>
-      </p>
+      <div
+        className="chapter-transition__a11y-status"
+        role="status"
+        aria-live="polite"
+        aria-label={`${name}: ${active.phase === 'closed' ? loading : entering}`}
+      />
     </div>
   );
 }

@@ -16,7 +16,12 @@ describe('loading-gated spacecraft door', () => {
   beforeEach(() => { vi.useFakeTimers(); motionState.reduced = false; });
   afterEach(() => { vi.useRealTimers(); });
 
-  it('announces loading without painting a status card over the door', async () => {
+  it.each([
+    ['en', 'Preparing the next station', 'Door opening'],
+    ['zh', '正在準備艙室', '艙門開啟'],
+  ])('keeps %s status accessible without any paintable label text', async (lang, loading, opening) => {
+    const previousLanguage = localStorage.getItem('site-lang');
+    localStorage.setItem('site-lang', lang);
     const style = document.createElement('style');
     style.textContent = readFileSync('src/components/ChapterTransition.css', 'utf8');
     document.head.append(style);
@@ -25,16 +30,21 @@ describe('loading-gated spacecraft door', () => {
       start();
       const status = container.querySelector('[role="status"]');
       expect(status).toHaveAttribute('aria-live', 'polite');
-      expect(status).toHaveTextContent('Preparing the next station');
+      expect(status).toHaveAccessibleName(expect.stringContaining(loading));
+      expect(status.textContent).toBe('');
+      expect(container.querySelector('.chapter-transition__arrival')).toBeNull();
       const computed = window.getComputedStyle(status);
       expect(computed.width).toBe('1px');
       expect(computed.height).toBe('1px');
       expect(computed.overflow).toBe('hidden');
       expect(computed.clipPath).toBe('inset(50%)');
       await tick(400);
-      expect(status).toHaveTextContent('Door opening');
+      expect(status).toHaveAccessibleName(expect.stringContaining(opening));
+      expect(status.textContent).toBe('');
     } finally {
       style.remove();
+      if (previousLanguage === null) localStorage.removeItem('site-lang');
+      else localStorage.setItem('site-lang', previousLanguage);
     }
   });
 
@@ -73,7 +83,7 @@ describe('loading-gated spacecraft door', () => {
     expect(onTravel).toHaveBeenCalledOnce();
     expect(onTravel.mock.calls[0][0]).toBe('/career-tree');
     expect(container.querySelector('.chapter-transition__surround').src).toBe(container.querySelector('.chapter-transition__leaf').src);
-    expect(container.querySelector('[role="status"]')).toHaveTextContent('Route Tree Station');
+    expect(container.querySelector('[role="status"]')).toHaveAccessibleName(expect.stringContaining('Route Tree Station'));
   });
 
   it('waits for loading under reduced motion, then only fades', async () => {
