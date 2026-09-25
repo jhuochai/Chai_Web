@@ -1,6 +1,6 @@
 import { navigateToRoute } from '../lib/siteRoute';
 import { ArrowLeft, Archive } from '@phosphor-icons/react';
-import { useLanguage } from '../i18n/LanguageContext';
+import { useLanguage } from '../i18n/useLanguage';
 import CollaboratorSeats from './CollaboratorSeats';
 import './MakingOf.css';
 

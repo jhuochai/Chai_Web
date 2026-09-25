@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { getRecommendedNext, getStationByRoute, STATIONS } from '../data/stations';
 import { getSiteRoute, navigateToRoute } from './siteRoute';
 
@@ -26,6 +26,12 @@ describe('station data', () => {
 });
 
 describe('getSiteRoute', () => {
+  afterEach(() => vi.unstubAllEnvs());
+  it('recognizes a station beneath the deployed repository base and trailing slash', () => {
+    vi.stubEnv('BASE_URL', '/Chai_Web/');
+    expect(getSiteRoute('/Chai_Web/profile/')).toBe('profile');
+    expect(getSiteRoute('/Chai_Web/ai-lab')).toBe('ai-lab');
+  });
   it.each([
     ['/', 'cockpit'],
     ['/profile', 'profile'],
@@ -43,6 +49,12 @@ describe('getSiteRoute', () => {
 });
 
 describe('navigateToRoute', () => {
+  afterEach(() => { vi.unstubAllEnvs(); window.history.replaceState({}, '', '/'); });
+  it('keeps navigation beneath the deployment base', () => {
+    vi.stubEnv('BASE_URL', '/Chai_Web/');
+    navigateToRoute('/profile');
+    expect(window.location.pathname).toBe('/Chai_Web/profile');
+  });
   it('pushes the pathname and broadcasts a popstate event', () => {
     const onPopState = vi.fn();
     window.addEventListener('popstate', onPopState);

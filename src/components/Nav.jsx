@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Globe, MapTrifold } from '@phosphor-icons/react';
-import { useLanguage } from '../i18n/LanguageContext';
+import { useLanguage } from '../i18n/useLanguage';
 import MusicToggle from './MusicToggle';
 import RouteMap from './RouteMap';
 import './Nav.css';

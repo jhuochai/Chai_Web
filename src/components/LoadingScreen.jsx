@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useReducedMotion } from 'motion/react';
-import { useLanguage } from '../i18n/LanguageContext';
-import gunHand from '../assets/scenes/gun-hand-cropped.webp';
+import { useLanguage } from '../i18n/useLanguage';
+import gunHand from '../assets/scenes/gun-hand-fair-v2.webp';
+import dockingPort from '../assets/scenes/night-docking-port.webp';
 import { createFireParticles, getAutoTarget, getCanvasMetrics } from './loadingFire';
 import './LoadingScreen.css';
 
@@ -197,6 +198,7 @@ export default function LoadingScreen({ onDone }) {
       onPointerDown={handlePointerDown}
       onKeyDown={handleKeyDown}
     >
+      <img className="loading-screen__landscape" src={dockingPort} alt="" fetchPriority="high" draggable="false" />
       <div className="loading-screen__gun" aria-hidden="true">
         <img src={gunHand} alt="" className="loading-screen__gun-image" draggable="false" />
         <span className="loading-screen__glint" />

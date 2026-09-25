@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react';
+import { cleanup, render } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 const mocks = vi.hoisted(() => {
@@ -39,7 +39,17 @@ import SmoothScroll from './SmoothScroll';
 import { scrollToScene, setScrollEngine } from '../lib/scrollToScene';
 
 describe('SmoothScroll', () => {
+  it('applies pause changes once without recreating the scroll engine', () => {
+    const { rerender } = render(<SmoothScroll paused />);
+    expect(mocks.instance.stop).toHaveBeenCalledTimes(1);
+    rerender(<SmoothScroll paused={false} />);
+    expect(mocks.instance.start).toHaveBeenCalledTimes(1);
+    rerender(<SmoothScroll paused />);
+    expect(mocks.instance.stop).toHaveBeenCalledTimes(2);
+    expect(mocks.Lenis).toHaveBeenCalledTimes(1);
+  });
   afterEach(() => {
+    cleanup();
     setScrollEngine(null);
     vi.clearAllMocks();
   });

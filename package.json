@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:pages": "vite build --mode pages --base=/Chai_Web/ --outDir=dist-pages && node scripts/prepare-pages.mjs",
     "lint": "oxlint",
     "preview": "vite preview",
     "test": "vitest run"

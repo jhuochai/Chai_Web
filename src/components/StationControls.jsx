@@ -1,5 +1,5 @@
 import { getRecommendedNext, getStationByRoute, STATIONS } from '../data/stations';
-import { useLanguage } from '../i18n/LanguageContext';
+import { useLanguage } from '../i18n/useLanguage';
 import './StationControls.css';
 
 const copy = {

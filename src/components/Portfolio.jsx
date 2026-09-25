@@ -3,7 +3,7 @@ import analysisHatchFrame from '../assets/portfolio/analysis-hatch-frame-v1.webp
 import CircularGallery from './CircularGallery';
 import CaseAnalysisDesk from './CaseAnalysisDesk';
 import { portfolioCases } from '../data/portfolioCases';
-import { useLanguage } from '../i18n/LanguageContext';
+import { useLanguage } from '../i18n/useLanguage';
 import './Portfolio.css';
 
 export default function Portfolio() {

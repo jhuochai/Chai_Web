@@ -25,8 +25,6 @@ export default function SmoothScroll({ paused = false }) {
     gsap.ticker.add(update);
     gsap.ticker.lagSmoothing(0);
 
-    if (paused) lenis.stop();
-
     return () => {
       if (typeof removeScrollListener === 'function') removeScrollListener();
       gsap.ticker.remove(update);

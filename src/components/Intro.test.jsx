@@ -13,6 +13,14 @@ function renderIntro(lang = 'en') {
 }
 
 describe("Captain's Office", () => {
+  it('places all five professional capabilities in the profile', () => {
+    renderIntro('zh');
+    const section = screen.getByRole('region', { name: '專業能力' });
+    for (const skill of ['社群內容企劃', 'Meta 成效判讀', 'KOC／KOL 協作', '玩家回饋整理', '基礎視覺與短影音製作']) {
+      expect(section).toHaveTextContent(skill);
+    }
+    expect(section).toHaveTextContent('最終判斷由本人完成');
+  });
   it('presents the profile as a finished captain dossier with a front portrait', () => {
     const { container } = renderIntro();
 

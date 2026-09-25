@@ -6,7 +6,7 @@ import { Sun, MoonStars } from '@phosphor-icons/react';
 import CareerRibbonSheet from './CareerRibbonSheet';
 import GameBloom from './GameBloom';
 import TreeOcclusionLayer from './TreeOcclusionLayer';
-import { useLanguage } from '../i18n/LanguageContext';
+import { useLanguage } from '../i18n/useLanguage';
 import { getCareerVisual } from '../data/careerVisuals';
 import {
   DAY_OCCLUSION_PATCHES,

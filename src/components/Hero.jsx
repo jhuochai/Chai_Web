@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useReducedMotion } from 'motion/react';
-import { useLanguage } from '../i18n/LanguageContext';
+import { useLanguage } from '../i18n/useLanguage';
 import { navigateToRoute } from '../lib/siteRoute';
 import { playStationTransition } from '../lib/chapterTransition';
 import emptyCockpitScene from '../assets/scenes/hero-empty-cockpit-v3.webp';

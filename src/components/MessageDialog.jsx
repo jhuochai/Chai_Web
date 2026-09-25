@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { X } from '@phosphor-icons/react';
 import FramedPanel from './FramedPanel';
 import Stepper, { Step } from './Stepper';
-import { useLanguage } from '../i18n/LanguageContext';
+import { useLanguage } from '../i18n/useLanguage';
 import './MessageDialog.css';
 
 export default function MessageDialog({ open, onClose }) {

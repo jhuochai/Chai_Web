@@ -1,7 +1,6 @@
-import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { content } from '../data/content';
-
-const LanguageContext = createContext(null);
+import { LanguageContext } from './useLanguage';
 
 const STORAGE_KEY = 'site-lang';
 
@@ -30,10 +29,4 @@ export function LanguageProvider({ children }) {
   );
 
   return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>;
-}
-
-export function useLanguage() {
-  const ctx = useContext(LanguageContext);
-  if (!ctx) throw new Error('useLanguage must be used within a LanguageProvider');
-  return ctx;
 }

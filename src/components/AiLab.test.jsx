@@ -14,11 +14,11 @@ function renderLab() {
 describe('AiLab', () => {
   afterEach(() => { document.body.style.overflow = ''; });
 
-  it('renders only finished Stapu and capability records with in-scene controls', () => {
+  it('keeps project demos and Stapu in the lab, with capabilities in the profile', () => {
     const { container } = renderLab();
     expect(screen.getByRole('heading', { name: 'AI Lab' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Inspect Stapu/i })).toBeEnabled();
-    expect(screen.getByRole('button', { name: /Open Skills cabinet/i })).toBeEnabled();
+    expect(screen.queryByRole('button', { name: /Open Skills cabinet/i })).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Return to Cockpit' })).toBeInTheDocument();
     expect(container.querySelectorAll('.incubation-pod')).toHaveLength(0);
     expect(container.querySelectorAll('.ai-lab__project-card')).toHaveLength(0);
@@ -37,14 +37,4 @@ describe('AiLab', () => {
     await waitFor(() => expect(opener).toHaveFocus());
   });
 
-  it('lists five recruiter-facing capabilities and the AI responsibility boundary', () => {
-    renderLab();
-    fireEvent.click(screen.getByRole('button', { name: /Open Skills cabinet/i }));
-    const dialog = screen.getByRole('dialog', { name: /Skills Cabinet/i });
-    for (const capability of ['Social content planning', 'Meta performance review', 'KOC / KOL collaboration', 'Player feedback synthesis', 'Basic visual and short-form video production']) {
-      expect(dialog).toHaveTextContent(capability);
-    }
-    expect(dialog.querySelectorAll('li')).toHaveLength(5);
-    expect(dialog).toHaveTextContent(/AI supports early exploration and information organization/i);
-  });
 });

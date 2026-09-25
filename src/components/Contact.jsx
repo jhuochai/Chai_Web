@@ -9,7 +9,7 @@ import {
   X,
 } from '@phosphor-icons/react';
 import MessageDialog from './MessageDialog';
-import { useLanguage } from '../i18n/LanguageContext';
+import { useLanguage } from '../i18n/useLanguage';
 import { buildContactLinkData } from '../lib/contactLinks';
 import { acquireBodyScrollLock } from '../lib/bodyScrollLock';
 import './Contact.css';

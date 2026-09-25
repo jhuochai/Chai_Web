@@ -3,7 +3,7 @@ import { useReducedMotion } from 'motion/react';
 import closedDoor from '../assets/scenes/transit-door-closed.webp';
 import corridor from '../assets/scenes/transit-corridor.webp';
 import { getStationByRoute } from '../data/stations';
-import { useLanguage } from '../i18n/LanguageContext';
+import { useLanguage } from '../i18n/useLanguage';
 import { STATION_TRANSITION_EVENT, isSafeStationPathname } from '../lib/chapterTransition';
 import { preloadImages } from '../lib/sceneReady';
 import { acquireBodyScrollLock } from '../lib/bodyScrollLock';

@@ -1,6 +1,6 @@
 import { ArrowRight, CookingPot, GameController } from '@phosphor-icons/react';
 import RevealSection from './RevealSection';
-import { useLanguage } from '../i18n/LanguageContext';
+import { useLanguage } from '../i18n/useLanguage';
 import './Interests.css';
 
 const HOBBY_ICONS = {

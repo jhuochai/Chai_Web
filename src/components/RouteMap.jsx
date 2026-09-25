@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { Broadcast, X } from '@phosphor-icons/react';
 import { STATIONS, getStationByRoute } from '../data/stations';
-import { useLanguage } from '../i18n/LanguageContext';
+import { useLanguage } from '../i18n/useLanguage';
 import './RouteMap.css';
 
 const comingSoonStations = [
